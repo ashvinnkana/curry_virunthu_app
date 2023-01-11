@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "162937215636",
+    "project_id": "curry-virunthu",
+    "storage_bucket": "curry-virunthu.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:162937215636:android:67c8fce547c75b6f2a3281",
+        "android_client_info": {
+          "package_name": "com.app.curry_virunthu_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "162937215636-bo5nm0695n9dh3fn9u67kqd6f6emmit4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5mIB_oHJHHitoh7cGA55uy1OJ_pUPBIc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "162937215636-bo5nm0695n9dh3fn9u67kqd6f6emmit4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "162937215636-k0d84an2ge3rmdm13pr9orc6pi7ulsim.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.app.curryVirunthuApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
