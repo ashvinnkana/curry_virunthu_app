@@ -1,26 +1,29 @@
 
+import 'package:curry_virunthu_app/util/user.dart';
 import 'package:flutter/material.dart';
 import 'package:quantity_input/quantity_input.dart';
 import 'package:flutter/services.dart';
 import '../widgets/gradient_slide_to_act.dart';
 import 'add_to_cart.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProductView extends StatefulWidget {
   final Map<String, dynamic> product;
+  final String item_id;
 
-  ProductView(this.product);
+  ProductView(this.product, this.item_id);
 
   @override
-  _ProductViewState createState() => _ProductViewState(product);
+  _ProductViewState createState() => _ProductViewState(product, item_id);
 }
 
 class _ProductViewState extends State<ProductView> {
-
+  final String item_id;
   final Map<String, dynamic> product;
   int currentChoice = 0;
   dynamic  quantity = 1;
 
-  _ProductViewState(this.product);
+  _ProductViewState(this.product, this.item_id);
 
   @override
   Widget build(BuildContext context) {
@@ -168,6 +171,17 @@ class _ProductViewState extends State<ProductView> {
                           builder: (BuildContext context) {
                             HapticFeedback.heavyImpact();
                             SystemSound.play(SystemSoundType.click);
+                            Map<String, dynamic> item = {
+                              "choice": product["choices"][currentChoice]["label"],
+                              "itemid": item_id,
+                              "quantity": quantity
+                            };
+                            User.dine_in_cart.add(item);
+                            FirebaseFirestore.instance.collection("customer").doc(User.user_id)
+                            .update({"dineInCart": User.dine_in_cart})
+                                .then((value) => print("User Updated"))
+                                .catchError((error) => print("Failed to update user: $error"));
+
                             return AddToCart();
                           },
                         ),

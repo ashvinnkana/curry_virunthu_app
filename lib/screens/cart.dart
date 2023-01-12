@@ -6,7 +6,12 @@ class Cart extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: Center(
-        child: Text('CART'),
+
+        child: Image.asset(
+          "assets/empty_cart.png",
+          height: MediaQuery.of(context).size.height/3,
+          width: MediaQuery.of(context).size.height/3,
+        ),
       ),
     );
   }

@@ -115,7 +115,7 @@ class Home extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder: (BuildContext context) {
-                        return ProductView(product);
+                        return ProductView(product, id);
                       },
                     ),
                   );
@@ -218,7 +218,7 @@ class Home extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (BuildContext context) {
-                          return ProductView(trend);
+                          return ProductView(trend, id);
                         },
                       ),
                     );
