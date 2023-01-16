@@ -27,37 +27,24 @@ class _AddToCartState extends State<AddToCart> {
           body: Column(
             children: [
               const SizedBox(height: 100.0),
-              Stack(
-                children: <Widget>[
-                  Image.asset(
-                    "assets/addeed-to-cart.gif",
-                    height: MediaQuery.of(context).size.height/2,
-                    width: MediaQuery.of(context).size.height/2,
-                    fit: BoxFit.cover,
-                  ),
-                  Positioned(
-
-                    bottom: 70,
-                    left: 80,
-                      child: Text(
-                        "ADDED TO CART",
-                        style: TextStyle(
-                          fontSize: 30
-                        ),
-                      ),
-                  ),
-                  Positioned(
-                    bottom: 40,
-                    left: 120,
-                    child: Text(
-                      "SUCCESSFULLY",
-                      style: TextStyle(
-                          fontSize: 20,
-                        color: Color.fromARGB(255, 55, 201, 148)
-                      ),
-                    ),
-                  )
-                ],
+              Image.asset(
+                "assets/addeed-to-cart.gif",
+                height: MediaQuery.of(context).size.height/2,
+                width: MediaQuery.of(context).size.height/2,
+                fit: BoxFit.cover,
+              ),
+              const Text(
+                "ADDED TO CART",
+                style: TextStyle(
+                    fontSize: 30
+                ),
+              ),
+              const Text(
+                "SUCCESSFULLY",
+                style: TextStyle(
+                    fontSize: 20,
+                    color: Color.fromARGB(255, 55, 201, 148)
+                ),
               ),
             ],
           ),

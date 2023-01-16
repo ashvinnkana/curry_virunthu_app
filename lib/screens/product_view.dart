@@ -171,15 +171,11 @@ class _ProductViewState extends State<ProductView> {
                           builder: (BuildContext context) {
                             HapticFeedback.heavyImpact();
                             SystemSound.play(SystemSoundType.click);
-                            Map<String, dynamic> item = {
-                              "choice": product["choices"][currentChoice]["label"],
-                              "itemid": item_id,
-                              "quantity": quantity
-                            };
-                            User.dine_in_cart.add(item);
+
+                            setupCartList();
                             FirebaseFirestore.instance.collection("customer").doc(User.user_id)
                             .update({"dineInCart": User.dine_in_cart})
-                                .then((value) => print("User Updated"))
+                                .then((value) => print("Cart Updated"))
                                 .catchError((error) => print("Failed to update user: $error"));
 
                             return AddToCart();
@@ -203,6 +199,38 @@ class _ProductViewState extends State<ProductView> {
           )
       ),
     );
+  }
+
+  void setupCartList() {
+    for (int i = 0; i < User.dine_in_cart.length; i++) {
+      if (User.dine_in_cart[i]["itemid"] == item_id) {
+        for (int j = 0; j < User.dine_in_cart[i]["choices"].length; j++) {
+          if (User.dine_in_cart[i]["choices"][j]["choice"] == product["choices"][currentChoice]["label"]) {
+            User.dine_in_cart[i]["choices"][j]["quantity"] = User.dine_in_cart[i]["choices"][j]["quantity"] + quantity;
+            return;
+          }
+        }
+        User.dine_in_cart[i]["choices"].add({
+          "choice": product["choices"][currentChoice]["label"],
+          "quantity": quantity
+        });
+
+        return;
+      }
+    }
+    Map<String, dynamic> item = {
+      "itemid": item_id,
+      "img": product["img"],
+      "price": int.parse(product["price"]),
+      "choices": [
+        {
+          "choice": product["choices"][currentChoice]["label"],
+          "quantity": quantity
+        }
+      ]
+    };
+    User.dine_in_cart.add(item);
+    return;
   }
 
   listItemChoice() {
