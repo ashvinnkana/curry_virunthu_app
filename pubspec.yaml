@@ -40,6 +40,7 @@ dependencies:
   firebase_storage: ^11.0.10
   fluttertoast: ^8.1.2
   quantity_input: ^1.0.2
+  dropdown_button2: ^1.9.2
 
 dev_dependencies:
   flutter_test:

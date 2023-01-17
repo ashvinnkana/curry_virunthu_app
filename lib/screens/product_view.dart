@@ -193,8 +193,8 @@ class _ProductViewState extends State<ProductView> {
                     ),
                   ),
               ),
-
-              const SizedBox(height: 20.0),
+              const SizedBox(
+                  height: 20.0),
             ],
           )
       ),
@@ -214,7 +214,6 @@ class _ProductViewState extends State<ProductView> {
           "choice": product["choices"][currentChoice]["label"],
           "quantity": quantity
         });
-
         return;
       }
     }
