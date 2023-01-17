@@ -1,4 +1,6 @@
 
+import 'dart:async';
+
 import 'package:curry_virunthu_app/util/user.dart';
 import 'package:flutter/material.dart';
 import 'package:quantity_input/quantity_input.dart';
@@ -27,6 +29,7 @@ class _ProductViewState extends State<ProductView> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 30, 30, 30),
       appBar: AppBar(
@@ -59,7 +62,7 @@ class _ProductViewState extends State<ProductView> {
                         // Add one stop for each color. Stops should increase from 0 to 1
                         stops: [0.2, 0.7],
                         colors: [
-                          Color.fromARGB(100, 80, 80, 80),
+                          Color.fromARGB(100, 0, 0, 0),
                           Color.fromARGB(50, 0, 0, 0),
                         ],
                       ),

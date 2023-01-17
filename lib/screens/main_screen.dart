@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'package:curry_virunthu_app/screens/notification.dart';
@@ -8,13 +10,19 @@ import 'package:curry_virunthu_app/screens/today_menu.dart';
 
 
 class MainScreen extends StatefulWidget {
+  final int page;
+
+  MainScreen(this.page);
+
   @override
-  _MainScreenState createState() => _MainScreenState();
+  _MainScreenState createState() => _MainScreenState(page);
 }
 
 class _MainScreenState extends State<MainScreen> {
   late PageController _pageController;
-  int _page = 0;
+  late int _page;
+
+  _MainScreenState(this._page);
 
   List icons = [
     Icons.home,
@@ -34,6 +42,11 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Timer(
+        Duration(seconds: 0),
+            () => {
+            _pageController.jumpToPage(_page)
+        });
     return Scaffold(
       body: PageView(
         physics: NeverScrollableScrollPhysics(),
@@ -67,6 +80,7 @@ class _MainScreenState extends State<MainScreen> {
         onPressed: () => _pageController.jumpToPage(2),
       ),
     );
+
   }
 
   // void navigationTapped(int page) {

@@ -66,7 +66,7 @@ class _MenuItemState extends State<MenuItems> {
                               stops: [0.2, 0.7],
                               colors: [
                                 Color.fromARGB(50, 0, 0, 0),
-                                Color.fromARGB(100, 80, 80, 80),
+                                Color.fromARGB(100, 0, 0, 0),
                               ],
                             ),
                           ),

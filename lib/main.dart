@@ -25,7 +25,7 @@ class _MyAppState extends State<MyApp> {
       title: Constants.appName,
       theme: Constants.lightTheme,
       darkTheme: Constants.darkTheme,
-      home: MainScreen(),
+      home: MainScreen(0),
     );
   }
 }
