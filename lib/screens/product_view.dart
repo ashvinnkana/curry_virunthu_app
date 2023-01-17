@@ -28,10 +28,12 @@ class _ProductViewState extends State<ProductView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 59, 59, 59),
       appBar: AppBar(
         elevation: 0.0,
         title: Text(product['label']),
         centerTitle: true,
+        backgroundColor: Color.fromARGB(255, 123, 152, 60),
       ),
       body: Padding(
           padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -48,6 +50,22 @@ class _ProductViewState extends State<ProductView> {
                         "${product["img"]}",
                         fit: BoxFit.cover,
                       )
+                  ),
+                  Container(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        // Add one stop for each color. Stops should increase from 0 to 1
+                        stops: [0.2, 0.7],
+                        colors: [
+                          Color.fromARGB(100, 100, 100, 100),
+                          Color.fromARGB(50, 0, 0, 0),
+                        ],
+                      ),
+                    ),
+                    height: MediaQuery.of(context).size.height / 3,
+                    width: MediaQuery.of(context).size.width,
                   ),
                   Positioned(
                     bottom: 6.0,
@@ -116,23 +134,31 @@ class _ProductViewState extends State<ProductView> {
                   color: Colors.white
               ),
               const SizedBox(height: 20.0),
-              const Padding(
-                  padding:  EdgeInsets.only(left: 20.0),
-                  child: Text(
-                    "Pick your choice",
-                    style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.lightGreen
-                    ),
-                  )
-              ),
-              const SizedBox(height: 10.0),
-              Padding(
-                  padding:  const EdgeInsets.only(left: 20.0, right: 20.0),
-                  child: listItemChoice()
-              ),
-              const SizedBox(height: 20.0),
+              product["choices"].length != 0 ?
+               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  const Padding(
+                      padding:  EdgeInsets.only(left: 20.0),
+                      child: Text(
+                        "Pick your choice",
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.lightGreen
+                        ),
+                      )
+                  ),
+                  const SizedBox(height: 10.0),
+                  Padding(
+                      padding:  const EdgeInsets.only(left: 20.0, right: 20.0),
+                      child: listItemChoice()
+                  ),
+                  const SizedBox(height: 20.0),
+                ],
+              ) :
+              SizedBox(),
+
               const Padding(
                   padding:  EdgeInsets.only(left: 20.0),
                   child: Text(
@@ -161,7 +187,8 @@ class _ProductViewState extends State<ProductView> {
                   padding:  const EdgeInsets.only(left: 70.0, right: 70.0),
                   child: GradientSlideToAct(
                     width: 400,
-                    dragableIconBackgroundColor: Colors.lightGreenAccent,
+                    dragableIconBackgroundColor: Color.fromARGB(
+                        255, 139, 195, 74),
                     textStyle: TextStyle(color: Colors.white,fontSize: 15),
                     backgroundColor: Colors.lightGreen,
                     onSubmit: (){
@@ -172,7 +199,9 @@ class _ProductViewState extends State<ProductView> {
                             HapticFeedback.heavyImpact();
                             SystemSound.play(SystemSoundType.click);
 
-                            setupCartList();
+                            product["choices"].length != 0 ?
+                              setupCartListWithChoice() :
+                                setupCartListWithoutChoice();
                             FirebaseFirestore.instance.collection("customer").doc(User.user_id)
                             .update({"dineInCart": User.dine_in_cart})
                                 .then((value) => print("Cart Updated"))
@@ -201,7 +230,7 @@ class _ProductViewState extends State<ProductView> {
     );
   }
 
-  void setupCartList() {
+  void setupCartListWithChoice() {
     for (int i = 0; i < User.dine_in_cart.length; i++) {
       if (User.dine_in_cart[i]["itemid"] == item_id) {
         for (int j = 0; j < User.dine_in_cart[i]["choices"].length; j++) {
@@ -228,6 +257,25 @@ class _ProductViewState extends State<ProductView> {
         }
       ]
     };
+    User.dine_in_cart.add(item);
+    return;
+  }
+
+  void setupCartListWithoutChoice() {
+    for (int i = 0; i < User.dine_in_cart.length; i++) {
+      if (User.dine_in_cart[i]["itemid"] == item_id) {
+        User.dine_in_cart[i]["quantity"] = User.dine_in_cart[i]["quantity"] + quantity;
+        return;
+      }
+    }
+    Map<String, dynamic> item = {
+      "itemid": item_id,
+      "img": product["img"],
+      "price": int.parse(product["price"]),
+      "choices": null,
+      "quantity": quantity
+    };
+
     User.dine_in_cart.add(item);
     return;
   }

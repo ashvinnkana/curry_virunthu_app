@@ -7,7 +7,7 @@ class Constants {
   static Color lightPrimary = Color(0xfffcfcff);
   static Color darkPrimary = Colors.black;
   static Color lightAccent = Color(0xff36c72d);
-  static Color darkAccent = Color(0xff6fd020);
+  static Color darkAccent = Color.fromARGB(255, 146, 197, 42);
   static Color lightBG = Color(0xfffcfcff);
   static Color darkBG = Colors.black;
   static Color ratingBG = Colors.yellow;

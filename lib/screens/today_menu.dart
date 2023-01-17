@@ -19,7 +19,7 @@ class Menu extends StatelessWidget {
                 color: Colors.white
             )
           ),
-          backgroundColor: Color.fromARGB(255, 75, 75, 75),
+          backgroundColor: Color.fromARGB(255, 123, 152, 60),
         ),
         body: Padding(
               padding: const EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 20.0),

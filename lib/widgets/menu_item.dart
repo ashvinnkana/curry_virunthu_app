@@ -65,10 +65,9 @@ class _MenuItemState extends State<MenuItems> {
                               // Add one stop for each color. Stops should increase from 0 to 1
                               stops: [0.2, 0.7],
                               colors: [
-                                Color.fromARGB(100, 52, 52, 52),
-                                Color.fromARGB(100, 52, 52, 52),
+                                Color.fromARGB(50, 0, 0, 0),
+                                Color.fromARGB(100, 100, 100, 100),
                               ],
-                              // stops: [0.0, 0.1],
                             ),
                           ),
                           height: MediaQuery.of(context).size.height / 3.7,
