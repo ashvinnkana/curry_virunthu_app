@@ -28,10 +28,10 @@ class _ProductViewState extends State<ProductView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 59, 59, 59),
+      backgroundColor: Color.fromARGB(255, 30, 30, 30),
       appBar: AppBar(
         elevation: 0.0,
-        title: Text(product['label']),
+        title: Text(product['label'].toString().toUpperCase().replaceAll("", " ")),
         centerTitle: true,
         backgroundColor: Color.fromARGB(255, 123, 152, 60),
       ),
@@ -59,7 +59,7 @@ class _ProductViewState extends State<ProductView> {
                         // Add one stop for each color. Stops should increase from 0 to 1
                         stops: [0.2, 0.7],
                         colors: [
-                          Color.fromARGB(100, 100, 100, 100),
+                          Color.fromARGB(100, 80, 80, 80),
                           Color.fromARGB(50, 0, 0, 0),
                         ],
                       ),
@@ -121,7 +121,7 @@ class _ProductViewState extends State<ProductView> {
               ),
               const SizedBox(height: 20.0),
               Padding(
-                  padding:  const EdgeInsets.only(left: 20.0),
+                  padding:  const EdgeInsets.only(left: 20.0, right: 10.0),
                   child: Text(
                     "${product["description"]}",
                     style: const TextStyle(
@@ -186,11 +186,11 @@ class _ProductViewState extends State<ProductView> {
               Padding(
                   padding:  const EdgeInsets.only(left: 70.0, right: 70.0),
                   child: GradientSlideToAct(
+                    text: "ADD TO CART",
                     width: 400,
-                    dragableIconBackgroundColor: Color.fromARGB(
-                        255, 139, 195, 74),
-                    textStyle: TextStyle(color: Colors.white,fontSize: 15),
-                    backgroundColor: Colors.lightGreen,
+                    dragableIconBackgroundColor: Color.fromARGB(255, 148, 182, 117),
+                    textStyle: TextStyle(color: Colors.black,fontSize: 15),
+                    backgroundColor: Color.fromARGB(255, 148, 182, 117),
                     onSubmit: (){
                       Navigator.push(
                         context,
@@ -248,7 +248,7 @@ class _ProductViewState extends State<ProductView> {
     }
     Map<String, dynamic> item = {
       "itemid": item_id,
-      "img": product["img"],
+      "label": product["label"],
       "price": int.parse(product["price"]),
       "choices": [
         {
@@ -270,7 +270,7 @@ class _ProductViewState extends State<ProductView> {
     }
     Map<String, dynamic> item = {
       "itemid": item_id,
-      "img": product["img"],
+      "label": product["label"],
       "price": int.parse(product["price"]),
       "choices": null,
       "quantity": quantity

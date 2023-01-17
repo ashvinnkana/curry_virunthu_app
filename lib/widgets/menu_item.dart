@@ -66,7 +66,7 @@ class _MenuItemState extends State<MenuItems> {
                               stops: [0.2, 0.7],
                               colors: [
                                 Color.fromARGB(50, 0, 0, 0),
-                                Color.fromARGB(100, 100, 100, 100),
+                                Color.fromARGB(100, 80, 80, 80),
                               ],
                             ),
                           ),
@@ -403,7 +403,7 @@ class _MenuItemState extends State<MenuItems> {
     }
     Map<String, dynamic> item = {
       "itemid": widget.id,
-      "img": widget.img,
+      "label":widget.title,
       "price": int.parse(widget.price),
       "choices": [
         {
@@ -425,7 +425,7 @@ class _MenuItemState extends State<MenuItems> {
     }
     Map<String, dynamic> item = {
       "itemid": widget.id,
-      "img": widget.img,
+      "label" :widget.title,
       "price": int.parse(widget.price),
       "choices": null,
       "quantity": 1

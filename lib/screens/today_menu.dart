@@ -13,8 +13,9 @@ class Menu extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar:AppBar(
+          automaticallyImplyLeading: false,
           centerTitle: true,
-          title: Text("TODAY'S MENU",
+          title: Text("T O D A Y ' S   M E N U",
             style: TextStyle(
                 color: Colors.white
             )
@@ -74,7 +75,7 @@ class Menu extends StatelessWidget {
       child: Text(
         "${category.toUpperCase().trim().replaceAll("", " ")}",
         style: TextStyle(
-            fontSize: 20,
+            fontSize: 15,
         ),
       ),
     );

@@ -53,7 +53,7 @@ class GradientSlideToAct extends StatefulWidget {
         this.height = 52,
         this.iconSize = 22,
         this.borderRadius = 52,
-        this.text = "Add To Cart",
+        required this.text,
         this.textStyle,
         this.dragableIconBackgroundColor,
         this.submittedIcon,
