@@ -48,29 +48,28 @@ class GradientSlideToAct extends StatefulWidget {
 
   GradientSlideToAct(
       {Key? key,
-        required this.onSubmit,
-        this.width = 300,
-        this.height = 52,
-        this.iconSize = 22,
-        this.borderRadius = 52,
-        required this.text,
-        this.textStyle,
-        this.dragableIconBackgroundColor,
-        this.submittedIcon,
-        this.draggableWidget,
-        this.dragableIcon = Icons.arrow_forward_ios,
-        this.sliderButtonIcon,
-        this.animationDuration = const Duration(milliseconds: 300),
-        this.gradient,
-        required this.backgroundColor})
+      required this.onSubmit,
+      this.width = 300,
+      this.height = 52,
+      this.iconSize = 22,
+      this.borderRadius = 52,
+      required this.text,
+      this.textStyle,
+      this.dragableIconBackgroundColor,
+      this.submittedIcon,
+      this.draggableWidget,
+      this.dragableIcon = Icons.arrow_forward_ios,
+      this.sliderButtonIcon,
+      this.animationDuration = const Duration(milliseconds: 300),
+      this.gradient,
+      required this.backgroundColor})
       : assert(width != double.infinity, "width should not be equal infinity"),
         assert(iconSize <= height,
-        "the size of the icon {iconSize} should be < height"),
+            "the size of the icon {iconSize} should be < height"),
         super(key: key);
 
   @override
-  State<GradientSlideToAct> createState() =>
-      _GradientSlideToActState();
+  State<GradientSlideToAct> createState() => _GradientSlideToActState();
 }
 
 class _GradientSlideToActState extends State<GradientSlideToAct>
@@ -96,94 +95,93 @@ class _GradientSlideToActState extends State<GradientSlideToAct>
         child: _submitted
             ? Icon(widget.submittedIcon ?? Icons.done)
             : Stack(
-          children: [
-            Positioned(
-                top: 0,
-                right: 0,
-                left: 0,
-                bottom: 0,
-                child: Row(
-                  children: [
-                    AnimatedContainer(
-                      duration: const Duration(milliseconds: 70),
-                      height: widget.height,
-                      width: _position + widget.height,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(52),
-                          gradient: widget.gradient),
-                    ),
-                  ],
-                )),
-            Positioned(
-                top: 0,
-                right: 0,
-                left: 0,
-                bottom: 0,
-                child: Opacity(
-                  opacity:
-                  1 - (position_percent > 1 ? 1 : position_percent),
-                  child: Center(
-                    child: Text(widget.text,
-                        style: widget.textStyle ??
-                            const TextStyle(
-                                color: Colors.white, fontSize: 15)),
-                  ),
-                )),
-            Positioned(
-              top: 0,
-              right: 0,
-              left: 0,
-              bottom: 0,
-              child: Row(
                 children: [
-                  GestureDetector(
-                    onPanUpdate: (details) async {
-                      _position += details.delta.dx;
-                      if (_position < 0) {
-                        _position = 0;
-                        setState(() {});
-                      } else if (_position >=
-                          (widget.width - widget.height - 180)) {
-                        _position = widget.width - widget.height;
-                        if (!_submitted) {
-                          _submitted = true;
-                          setState(() {
-                          });
-                          Duration _dur =
-                              const Duration(milliseconds: 200) +
-                                  (widget.animationDuration);
-                          await Future.delayed(_dur);
-                          if (mounted) widget.onSubmit();
-                          return;
-                        }
-                        _submitted = true;
-                        setState(() {});
-                      }
-                      setState(() {});
-                    },
-                    onPanEnd: (_) {
-                      position_percent = 0;
-                      _position = 0;
-                      setState(() {});
-                    },
-                    child: AnimatedPadding(
-                      duration: const Duration(milliseconds: 70),
-                      padding: EdgeInsets.only(left: _position),
-                      child: widget.draggableWidget ??
-                          _draggableWidget(
-                            iconSize: widget.height,
-                            gradient: widget.gradient,
-                            dragableIconBackground:
-                            widget.dragableIconBackgroundColor,
-                            dragableIcon: widget.dragableIcon,
+                  Positioned(
+                      top: 0,
+                      right: 0,
+                      left: 0,
+                      bottom: 0,
+                      child: Row(
+                        children: [
+                          AnimatedContainer(
+                            duration: const Duration(milliseconds: 70),
+                            height: widget.height,
+                            width: _position + widget.height,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(52),
+                                gradient: widget.gradient),
                           ),
+                        ],
+                      )),
+                  Positioned(
+                      top: 0,
+                      right: 0,
+                      left: 0,
+                      bottom: 0,
+                      child: Opacity(
+                        opacity:
+                            1 - (position_percent > 1 ? 1 : position_percent),
+                        child: Center(
+                          child: Text(widget.text,
+                              style: widget.textStyle ??
+                                  const TextStyle(
+                                      color: Colors.white, fontSize: 15)),
+                        ),
+                      )),
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    left: 0,
+                    bottom: 0,
+                    child: Row(
+                      children: [
+                        GestureDetector(
+                          onPanUpdate: (details) async {
+                            _position += details.delta.dx;
+                            if (_position < 0) {
+                              _position = 0;
+                              setState(() {});
+                            } else if (_position >=
+                                (widget.width - widget.height - 180)) {
+                              _position = widget.width - widget.height;
+                              if (!_submitted) {
+                                _submitted = true;
+                                setState(() {});
+                                Duration _dur =
+                                    const Duration(milliseconds: 200) +
+                                        (widget.animationDuration);
+                                await Future.delayed(_dur);
+                                if (mounted) widget.onSubmit();
+                                return;
+                              }
+                              _submitted = true;
+                              setState(() {});
+                            }
+                            setState(() {});
+                          },
+                          onPanEnd: (_) {
+                            position_percent = 0;
+                            _position = 0;
+                            setState(() {});
+                          },
+                          child: AnimatedPadding(
+                            duration: const Duration(milliseconds: 70),
+                            padding: EdgeInsets.only(left: _position),
+                            child: widget.draggableWidget ??
+                                _draggableWidget(
+                                  iconSize: widget.height,
+                                  gradient: widget.gradient,
+                                  dragableIconBackground:
+                                      widget.dragableIconBackgroundColor,
+                                  dragableIcon: widget.dragableIcon,
+                                ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -197,10 +195,10 @@ class _draggableWidget extends StatelessWidget {
 
   const _draggableWidget(
       {Key? key,
-        required this.iconSize,
-        this.gradient,
-        this.dragableIconBackground,
-        required this.dragableIcon})
+      required this.iconSize,
+      this.gradient,
+      this.dragableIconBackground,
+      required this.dragableIcon})
       : super(key: key);
 
   @override
@@ -213,7 +211,7 @@ class _draggableWidget extends StatelessWidget {
           color: dragableIconBackground,
           gradient: dragableIconBackground != null ? null : gradient),
       alignment: Alignment.center,
-      child:  Icon(dragableIcon),
+      child: Icon(dragableIcon),
     );
   }
 }

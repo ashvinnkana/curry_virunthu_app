@@ -12,16 +12,15 @@ class MenuItems extends StatefulWidget {
   final String price;
   final List<dynamic> choices;
 
-  MenuItems({
-    required this.id,
-    required this.img,
-    required this.title,
-    required this.desc,
-    required this.buyCount,
-    required this.isAvailable,
-    required this.price,
-    required this.choices
-  });
+  MenuItems(
+      {required this.id,
+      required this.img,
+      required this.title,
+      required this.desc,
+      required this.buyCount,
+      required this.isAvailable,
+      required this.price,
+      required this.choices});
 
   @override
   _MenuItemState createState() => _MenuItemState();
@@ -35,92 +34,92 @@ class _MenuItemState extends State<MenuItems> {
       child: SizedBox(
         width: MediaQuery.of(context).size.width,
         child: Card(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
           elevation: 3.0,
           child: Column(
             children: <Widget>[
               ClipRRect(
-                borderRadius: BorderRadius.circular(8.0),
-                child:Stack(
-                      children: <Widget>[
-                        Container(
-                          height: MediaQuery.of(context).size.height / 3.7,
-                          width: MediaQuery.of(context).size.width,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(10.0),
-                              topRight: Radius.circular(10.0),
-                            ),
-                            child: Image.network(
-                              "${widget.img}",
-                              fit: BoxFit.cover,
-                            ),
+                  borderRadius: BorderRadius.circular(8.0),
+                  child: Stack(
+                    children: <Widget>[
+                      Container(
+                        height: MediaQuery.of(context).size.height / 3.7,
+                        width: MediaQuery.of(context).size.width,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(10.0),
+                            topRight: Radius.circular(10.0),
+                          ),
+                          child: Image.network(
+                            "${widget.img}",
+                            fit: BoxFit.cover,
                           ),
                         ),
-                        Container(
-                          decoration: const BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              // Add one stop for each color. Stops should increase from 0 to 1
-                              stops: [0.2, 0.7],
-                              colors: [
-                                Color.fromARGB(50, 0, 0, 0),
-                                Color.fromARGB(100, 0, 0, 0),
+                      ),
+                      Container(
+                        decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            // Add one stop for each color. Stops should increase from 0 to 1
+                            stops: [0.2, 0.7],
+                            colors: [
+                              Color.fromARGB(50, 0, 0, 0),
+                              Color.fromARGB(100, 0, 0, 0),
+                            ],
+                          ),
+                        ),
+                        height: MediaQuery.of(context).size.height / 3.7,
+                        width: MediaQuery.of(context).size.width,
+                      ),
+                      Positioned(
+                        bottom: 6.0,
+                        right: 6.0,
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4.0)),
+                          child: Padding(
+                            padding: EdgeInsets.all(2.0),
+                            child: Row(
+                              children: <Widget>[
+                                Icon(
+                                  Icons.favorite,
+                                  color: Colors.pink,
+                                  size: 12,
+                                ),
+                                Text(
+                                  " ${widget.buyCount} ",
+                                  style: TextStyle(
+                                    fontSize: 12.0,
+                                  ),
+                                ),
                               ],
                             ),
                           ),
-                          height: MediaQuery.of(context).size.height / 3.7,
-                          width: MediaQuery.of(context).size.width,
                         ),
-                        Positioned(
-                          bottom: 6.0,
-                          right: 6.0,
-                          child: Card(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(4.0)),
-                            child: Padding(
-                              padding: EdgeInsets.all(2.0),
-                              child: Row(
-                                children: <Widget>[
-                                  Icon(
-                                    Icons.favorite,
-                                    color: Colors.pink,
-                                    size: 12,
-                                  ),
-                                  Text(
-                                    " ${widget.buyCount} ",
-                                    style: TextStyle(
-                                      fontSize: 12.0,
-                                    ),
-                                  ),
-                                ],
+                      ),
+                      Positioned(
+                        top: 6.0,
+                        left: 6.0,
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(3.0)),
+                          child: Padding(
+                            padding: EdgeInsets.all(4.0),
+                            child: Text(
+                              "A\$ ${widget.price}",
+                              style: TextStyle(
+                                fontSize: 25.0,
+                                color: Colors.lightGreen,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
                         ),
-                        Positioned(
-                          top: 6.0,
-                          left: 6.0,
-                          child: Card(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(3.0)),
-                            child: Padding(
-                              padding: EdgeInsets.all(4.0),
-                              child: Text(
-                                "A\$ ${widget.price}",
-                                style: TextStyle(
-                                  fontSize: 25.0,
-                                  color: Colors.lightGreen,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    )
-              ),
+                      ),
+                    ],
+                  )),
               SizedBox(height: 10.0),
               Padding(
                 padding: EdgeInsets.only(left: 15.0),
@@ -150,11 +149,9 @@ class _MenuItemState extends State<MenuItems> {
                   ),
                 ),
               ),
-
-              checkCartforItem(widget.id) == "" ?
-                buildSelect(widget.choices) : buildAddedToCart(widget.choices)
-
-
+              checkCartforItem(widget.id) == ""
+                  ? buildSelect(widget.choices)
+                  : buildAddedToCart(widget.choices)
             ],
           ),
         ),
@@ -163,146 +160,163 @@ class _MenuItemState extends State<MenuItems> {
   }
 
   buildAddedToCart(List choices) {
-    return choices.length == 0 ? Stack(
-      children: <Widget>[
-        Padding(
-          padding: EdgeInsets.all(15),
-          child:Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                GestureDetector(
-                  onHorizontalDragEnd: (_){
-                    deleteItemInCart(widget.id, widget.title);
-                    setState(() {});
-                  },
-                  child: TextButton(
-                    style:TextButton.styleFrom( //<-- SEE HERE
-                        side: BorderSide(width: 1.0, color: Colors.lightGreenAccent),
-                        backgroundColor: Colors.lightGreenAccent,
-                        foregroundColor: Colors.black,
-                        alignment: Alignment.centerLeft
-                    ),
-                    onPressed: () {
-                      setupCartList();
-                      setState(() {});
-                    },
-                    child: const Padding(padding:EdgeInsets.only(left: 10), child:Text('ADDED TO CART')),
-                  ),
-                )
-
-              ]
+    return choices.length == 0
+        ? Stack(
+            children: <Widget>[
+              Padding(
+                  padding: EdgeInsets.all(15),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        GestureDetector(
+                          onHorizontalDragEnd: (_) {
+                            deleteItemInCart(widget.id, widget.title);
+                            setState(() {});
+                          },
+                          child: TextButton(
+                            style: TextButton.styleFrom(
+                                //<-- SEE HERE
+                                side: BorderSide(
+                                    width: 1.0, color: Colors.lightGreen),
+                                backgroundColor: Colors.lightGreen,
+                                foregroundColor: Colors.black,
+                                alignment: Alignment.centerLeft),
+                            onPressed: () {
+                              setupCartList();
+                              setState(() {});
+                            },
+                            child: const Padding(
+                                padding: EdgeInsets.only(left: 10),
+                                child: Text('ADDED TO CART')),
+                          ),
+                        )
+                      ])),
+              Positioned(
+                right: 30,
+                top: 28,
+                child: Container(
+                    width: 40.0,
+                    height: 20.0,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        border: Border.all(width: 1.5)),
+                    child: Center(
+                        child: Text(
+                      "${checkCartforItem(widget.id)["quantity"]}",
+                      style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black),
+                    ))),
+              )
+            ],
           )
-        ),
-        Positioned(
-          right: 30,
-          top: 28,
-          child: Container(
-              width:40.0,
-              height:20.0,
-              decoration: BoxDecoration(
-                  shape: BoxShape.rectangle,
-                  border: Border.all(width: 1.5)),
-              child: Center(child:
-              Text(
-                "${checkCartforItem(widget.id)["quantity"]}",
-                style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black
-                ),
-              ))),
-        )
-
-      ],
-    ) :
-    Padding(
-        padding: EdgeInsets.all(15),
-        child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Text(
-            "- - - - -   ADDED TO CART   - - - - -",
-            style: TextStyle(
-                color: Colors.lightGreenAccent
-            ),
-          ),
-          const SizedBox(height: 10.0),
-          ListView.separated(
-              primary: true,
-              shrinkWrap: true,
-              itemCount: widget.choices.length,
-              physics: ClampingScrollPhysics(),
-              itemBuilder:(_, index) {
-                return  widget.choices[index]["isAvailable"] ? (checkCartforChoice(checkCartforItem(widget.id), widget.choices[index]["label"]) == "-1" ?
-                TextButton(
-                  style:TextButton.styleFrom( //<-- SEE HERE
-                      side: BorderSide(width: 1.0, color: Colors.lightGreenAccent),
-                      backgroundColor: null,
-                      foregroundColor: Colors.lightGreenAccent,
-                      alignment: Alignment.center
+        : Padding(
+            padding: EdgeInsets.all(15),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  Text(
+                    "- - - - -   ADDED TO CART   - - - - -",
+                    style: TextStyle(color: Colors.lightGreen),
                   ),
-                  onPressed: () {
-                    setupCartListWithChoice(widget.choices[index]["label"]);
-                    setState(() {});
-                  },
-                  child: Text('${widget.choices[index]["label"]}'),
-                ) : Stack(
-                  children: <Widget>[
-                    Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: <Widget>[
-                              GestureDetector(
-                                  onHorizontalDragEnd: (_){
-                                    deleteChoiceInCart(widget.id, widget.title, widget.choices[index]["label"]);
-                                    setState(() {});
-                                  },
-                              child: TextButton(
-                                style:TextButton.styleFrom( //<-- SEE HERE
-                                    side: BorderSide(width: 1.0, color: Colors.lightGreenAccent),
-                                    backgroundColor: Colors.lightGreenAccent,
-                                    foregroundColor: Colors.black,
-                                    alignment: Alignment.centerLeft
-                                ),
-                                onPressed: () {
-                                  setupCartListWithChoice(widget.choices[index]["label"]);
-                                  setState(() {});
-                                },
-                                child: Padding(padding:EdgeInsets.only(left: 10), child:Text("${widget.choices[index]["label"]}")),
-
-                              )
-                              ),
-                            ]
-                        ),
-                    Positioned(
-                      right: 15,
-                      top: 15,
-                      child: Container(
-                          width:40.0,
-                          height:20.0,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.rectangle,
-                              border: Border.all(width: 1.5)),
-                          child: Center(child:
-                          Text(
-                            "${checkCartforChoice(checkCartforItem(widget.id), widget.choices[index]["label"])}",
-                            style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black
-                            ),
-                          ))),
-                    )
-                  ],
-                )):SizedBox();
-              },
-              separatorBuilder: (_, index) {
-                return SizedBox(height: 5,);
-              }
-          )
-
-        ]
-    )
-    );
+                  const SizedBox(height: 10.0),
+                  ListView.separated(
+                      primary: true,
+                      shrinkWrap: true,
+                      itemCount: widget.choices.length,
+                      physics: ClampingScrollPhysics(),
+                      itemBuilder: (_, index) {
+                        return widget.choices[index]["isAvailable"]
+                            ? (checkCartforChoice(checkCartforItem(widget.id),
+                                        widget.choices[index]["label"]) ==
+                                    "-1"
+                                ? TextButton(
+                                    style: TextButton.styleFrom(
+                                        //<-- SEE HERE
+                                        side: BorderSide(
+                                            width: 1.0,
+                                            color: Colors.lightGreen),
+                                        backgroundColor: null,
+                                        foregroundColor: Colors.lightGreen,
+                                        alignment: Alignment.center),
+                                    onPressed: () {
+                                      setupCartListWithChoice(
+                                          widget.choices[index]["label"]);
+                                      setState(() {});
+                                    },
+                                    child: Text(
+                                        '${widget.choices[index]["label"]}'),
+                                  )
+                                : Stack(
+                                    children: <Widget>[
+                                      Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.stretch,
+                                          children: <Widget>[
+                                            GestureDetector(
+                                                onHorizontalDragEnd: (_) {
+                                                  deleteChoiceInCart(
+                                                      widget.id,
+                                                      widget.title,
+                                                      widget.choices[index]
+                                                          ["label"]);
+                                                  setState(() {});
+                                                },
+                                                child: TextButton(
+                                                  style: TextButton.styleFrom(
+                                                      //<-- SEE HERE
+                                                      side: BorderSide(
+                                                          width: 1.0,
+                                                          color: Colors
+                                                              .lightGreen),
+                                                      backgroundColor:
+                                                          Colors.lightGreen,
+                                                      foregroundColor:
+                                                          Colors.black,
+                                                      alignment:
+                                                          Alignment.centerLeft),
+                                                  onPressed: () {
+                                                    setupCartListWithChoice(
+                                                        widget.choices[index]
+                                                            ["label"]);
+                                                    setState(() {});
+                                                  },
+                                                  child: Padding(
+                                                      padding: EdgeInsets.only(
+                                                          left: 10),
+                                                      child: Text(
+                                                          "${widget.choices[index]["label"]}")),
+                                                )),
+                                          ]),
+                                      Positioned(
+                                        right: 15,
+                                        top: 15,
+                                        child: Container(
+                                            width: 40.0,
+                                            height: 20.0,
+                                            decoration: BoxDecoration(
+                                                shape: BoxShape.rectangle,
+                                                border: Border.all(width: 1.5)),
+                                            child: Center(
+                                                child: Text(
+                                              "${checkCartforChoice(checkCartforItem(widget.id), widget.choices[index]["label"])}",
+                                              style: TextStyle(
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black),
+                                            ))),
+                                      )
+                                    ],
+                                  ))
+                            : SizedBox();
+                      },
+                      separatorBuilder: (_, index) {
+                        return SizedBox(
+                          height: 5,
+                        );
+                      })
+                ]));
   }
 
   checkCartforChoice(data, choice) {
@@ -325,64 +339,63 @@ class _MenuItemState extends State<MenuItems> {
 
   buildSelect(List choices) {
     return Padding(
-      padding: EdgeInsets.all(15),
-      child: choices.length == 0 ?
-      Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            TextButton(
-              style:TextButton.styleFrom( //<-- SEE HERE
-                  side: BorderSide(width: 1.0, color: Colors.lightGreenAccent),
-                  backgroundColor: null,
-                  foregroundColor: Colors.lightGreenAccent,
-                  alignment: Alignment.center
-              ),
-              onPressed: () {
-                setupCartList();
-                setState(() {});
-              },
-              child: Text('ADD TO CART'),
-            ),
-          ]
-      ) :
-      Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Text(
-                "- - - - -   ADD TO CART   - - - - -",
-              style: TextStyle(
-                color: Colors.lightGreenAccent
-              ),
-            ),
-            const SizedBox(height: 10.0),
-            ListView.separated(
-                primary: true,
-                shrinkWrap: true,
-                itemCount: widget.choices.length,
-                physics: ClampingScrollPhysics(),
-                itemBuilder:(_, index) {
-                  return  widget.choices[index]["isAvailable"] ? TextButton(
-                    style:TextButton.styleFrom( //<-- SEE HERE
-                        side: BorderSide(width: 1.0, color: Colors.lightGreenAccent),
-                        backgroundColor: null,
-                        foregroundColor: Colors.lightGreenAccent,
-                        alignment: Alignment.center
+        padding: EdgeInsets.all(15),
+        child: choices.length == 0
+            ? Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: <
+                Widget>[
+                TextButton(
+                  style: TextButton.styleFrom(
+                      //<-- SEE HERE
+                      side: BorderSide(width: 1.0, color: Colors.lightGreen),
+                      backgroundColor: null,
+                      foregroundColor: Colors.lightGreen,
+                      alignment: Alignment.center),
+                  onPressed: () {
+                    setupCartList();
+                    setState(() {});
+                  },
+                  child: Text('ADD TO CART'),
+                ),
+              ])
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                    Text(
+                      "- - - - -   ADD TO CART   - - - - -",
+                      style: TextStyle(color: Colors.lightGreen),
                     ),
-                    onPressed: () {
-                      setupCartListWithChoice(widget.choices[index]["label"]);
-                      setState(() {});
-                    },
-                    child: Text('${widget.choices[index]["label"]}'),
-                  ) : SizedBox();
-                },
-                separatorBuilder: (_, index) {
-                  return SizedBox(height: 5,);
-                }
-            )
-
-          ]
-      )
-    );
+                    const SizedBox(height: 10.0),
+                    ListView.separated(
+                        primary: true,
+                        shrinkWrap: true,
+                        itemCount: widget.choices.length,
+                        physics: ClampingScrollPhysics(),
+                        itemBuilder: (_, index) {
+                          return widget.choices[index]["isAvailable"]
+                              ? TextButton(
+                                  style: TextButton.styleFrom(
+                                      //<-- SEE HERE
+                                      side: BorderSide(
+                                          width: 1.0, color: Colors.lightGreen),
+                                      backgroundColor: null,
+                                      foregroundColor: Colors.lightGreen,
+                                      alignment: Alignment.center),
+                                  onPressed: () {
+                                    setupCartListWithChoice(
+                                        widget.choices[index]["label"]);
+                                    setState(() {});
+                                  },
+                                  child:
+                                      Text('${widget.choices[index]["label"]}'),
+                                )
+                              : SizedBox();
+                        },
+                        separatorBuilder: (_, index) {
+                          return SizedBox(
+                            height: 5,
+                          );
+                        })
+                  ]));
   }
 
   void setupCartListWithChoice(String choice) {
@@ -394,22 +407,16 @@ class _MenuItemState extends State<MenuItems> {
             return;
           }
         }
-        User.dine_in_cart[i]["choices"].add({
-          "choice": choice,
-          "quantity": 1
-        });
+        User.dine_in_cart[i]["choices"].add({"choice": choice, "quantity": 1});
         return;
       }
     }
     Map<String, dynamic> item = {
       "itemid": widget.id,
-      "label":widget.title,
+      "label": widget.title,
       "price": int.parse(widget.price),
       "choices": [
-        {
-          "choice": choice,
-          "quantity": 1
-        }
+        {"choice": choice, "quantity": 1}
       ]
     };
     User.dine_in_cart.add(item);
@@ -425,7 +432,7 @@ class _MenuItemState extends State<MenuItems> {
     }
     Map<String, dynamic> item = {
       "itemid": widget.id,
-      "label" :widget.title,
+      "label": widget.title,
       "price": int.parse(widget.price),
       "choices": null,
       "quantity": 1
@@ -443,28 +450,26 @@ class _MenuItemState extends State<MenuItems> {
         timeInSecForIosWeb: 1,
         backgroundColor: Colors.red,
         textColor: Colors.white,
-        fontSize: 16.0
-    );
+        fontSize: 16.0);
   }
 
   void deleteChoiceInCart(String id, String title, String choice) {
     for (int i = 0; i < User.dine_in_cart.length; i++) {
       if (User.dine_in_cart[i]["itemid"] == id) {
-        if (User.dine_in_cart[i]["choices"].length > 1){
+        if (User.dine_in_cart[i]["choices"].length > 1) {
           for (int j = 0; j < User.dine_in_cart[i]["choices"].length; j++) {
-          if (User.dine_in_cart[i]["choices"][j]["choice"] == choice) {
-            User.dine_in_cart[i]["choices"].removeAt(j);
-            Fluttertoast.showToast(
-                msg: choice + " Removed from Cart!",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
-                timeInSecForIosWeb: 1,
-                backgroundColor: Colors.red,
-                textColor: Colors.white,
-                fontSize: 16.0
-            );
+            if (User.dine_in_cart[i]["choices"][j]["choice"] == choice) {
+              User.dine_in_cart[i]["choices"].removeAt(j);
+              Fluttertoast.showToast(
+                  msg: choice + " Removed from Cart!",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: Colors.red,
+                  textColor: Colors.white,
+                  fontSize: 16.0);
+            }
           }
-        }
         } else {
           User.dine_in_cart.removeAt(i);
           Fluttertoast.showToast(
@@ -474,12 +479,9 @@ class _MenuItemState extends State<MenuItems> {
               timeInSecForIosWeb: 1,
               backgroundColor: Colors.red,
               textColor: Colors.white,
-              fontSize: 16.0
-          );
-
+              fontSize: 16.0);
         }
       }
     }
-
   }
 }

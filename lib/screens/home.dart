@@ -11,13 +11,12 @@ import 'package:curry_virunthu_app/widgets/slide_item.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class Home extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         FocusScopeNode currentFocus = FocusScope.of(context);
-        if(!currentFocus.hasPrimaryFocus){
+        if (!currentFocus.hasPrimaryFocus) {
           currentFocus.unfocus();
         }
       },
@@ -39,7 +38,7 @@ class Home extends StatelessWidget {
               buildCategoriesHeadingRow(context),
               const SizedBox(height: 10.0),
               buildCategoryList(context),
-              const  SizedBox(height: 40.0),
+              const SizedBox(height: 40.0),
             ],
           ),
         ),
@@ -84,7 +83,8 @@ class Home extends StatelessWidget {
 
   buildMenuList(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance.collection('item')
+      stream: FirebaseFirestore.instance
+          .collection('item')
           .where("isAvailable", isEqualTo: true)
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -95,7 +95,7 @@ class Home extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Text("Loading ...");
         }
-        return Container(
+        return SizedBox(
           height: MediaQuery.of(context).size.height / 6,
           child: ListView(
             primary: false,
@@ -103,26 +103,23 @@ class Home extends StatelessWidget {
             shrinkWrap: true,
             children: snapshot.data!.docs
                 .map((DocumentSnapshot document) {
-              Map<String, dynamic> product =
-              document.data()! as Map<String, dynamic>;
-              String id = document.id;
-              return GestureDetector (
-                child: ProductItem(
-                    prod: product
-                ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (BuildContext context) {
-                        return ProductView(product, id);
-                      },
-                    ),
+                  Map<String, dynamic> product =
+                      document.data()! as Map<String, dynamic>;
+                  String id = document.id;
+                  return GestureDetector(
+                    child: ProductItem(prod: product),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) {
+                            return ProductView(product, id);
+                          },
+                        ),
+                      );
+                    },
                   );
-                },
-              );
-
-            })
+                })
                 .toList()
                 .cast(),
           ),
@@ -135,9 +132,7 @@ class Home extends StatelessWidget {
 
   buildSearchBar(BuildContext context) {
     return Container(
-        margin: const EdgeInsets.fromLTRB(10, 5, 10, 0),
-        child: SearchCard()
-    );
+        margin: const EdgeInsets.fromLTRB(10, 5, 10, 0), child: SearchCard());
   }
 
   //TRENDING
@@ -177,7 +172,8 @@ class Home extends StatelessWidget {
 
   buildTrendingList(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance.collection('item')
+      stream: FirebaseFirestore.instance
+          .collection('item')
           .orderBy("buyCount", descending: true)
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -197,45 +193,43 @@ class Home extends StatelessWidget {
             shrinkWrap: true,
             children: snapshot.data!.docs
                 .map((DocumentSnapshot document) {
-              Map<String, dynamic> trend =
-              document.data()! as Map<String, dynamic>;
-              String id = document.id;
-              return GestureDetector (
-                child: Padding(
-                    padding: const EdgeInsets.only(right: 10.0),
-                    child: SlideItem(
-                      img: trend["img"],
-                      title: trend["label"],
-                      desc: trend["description"],
-                      buyCount: trend["buyCount"],
-                      isAvailable: trend["isAvailable"],
-                      price: trend["price"],
-                    )
-                ),
-                onTap: () {
-                  if (trend["isAvailable"]) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (BuildContext context) {
-                          return ProductView(trend, id);
-                        },
-                      ),
-                    );
-                  } else {
-                    Fluttertoast.showToast(
-                        msg: "Sorry, This item is sold out",
-                        toastLength: Toast.LENGTH_LONG,
-                        gravity: ToastGravity.TOP,
-                        timeInSecForIosWeb: 1,
-                        backgroundColor: Colors.lightGreenAccent,
-                        textColor: Colors.black,
-                        fontSize: 16.0
-                    );
-                  }
-                },
-              );
-            })
+                  Map<String, dynamic> trend =
+                      document.data()! as Map<String, dynamic>;
+                  String id = document.id;
+                  return GestureDetector(
+                    child: Padding(
+                        padding: const EdgeInsets.only(right: 10.0),
+                        child: SlideItem(
+                          img: trend["img"],
+                          title: trend["label"],
+                          desc: trend["description"],
+                          buyCount: trend["buyCount"],
+                          isAvailable: trend["isAvailable"],
+                          price: trend["price"],
+                        )),
+                    onTap: () {
+                      if (trend["isAvailable"]) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) {
+                              return ProductView(trend, id);
+                            },
+                          ),
+                        );
+                      } else {
+                        Fluttertoast.showToast(
+                            msg: "Sorry, This item is sold out",
+                            toastLength: Toast.LENGTH_LONG,
+                            gravity: ToastGravity.TOP,
+                            timeInSecForIosWeb: 1,
+                            backgroundColor: Colors.lightGreenAccent,
+                            textColor: Colors.black,
+                            fontSize: 16.0);
+                      }
+                    },
+                  );
+                })
                 .toList()
                 .cast(),
           ),
@@ -246,7 +240,7 @@ class Home extends StatelessWidget {
 
   //CATEGORY
 
-  buildCategoriesHeadingRow(BuildContext context)  {
+  buildCategoriesHeadingRow(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
@@ -281,7 +275,8 @@ class Home extends StatelessWidget {
 
   buildCategoryList(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance.collection('category')
+      stream: FirebaseFirestore.instance
+          .collection('category')
           .orderBy("orderId")
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -300,13 +295,11 @@ class Home extends StatelessWidget {
             shrinkWrap: true,
             children: snapshot.data!.docs
                 .map((DocumentSnapshot document) {
-              Map<String, dynamic> category =
-              document.data()! as Map<String, dynamic>;
-              String id = document.id;
-              return CategoryItem(
-                  cat: category
-              );
-            })
+                  Map<String, dynamic> category =
+                      document.data()! as Map<String, dynamic>;
+                  String id = document.id;
+                  return CategoryItem(cat: category);
+                })
                 .toList()
                 .cast(),
           ),

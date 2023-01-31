@@ -9,14 +9,13 @@ class SlideItem extends StatefulWidget {
   final bool isAvailable;
   final String price;
 
-  SlideItem({
-    required this.img,
-    required this.title,
-    required this.desc,
-    required this.buyCount,
-    required this.isAvailable,
-    required this.price
-  });
+  SlideItem(
+      {required this.img,
+      required this.title,
+      required this.desc,
+      required this.buyCount,
+      required this.isAvailable,
+      required this.price});
 
   @override
   _SlideItemState createState() => _SlideItemState();
@@ -66,10 +65,9 @@ class _SlideItemState extends State<SlideItem> {
                             Text(
                               "A\$ ${widget.price}",
                               style: const TextStyle(
-                                fontSize: 20.0,
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold
-                              ),
+                                  fontSize: 20.0,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
                             ),
                           ],
                         ),
@@ -114,7 +112,9 @@ class _SlideItemState extends State<SlideItem> {
                           widget.isAvailable == true ? 'AVAILABLE' : "SOLD OUT",
                           style: TextStyle(
                             fontSize: 12.0,
-                            color: widget.isAvailable == true ? Colors.lightGreenAccent : Colors.deepOrange,
+                            color: widget.isAvailable == true
+                                ? Colors.lightGreenAccent
+                                : Colors.deepOrange,
                             fontWeight: FontWeight.bold,
                           ),
                         ),

@@ -8,7 +8,6 @@ import 'package:curry_virunthu_app/screens/home.dart';
 import 'package:curry_virunthu_app/screens/profile.dart';
 import 'package:curry_virunthu_app/screens/today_menu.dart';
 
-
 class MainScreen extends StatefulWidget {
   final int page;
 
@@ -33,7 +32,7 @@ class _MainScreenState extends State<MainScreen> {
   ];
 
   List pages = [
-    Home(), 
+    Home(),
     Menu(),
     Cart(),
     Notify(),
@@ -42,17 +41,13 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Timer(
-        Duration(seconds: 0),
-            () => {
-            _pageController.jumpToPage(_page)
-        });
+    Timer(Duration(seconds: 0), () => {_pageController.jumpToPage(_page)});
     return Scaffold(
       body: PageView(
         physics: NeverScrollableScrollPhysics(),
         controller: _pageController,
         onPageChanged: onPageChanged,
-        children: List.generate(5, (index) =>  pages[index] ),
+        children: List.generate(5, (index) => pages[index]),
       ),
       bottomNavigationBar: BottomAppBar(
         color: Theme.of(context).primaryColor,
@@ -80,7 +75,6 @@ class _MainScreenState extends State<MainScreen> {
         onPressed: () => _pageController.jumpToPage(2),
       ),
     );
-
   }
 
   // void navigationTapped(int page) {
@@ -107,7 +101,8 @@ class _MainScreenState extends State<MainScreen> {
 
   buildTabIcon(int index) {
     return Container(
-      margin: EdgeInsets.fromLTRB( index == 3 ? 30 : 0, 0,  index == 1 ? 30 : 0, 0),
+      margin:
+          EdgeInsets.fromLTRB(index == 3 ? 30 : 0, 0, index == 1 ? 30 : 0, 0),
       child: IconButton(
         icon: Icon(
           icons[index],

@@ -9,14 +9,13 @@ class TrendingItem extends StatefulWidget {
   final bool isAvailable;
   final String price;
 
-  TrendingItem({
-    required this.img,
-    required this.title,
-    required this.desc,
-    required this.buyCount,
-    required this.isAvailable,
-    required this.price
-  });
+  TrendingItem(
+      {required this.img,
+      required this.title,
+      required this.desc,
+      required this.buyCount,
+      required this.isAvailable,
+      required this.price});
 
   @override
   _TrendingItemState createState() => _TrendingItemState();

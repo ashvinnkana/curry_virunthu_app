@@ -1,4 +1,3 @@
-
 import 'dart:async';
 
 import 'package:curry_virunthu_app/util/user.dart';
@@ -23,18 +22,18 @@ class _ProductViewState extends State<ProductView> {
   final String item_id;
   final Map<String, dynamic> product;
   int currentChoice = 0;
-  dynamic  quantity = 1;
+  dynamic quantity = 1;
 
   _ProductViewState(this.product, this.item_id);
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 30, 30, 30),
       appBar: AppBar(
         elevation: 0.0,
-        title: Text(product['label'].toString().toUpperCase().replaceAll("", " ")),
+        title:
+            Text(product['label'].toString().toUpperCase().replaceAll("", " ")),
         centerTitle: true,
         backgroundColor: Color.fromARGB(255, 123, 152, 60),
       ),
@@ -52,8 +51,7 @@ class _ProductViewState extends State<ProductView> {
                       child: Image.network(
                         "${product["img"]}",
                         fit: BoxFit.cover,
-                      )
-                  ),
+                      )),
                   Container(
                     decoration: const BoxDecoration(
                       gradient: LinearGradient(
@@ -98,88 +96,72 @@ class _ProductViewState extends State<ProductView> {
                   ),
                 ],
               ),
-
               const SizedBox(height: 20.0),
               const Padding(
-                  padding:  EdgeInsets.only(left: 20.0),
+                  padding: EdgeInsets.only(left: 20.0),
                   child: Text(
                     "Price",
-                    style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold
-                    ),
-                  )
-              ),
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                  )),
               const SizedBox(height: 5.0),
               Padding(
-                  padding:  const EdgeInsets.only(left: 20.0),
+                  padding: const EdgeInsets.only(left: 20.0),
                   child: Text(
                     "A\$ ${product["price"]}",
                     style: const TextStyle(
                         fontSize: 40,
                         fontWeight: FontWeight.bold,
-                        color: Colors.lightGreenAccent
-                    ),
-                  )
-              ),
+                        color: Colors.lightGreenAccent),
+                  )),
               const SizedBox(height: 20.0),
               Padding(
-                  padding:  const EdgeInsets.only(left: 20.0, right: 10.0),
+                  padding: const EdgeInsets.only(left: 20.0, right: 10.0),
                   child: Text(
                     "${product["description"]}",
-                    style: const TextStyle(
-                        fontSize: 15
-                    ),
-                  )
-              ),
+                    style: const TextStyle(fontSize: 15),
+                  )),
               const SizedBox(height: 20.0),
-              const Divider(
-                  color: Colors.white
-              ),
+              const Divider(color: Colors.white),
               const SizedBox(height: 20.0),
-              product["choices"].length != 0 ?
-               Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  const Padding(
-                      padding:  EdgeInsets.only(left: 20.0),
-                      child: Text(
-                        "Pick your choice",
-                        style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.lightGreen
-                        ),
-                      )
-                  ),
-                  const SizedBox(height: 10.0),
-                  Padding(
-                      padding:  const EdgeInsets.only(left: 20.0, right: 20.0),
-                      child: listItemChoice()
-                  ),
-                  const SizedBox(height: 20.0),
-                ],
-              ) :
-              SizedBox(),
-
+              product["choices"].length != 0
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        const Padding(
+                            padding: EdgeInsets.only(left: 20.0),
+                            child: Text(
+                              "Pick your choice",
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.lightGreen),
+                            )),
+                        const SizedBox(height: 10.0),
+                        Padding(
+                            padding:
+                                const EdgeInsets.only(left: 20.0, right: 20.0),
+                            child: listItemChoice()),
+                        const SizedBox(height: 20.0),
+                      ],
+                    )
+                  : SizedBox(),
               const Padding(
-                  padding:  EdgeInsets.only(left: 20.0),
+                  padding: EdgeInsets.only(left: 20.0),
                   child: Text(
                     "Quantity",
                     style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
-                        color: Colors.lightGreen
-                    ),
-                  )
-              ),
+                        color: Colors.lightGreen),
+                  )),
               const SizedBox(height: 20.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   QuantityInput(
-                      value: quantity,
-                      onChanged: (value) => setState(() => quantity = int.parse(value.replaceAll(',', ''))),
+                    value: quantity,
+                    onChanged: (value) => setState(
+                        () => quantity = int.parse(value.replaceAll(',', ''))),
                     minValue: 1,
                     buttonColor: Color.fromARGB(255, 68, 67, 67),
                   ),
@@ -187,49 +169,50 @@ class _ProductViewState extends State<ProductView> {
               ),
               const SizedBox(height: 30.0),
               Padding(
-                  padding:  const EdgeInsets.only(left: 70.0, right: 70.0),
-                  child: GradientSlideToAct(
-                    text: "ADD TO CART",
-                    width: 400,
-                    dragableIconBackgroundColor: Color.fromARGB(255, 148, 182, 117),
-                    textStyle: TextStyle(color: Colors.black,fontSize: 15),
-                    backgroundColor: Color.fromARGB(255, 148, 182, 117),
-                    onSubmit: (){
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (BuildContext context) {
-                            HapticFeedback.heavyImpact();
-                            SystemSound.play(SystemSoundType.click);
+                padding: const EdgeInsets.only(left: 70.0, right: 70.0),
+                child: GradientSlideToAct(
+                  text: "ADD TO CART",
+                  width: 400,
+                  dragableIconBackgroundColor:
+                      Color.fromARGB(255, 148, 182, 117),
+                  textStyle: TextStyle(color: Colors.black, fontSize: 15),
+                  backgroundColor: Color.fromARGB(255, 148, 182, 117),
+                  onSubmit: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) {
+                          HapticFeedback.heavyImpact();
+                          SystemSound.play(SystemSoundType.click);
 
-                            product["choices"].length != 0 ?
-                              setupCartListWithChoice() :
-                                setupCartListWithoutChoice();
-                            FirebaseFirestore.instance.collection("customer").doc(User.user_id)
-                            .update({"dineInCart": User.dine_in_cart})
-                                .then((value) => print("Cart Updated"))
-                                .catchError((error) => print("Failed to update user: $error"));
+                          product["choices"].length != 0
+                              ? setupCartListWithChoice()
+                              : setupCartListWithoutChoice();
+                          FirebaseFirestore.instance
+                              .collection("customer")
+                              .doc(User.user_id)
+                              .update({"dineInCart": User.dine_in_cart})
+                              .then((value) => print("Cart Updated"))
+                              .catchError((error) =>
+                                  print("Failed to update user: $error"));
 
-                            return AddToCart();
-                          },
-                        ),
-                      );
-                    },
-                    gradient:  const LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          Color(0Xff11998E),
-                          Color(0Xff38EF7D),
-                        ]
-                    ),
-                  ),
+                          return AddToCart();
+                        },
+                      ),
+                    );
+                  },
+                  gradient: const LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Color(0Xff11998E),
+                        Color(0Xff38EF7D),
+                      ]),
+                ),
               ),
-              const SizedBox(
-                  height: 20.0),
+              const SizedBox(height: 20.0),
             ],
-          )
-      ),
+          )),
     );
   }
 
@@ -237,8 +220,10 @@ class _ProductViewState extends State<ProductView> {
     for (int i = 0; i < User.dine_in_cart.length; i++) {
       if (User.dine_in_cart[i]["itemid"] == item_id) {
         for (int j = 0; j < User.dine_in_cart[i]["choices"].length; j++) {
-          if (User.dine_in_cart[i]["choices"][j]["choice"] == product["choices"][currentChoice]["label"]) {
-            User.dine_in_cart[i]["choices"][j]["quantity"] = User.dine_in_cart[i]["choices"][j]["quantity"] + quantity;
+          if (User.dine_in_cart[i]["choices"][j]["choice"] ==
+              product["choices"][currentChoice]["label"]) {
+            User.dine_in_cart[i]["choices"][j]["quantity"] =
+                User.dine_in_cart[i]["choices"][j]["quantity"] + quantity;
             return;
           }
         }
@@ -267,7 +252,8 @@ class _ProductViewState extends State<ProductView> {
   void setupCartListWithoutChoice() {
     for (int i = 0; i < User.dine_in_cart.length; i++) {
       if (User.dine_in_cart[i]["itemid"] == item_id) {
-        User.dine_in_cart[i]["quantity"] = User.dine_in_cart[i]["quantity"] + quantity;
+        User.dine_in_cart[i]["quantity"] =
+            User.dine_in_cart[i]["quantity"] + quantity;
         return;
       }
     }
@@ -285,103 +271,98 @@ class _ProductViewState extends State<ProductView> {
 
   listItemChoice() {
     return ListView.separated(
-        shrinkWrap: true,
-        physics: ClampingScrollPhysics(),
-        itemBuilder:(_, index) {
-          if (product["choices"][index]["isAvailable"]) {
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Radio(
-                    value: index,
-                    groupValue: currentChoice,
-                    onChanged: (flag) {
-                      setState(() {
-                        currentChoice = index;
-                      });
-                    }
+      shrinkWrap: true,
+      physics: ClampingScrollPhysics(),
+      itemBuilder: (_, index) {
+        if (product["choices"][index]["isAvailable"]) {
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Radio(
+                  value: index,
+                  groupValue: currentChoice,
+                  onChanged: (flag) {
+                    setState(() {
+                      currentChoice = index;
+                    });
+                  }),
+              Expanded(
+                child: Text(
+                  product["choices"][index]["label"].toString(),
+                  style: TextStyle(
+                    fontSize: 15.0,
+                  ),
                 ),
-                Expanded(
+              ),
+              Card(
+                margin: EdgeInsets.only(left: 40),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(3.0)),
+                child: Padding(
+                  padding: EdgeInsets.all(4.0),
                   child: Text(
-                    product["choices"][index]["label"].toString(),
+                    product["choices"][index]["isVeg"] == true
+                        ? 'VEG'
+                        : "NON-VEG",
                     style: TextStyle(
-                      fontSize: 15.0,
+                      fontSize: 12.0,
+                      color: product["choices"][index]["isVeg"] == true
+                          ? Colors.lightGreenAccent
+                          : Colors.deepOrange,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
-                Card(
-                  margin: EdgeInsets.only(left: 40),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(3.0)),
-                  child: Padding(
-                    padding: EdgeInsets.all(4.0),
-                    child: Text(
-                      product["choices"][index]["isVeg"] == true
-                          ? 'VEG'
-                          : "NON-VEG",
-                      style: TextStyle(
-                        fontSize: 12.0,
-                        color: product["choices"][index]["isVeg"] == true
-                            ? Colors.lightGreenAccent
-                            : Colors.deepOrange,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            );
-          } else {
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const Padding(
-                    padding:  EdgeInsets.only(left: 15.0, right: 10.0),
-                    child: Text(
-                      "SOLD OUT",
-                      style: TextStyle(
-                          fontSize: 15.0,
-                          color: Colors.red
-                      ),
-                    ),
+              )
+            ],
+          );
+        } else {
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(left: 15.0, right: 10.0),
+                child: Text(
+                  "SOLD OUT",
+                  style: TextStyle(fontSize: 15.0, color: Colors.red),
                 ),
-                Expanded(
+              ),
+              Expanded(
+                child: Text(
+                  product["choices"][index]["label"].toString(),
+                  style: TextStyle(fontSize: 15.0, color: Colors.grey),
+                ),
+              ),
+              Card(
+                margin: EdgeInsets.only(left: 40),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(3.0)),
+                child: Padding(
+                  padding: EdgeInsets.all(4.0),
                   child: Text(
-                    product["choices"][index]["label"].toString(),
+                    product["choices"][index]["isVeg"] == true
+                        ? 'VEG'
+                        : "NON-VEG",
                     style: TextStyle(
-                      fontSize: 15.0,
-                      color: Colors.grey
+                      fontSize: 12.0,
+                      color: product["choices"][index]["isVeg"] == true
+                          ? Colors.lightGreen
+                          : Colors.deepOrange,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
-                Card(
-                  margin: EdgeInsets.only(left: 40),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(3.0)),
-                  child: Padding(
-                    padding: EdgeInsets.all(4.0),
-                    child: Text(
-                      product["choices"][index]["isVeg"] == true
-                          ? 'VEG'
-                          : "NON-VEG",
-                      style: TextStyle(
-                        fontSize: 12.0,
-                        color: product["choices"][index]["isVeg"] == true
-                            ? Colors.lightGreen
-                            : Colors.deepOrange,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            );
-          }
-        },
-        itemCount: product["choices"].length,
-        separatorBuilder: (_, index) {
-          return SizedBox(height: 5,);
-        },);
+              )
+            ],
+          );
+        }
+      },
+      itemCount: product["choices"].length,
+      separatorBuilder: (_, index) {
+        return SizedBox(
+          height: 5,
+        );
+      },
+    );
   }
-
 }
