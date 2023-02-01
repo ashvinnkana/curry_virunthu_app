@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 
 import 'package:curry_virunthu_app/util/const.dart';
 import 'package:curry_virunthu_app/screens/main_screen.dart';
+import 'package:curry_virunthu_app/screens/login.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,9 +24,10 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: Constants.appName,
-      theme: Constants.lightTheme,
+      theme: Constants.darkTheme,
       darkTheme: Constants.darkTheme,
-      home: MainScreen(0),
+      //home: MainScreen(0),
+      home: Login(),
     );
   }
 }

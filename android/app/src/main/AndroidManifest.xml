@@ -2,7 +2,7 @@
     package="com.app.curry_virunthu_app">
     <uses-permission android:name="android.permission.VIBRATE"/>
    <application
-        android:label="curry_virunthu_app"
+        android:label="Curry Virunthu"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

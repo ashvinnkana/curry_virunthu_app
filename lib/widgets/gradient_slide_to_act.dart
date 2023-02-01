@@ -52,7 +52,7 @@ class GradientSlideToAct extends StatefulWidget {
       this.width = 300,
       this.height = 52,
       this.iconSize = 22,
-      this.borderRadius = 52,
+      this.borderRadius = 10,
       required this.text,
       this.textStyle,
       this.dragableIconBackgroundColor,
