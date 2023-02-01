@@ -1,10 +1,12 @@
-import 'dart:ffi';
 
 import 'package:curry_virunthu_app/screens/main_screen.dart';
+import 'package:curry_virunthu_app/screens/otp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '../widgets/gradient_slide_to_act.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Login extends StatefulWidget {
 
@@ -18,6 +20,16 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+
+    FirebaseAuth.instance
+    .authStateChanges()
+    .listen((User? user) {
+      if (user == null) {
+        print("User is currently signed out!");
+      } else {
+        print("User is signed in! : " + user.uid);
+      }
+    });
     return Scaffold(
       body: ListView(
         children: <Widget>[
@@ -85,10 +97,10 @@ class _LoginState extends State<Login> {
                         minWidth: 20,
                         minHeight: 20,
                       ),
-                      child: Center(
+                      child: const Center(
                         child: Text(
                           "W E L C O M E   T O",
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: Colors.grey,
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -128,7 +140,7 @@ class _LoginState extends State<Login> {
           const Padding(
             padding: EdgeInsets.only(left: 20.0, right: 20.0),
             child: Text(
-              "Proceed to explore a delicious Indian Cuisine",
+              "Proceed to explore a delicious Indian and Sri Lankan Cuisine",
               style: TextStyle(
                   fontSize: 15,
                   color: Colors.grey
@@ -161,7 +173,7 @@ class _LoginState extends State<Login> {
                         ),
                       ),
                       const Text(
-                        "  +64     ",
+                        "  +61     ",
                         style: TextStyle(
                             fontSize: 15
                         ),
@@ -170,7 +182,7 @@ class _LoginState extends State<Login> {
                         width: 200,
                         child: TextField(
                           controller: _controller,
-                          keyboardType: TextInputType.number,
+                          keyboardType: TextInputType.phone,
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             labelText: "Phone Number",
@@ -178,7 +190,6 @@ class _LoginState extends State<Login> {
                           ),
 
                           onChanged: (text) => setState(() {
-                            print(text);
                           }),
                         )
                       )
@@ -190,48 +201,74 @@ class _LoginState extends State<Login> {
           const SizedBox(height: 10.0),
           Padding(
           padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-          child: (_controller.text.length > 9 || _controller.text.length < 9) && _controller.text.length != 0 ?
-              Text(
+          child: (_controller.text.length > 9 || _controller.text.length < 9) && _controller.text.isNotEmpty ?
+              const Text(
                   "Valid Phone Number Required!",
                   textAlign: TextAlign.right,
                 style: TextStyle(
                   color: Color.fromARGB(255, 100, 37, 37)
                 ),
               ) : Text("")),
-          const SizedBox(height: 30.0),
+          const SizedBox(height: 20.0),
           Padding(
             padding: const EdgeInsets.only(left: 20.0, right: 20.0),
             child: Stack(
                 children: <Widget>[
-                  GradientSlideToAct(
-                    text: "G E T   S T A R T E D",
-                    width: 400,
-                    dragableIconBackgroundColor:
-                    Color.fromARGB(255, 97, 159, 62),
-                    textStyle: TextStyle(color: Colors.white, fontSize: 15),
-                    backgroundColor: Color.fromARGB(255, 97, 159, 62),
-                    onSubmit: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (BuildContext context) {
-                            HapticFeedback.heavyImpact();
-                            SystemSound.play(SystemSoundType.click);
+                  Center(
+                    child: GradientSlideToAct(
+                      text: "G E T   S T A R T E D",
+                      width: 400,
+                      dragableIconBackgroundColor:
+                      const Color.fromARGB(255, 97, 159, 62),
+                      textStyle: const TextStyle(color: Colors.white, fontSize: 15),
+                      backgroundColor: const Color.fromARGB(255, 97, 159, 62),
+                      onSubmit: () async {
 
-                            return MainScreen(0);
+                        FirebaseAuth auth = FirebaseAuth.instance;
+                        print('+61${_controller.text}');
+                        await auth.verifyPhoneNumber(
+                          phoneNumber: '+61${_controller.text}',
+                          timeout: const Duration(seconds: 10),
+                          verificationCompleted: (PhoneAuthCredential credential) {
+                            Navigator.pushNamed(
+                                  context,'otp'
+                                );
                           },
-                        ),
-                      );
-                    },
-                    gradient: const LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          Color(0Xff11998E),
-                          Color(0Xff38EF7D),
-                        ]),
+                          verificationFailed: (FirebaseAuthException e) {
+                            Fluttertoast.showToast(
+                                msg: e.message.toString(),
+                                toastLength: Toast.LENGTH_LONG,
+                                gravity: ToastGravity.TOP,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: Colors.lightGreenAccent,
+                                textColor: Colors.black,
+                                fontSize: 16.0);
+                          },
+                          codeSent: (String verificationId, int? resendToken) {
+
+                          },
+                          codeAutoRetrievalTimeout: (String verificationId) {},
+                        );
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (BuildContext context) {
+                        //
+                        //       return MainScreen(0);
+                        //     },
+                        //   ),
+                        // );
+                      },
+                      gradient: const LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            Color(0Xff11998E),
+                            Color(0Xff38EF7D),
+                          ]),
+                    ),
                   ),
-                  _controller.text == "" || _controller.text.length > 9 || _controller.text.length < 9  ?
+                  _controller.text == "" && _controller.text.length > 9 && _controller.text.length < 9  ?
                       Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
@@ -250,7 +287,7 @@ class _LoginState extends State<Login> {
                         height: 52,
                         width: MediaQuery.of(context).size.width,
                       ) : Container(),
-                  _controller.text == "" || _controller.text.length > 9 || _controller.text.length < 9  ?
+                  _controller.text == "" && _controller.text.length > 9 && _controller.text.length < 9  ?
                       const Positioned(
                          right: 20,
                           top: 12,
@@ -261,7 +298,8 @@ class _LoginState extends State<Login> {
                       ) : Container()
                 ]
             ),
-          )
+          ),
+          const SizedBox(height: 20.0),
         ],
       ),
     );
