@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:curry_virunthu_app/util/user.dart';
 import 'package:flutter/material.dart';
 import 'package:quantity_input/quantity_input.dart';
@@ -48,10 +49,18 @@ class _ProductViewState extends State<ProductView> {
                   Container(
                       height: MediaQuery.of(context).size.height / 3,
                       width: MediaQuery.of(context).size.width,
-                      child: Image.network(
-                        "${product["img"]}",
-                        fit: BoxFit.cover,
-                      )),
+                      child: CachedNetworkImage(
+                        imageUrl: product["img"],
+                        imageBuilder: (context, imageProvider) => Container(
+                          decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.cover,
+                              )
+                          ),
+                        ),
+                        errorWidget: (context, url, error) => Icon(Icons.error),
+                      ),),
                   Container(
                     decoration: const BoxDecoration(
                       gradient: LinearGradient(

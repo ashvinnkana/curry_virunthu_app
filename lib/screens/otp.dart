@@ -1,13 +1,25 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 
+import 'login.dart';
+import 'main_screen.dart';
+
 class Otp extends StatefulWidget {
 
+  final String verifyId;
+
+  Otp(this.verifyId);
+
   @override
-  _OtpState createState() => _OtpState();
+  _OtpState createState() => _OtpState(this.verifyId);
 }
 
 class _OtpState extends State<Otp> {
+
+  final String verifyId;
+
+  _OtpState(this.verifyId);
 
   @override
   Widget build(BuildContext context) {
@@ -36,21 +48,10 @@ class _OtpState extends State<Otp> {
       ),
     );
 
+    var code = "";
+
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(
-            Icons.arrow_back_ios_rounded,
-            color: Colors.black,
-          ),
-        ),
-        elevation: 0,
-      ),
       body: Container(
         margin: EdgeInsets.only(left: 25, right: 25),
         alignment: Alignment.center,
@@ -59,7 +60,7 @@ class _OtpState extends State<Otp> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(
-                'assets/img1.png',
+                'assets/verify-phone.png',
                 width: 150,
                 height: 150,
               ),
@@ -73,8 +74,8 @@ class _OtpState extends State<Otp> {
               SizedBox(
                 height: 10,
               ),
-              Text(
-                "We need to register your phone without getting started!",
+              const Text(
+                "We need to verify your phone before getting started!",
                 style: TextStyle(
                   fontSize: 16,
                 ),
@@ -91,6 +92,9 @@ class _OtpState extends State<Otp> {
 
                 showCursor: true,
                 onCompleted: (pin) => print(pin),
+                onChanged: (value){
+                  code = value;
+                },
               ),
               SizedBox(
                 height: 20,
@@ -103,22 +107,90 @@ class _OtpState extends State<Otp> {
                         primary: Colors.green.shade600,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10))),
-                    onPressed: () {},
+                    onPressed: () async {
+                      try {
+                        PhoneAuthCredential credential =
+                            PhoneAuthProvider.credential(
+                                verificationId: this.verifyId, smsCode: code);
+
+                        // Sign the user in (or link) with the credential
+                        await FirebaseAuth.instance
+                            .signInWithCredential(credential).then((value) =>
+                        {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext context) {
+
+                                return MainScreen(0);
+                              },
+                            ),
+                          )
+                        }).catchError((onError) =>{
+                          showDialog<void>(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text('Something Went Wrong'),
+                                content: const Text('Invalid OTP, Login Failed'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    style: TextButton.styleFrom(
+                                      textStyle: Theme.of(context).textTheme.labelLarge,
+                                    ),
+                                    child: const Text('Okay'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          )
+                        });
+                      } catch (e) {
+                        showDialog<void>(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('Something Went Wrong'),
+                              content: const Text('Invalid OTP, Login Failed'),
+                              actions: <Widget>[
+                                TextButton(
+                                  style: TextButton.styleFrom(
+                                    textStyle: Theme.of(context).textTheme.labelLarge,
+                                  ),
+                                  child: const Text('Okay'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
+                    },
                     child: Text("Verify Phone Number")),
               ),
               Row(
                 children: [
+                  Text("SMS sent to +64 415561457"),
                   TextButton(
                       onPressed: () {
-                        Navigator.pushNamedAndRemoveUntil(
+                        Navigator.push(
                           context,
-                          'phone',
-                              (route) => false,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) {
+
+                              return Login();
+                            },
+                          ),
                         );
                       },
                       child: Text(
                         "Edit Phone Number ?",
-                        style: TextStyle(color: Colors.black),
+                        style: TextStyle(color: Colors.blue),
                       ))
                 ],
               )

@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class CategoryItem extends StatelessWidget {
   final Map cat;
@@ -16,11 +16,20 @@ class CategoryItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(8.0),
         child: Stack(
           children: <Widget>[
-            Image.network(
-              cat["img"],
+            CachedNetworkImage(
+              imageUrl: cat["img"],
+              imageBuilder: (context, imageProvider) => Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: imageProvider,
+                      fit: BoxFit.cover,
+                  )
+                ),
+              ),
+
+              errorWidget: (context, url, error) => Icon(Icons.error),
               height: MediaQuery.of(context).size.height / 6,
               width: MediaQuery.of(context).size.height / 6,
-              fit: BoxFit.cover,
             ),
             Container(
               decoration: const BoxDecoration(

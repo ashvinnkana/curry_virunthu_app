@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:curry_virunthu_app/util/user.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -51,9 +52,17 @@ class _MenuItemState extends State<MenuItems> {
                             topLeft: Radius.circular(10.0),
                             topRight: Radius.circular(10.0),
                           ),
-                          child: Image.network(
-                            "${widget.img}",
-                            fit: BoxFit.cover,
+                          child: CachedNetworkImage(
+                            imageUrl: widget.img,
+                            imageBuilder: (context, imageProvider) => Container(
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: imageProvider,
+                                    fit: BoxFit.cover,
+                                  )
+                              ),
+                            ),
+                            errorWidget: (context, url, error) => Icon(Icons.error),
                           ),
                         ),
                       ),

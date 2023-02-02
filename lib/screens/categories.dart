@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -48,12 +49,20 @@ class _CategoriesState extends State<Categories> {
                       borderRadius: BorderRadius.circular(8.0),
                       child: Stack(
                         children: <Widget>[
-                          Image.network(
-                            category['img'],
-                            height: MediaQuery.of(context).size.height,
-                            width: MediaQuery.of(context).size.height,
-                            fit: BoxFit.cover,
+                      CachedNetworkImage(
+                      imageUrl: category["img"],
+                        imageBuilder: (context, imageProvider) => Container(
+                          decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.cover,
+                              )
                           ),
+                        ),
+                        errorWidget: (context, url, error) => Icon(Icons.error),
+                        height: MediaQuery.of(context).size.height,
+                        width: MediaQuery.of(context).size.width
+                      ),
                           Container(
                             decoration: const BoxDecoration(
                               gradient: LinearGradient(
