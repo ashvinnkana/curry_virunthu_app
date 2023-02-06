@@ -42,12 +42,6 @@ class _MyAppState extends State<MyApp> {
       darkTheme: Constants.darkTheme,
       //home: MainScreen(0),
       home: Login(),
-      routes: {
-        // When navigating to the "/" route, build the FirstScreen widget.
-        '/login': (context) => Login(),
-        // When navigating to the "/second" route, build the SecondScreen widget.
-        '/otp': (context) => Otp("null"),
-      },
     );
   }
 }
