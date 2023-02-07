@@ -115,7 +115,7 @@ class _TrendingItemState extends State<TrendingItem> {
               ),
               SizedBox(height: 7.0),
               Padding(
-                padding: EdgeInsets.only(left: 15.0),
+                padding: EdgeInsets.only(left: 15.0, right: 15),
                 child: Container(
                   width: MediaQuery.of(context).size.width,
                   child: Text(

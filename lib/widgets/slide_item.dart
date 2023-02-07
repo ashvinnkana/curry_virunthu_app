@@ -149,11 +149,14 @@ class _SlideItemState extends State<SlideItem> {
               ),
               SizedBox(height: 7.0),
               Padding(
-                padding: EdgeInsets.only(left: 15.0),
+                padding: EdgeInsets.only(left: 15.0, right: 15),
                 child: Container(
-                  width: MediaQuery.of(context).size.width,
+                  height: 45,
                   child: Text(
                     "${widget.desc}",
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 3,
+                    softWrap: false,
                     style: TextStyle(
                       fontSize: 12.0,
                       fontWeight: FontWeight.w300,

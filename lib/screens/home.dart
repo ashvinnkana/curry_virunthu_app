@@ -10,6 +10,8 @@ import 'package:curry_virunthu_app/widgets/search_card.dart';
 import 'package:curry_virunthu_app/widgets/slide_item.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import 'main_screen.dart';
+
 class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -71,7 +73,7 @@ class Home extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder: (BuildContext context) {
-                  return Categories();
+                  return MainScreen(1);
                 },
               ),
             );

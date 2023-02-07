@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:curry_virunthu_app/screens/notification.dart';
@@ -7,6 +9,8 @@ import 'package:curry_virunthu_app/screens/cart.dart';
 import 'package:curry_virunthu_app/screens/home.dart';
 import 'package:curry_virunthu_app/screens/profile.dart';
 import 'package:curry_virunthu_app/screens/today_menu.dart';
+
+import '../util/user.dart';
 
 class MainScreen extends StatefulWidget {
   final int page;
@@ -42,7 +46,11 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     Timer(Duration(seconds: 0), () => {_pageController.jumpToPage(_page)});
-    return Scaffold(
+    return WillPopScope(
+        onWillPop: () async {
+      return false;
+    },
+    child:Scaffold(
       body: PageView(
         physics: NeverScrollableScrollPhysics(),
         controller: _pageController,
@@ -74,6 +82,7 @@ class _MainScreenState extends State<MainScreen> {
         ),
         onPressed: () => _pageController.jumpToPage(2),
       ),
+    )
     );
   }
 
@@ -96,7 +105,19 @@ class _MainScreenState extends State<MainScreen> {
   void onPageChanged(int page) {
     setState(() {
       _page = page;
+      FirebaseFirestore.instance
+          .collection("customer")
+          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .update({"dineInCart": CurrentUser.dine_in_cart})
+          .then((value) => {
+        print("Cart Updated")
+
+      })
+          .catchError((error) =>
+          print("Failed to update cart: $error"));
     });
+
+
   }
 
   buildTabIcon(int index) {

@@ -21,7 +21,7 @@ class Cart extends StatelessWidget {
         body: SingleChildScrollView(
             child: Padding(
                 padding: const EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 20.0),
-                child: User.dine_in_cart.isEmpty
+                child: CurrentUser.dine_in_cart.isEmpty
                     ? buildEmptyCart(context)
                     : buildListCart(context))));
   }
@@ -38,16 +38,16 @@ class Cart extends StatelessWidget {
 
   findTotal() {
     int total = 0;
-    for (int i = 0; i < User.dine_in_cart.length; i++) {
-      if (User.dine_in_cart[i]["choices"] == null) {
+    for (int i = 0; i < CurrentUser.dine_in_cart.length; i++) {
+      if (CurrentUser.dine_in_cart[i]["choices"] == null) {
         total = (total +
-            (User.dine_in_cart[i]["quantity"] *
-                User.dine_in_cart[i]["price"])) as int;
+            (CurrentUser.dine_in_cart[i]["quantity"] *
+                CurrentUser.dine_in_cart[i]["price"])) as int;
       } else {
-        for (int j = 0; j < User.dine_in_cart[i]["choices"].length; j++) {
+        for (int j = 0; j < CurrentUser.dine_in_cart[i]["choices"].length; j++) {
           total = (total +
-              (User.dine_in_cart[i]["choices"][j]["quantity"] *
-                  User.dine_in_cart[i]["price"])) as int;
+              (CurrentUser.dine_in_cart[i]["choices"][j]["quantity"] *
+                  CurrentUser.dine_in_cart[i]["price"])) as int;
         }
       }
     }
@@ -60,31 +60,31 @@ class Cart extends StatelessWidget {
           child: ListView.separated(
               primary: false,
               shrinkWrap: true,
-              itemCount: User.dine_in_cart.length,
+              itemCount: CurrentUser.dine_in_cart.length,
               physics: const ClampingScrollPhysics(),
               itemBuilder: (_, index) {
                 return Padding(
                     padding: const EdgeInsets.only(left: 15.0, right: 15.0),
-                    child: User.dine_in_cart[index]["choices"] == null
+                    child: CurrentUser.dine_in_cart[index]["choices"] == null
                         ? CartItem(
-                            price: User.dine_in_cart[index]["price"],
-                            itemid: User.dine_in_cart[index]["itemid"],
-                            label: User.dine_in_cart[index]["label"],
-                            quantity: User.dine_in_cart[index]["quantity"])
+                            price: CurrentUser.dine_in_cart[index]["price"],
+                            itemid: CurrentUser.dine_in_cart[index]["itemid"],
+                            label: CurrentUser.dine_in_cart[index]["label"],
+                            quantity: CurrentUser.dine_in_cart[index]["quantity"])
                         : ListView.separated(
                             primary: false,
                             shrinkWrap: true,
                             itemCount:
-                                User.dine_in_cart[index]["choices"].length,
+                                CurrentUser.dine_in_cart[index]["choices"].length,
                             physics: const ClampingScrollPhysics(),
                             itemBuilder: (_, index2) {
                               return CartItem(
-                                  price: User.dine_in_cart[index]["price"],
-                                  itemid: User.dine_in_cart[index]
+                                  price: CurrentUser.dine_in_cart[index]["price"],
+                                  itemid: CurrentUser.dine_in_cart[index]
                                       ["itemid"],
-                                  label: User.dine_in_cart[index]["choices"]
+                                  label: CurrentUser.dine_in_cart[index]["choices"]
                                       [index2]["choice"],
-                                  quantity: User.dine_in_cart[index]
+                                  quantity: CurrentUser.dine_in_cart[index]
                                       ["choices"][index2]["quantity"]);
                             },
                             separatorBuilder: (_, index) {

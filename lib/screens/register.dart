@@ -181,7 +181,7 @@ class _RegisterState extends State<Register> {
                         textAlign: TextAlign.right,
                         "Phone Number Verified!",
                         style: TextStyle(
-                            fontSize: 15, color: Color.fromRGBO(
+                            fontSize: 11, color: Color.fromRGBO(
                             127, 180, 15, 1.0)),
                       ),
                     ),
@@ -298,8 +298,8 @@ class _RegisterState extends State<Register> {
                         textAlign: TextAlign.right,
                         "Invalid Email!",
                         style: TextStyle(
-                            fontSize: 15, color: Color.fromRGBO(
-                            215, 22, 22, 1.0)),
+                            fontSize: 11, color: Color.fromRGBO(
+                            231, 75, 75, 1.0)),
                       ),
                     ) : SizedBox(),
                     const SizedBox(height: 20.0),
@@ -354,6 +354,26 @@ class _RegisterState extends State<Register> {
                                     borderRadius:
                                     BorderRadius.circular(5))),
                             onPressed: () {
+                              FirebaseFirestore.instance.collection('customer')
+                              .doc(FirebaseAuth.instance.currentUser?.uid)
+                              .set({
+                                'fname': fname_controller.text,
+                                'lname' : lname_controller.text,
+                                'email' : email_controller.text,
+                                'dineInCart': [],
+                                'mobile' : "+61$phoneNum"
+                              })
+                              .then((value) => {
+                                print("NEW USER REGISTERED SUCCESSFULLY"),
+                              Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                              builder: (BuildContext context) {
+                              return MainScreen(0);
+                              },
+                              ),
+                              )
+                              });
 
                             },
                             icon: Icon(

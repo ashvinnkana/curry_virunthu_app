@@ -1,10 +1,23 @@
 import 'package:curry_virunthu_app/screens/product_view.dart';
+import 'package:curry_virunthu_app/util/user.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../widgets/menu_item.dart';
 
 class Menu extends StatelessWidget {
+
+  Menu() {
+    FirebaseFirestore.instance.collection("customer")
+        .doc(FirebaseAuth.instance.currentUser?.uid)
+        .get()
+        .then((value) => {
+          CurrentUser.dine_in_cart = value["dineInCart"],
+          print(value["dineInCart"])
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

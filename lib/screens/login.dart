@@ -490,7 +490,7 @@ class _LoginState extends State<Login> {
               child: SizedBox(
                 width: MediaQuery.of(context).size.width,
                   child: Text(
-                "S E N D I N G   C O D E\n>>>",
+                "S E N D I N G   C O D E\n. . .",
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               )))
