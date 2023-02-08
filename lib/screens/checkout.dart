@@ -11,16 +11,13 @@ import 'main_screen.dart';
 class Checkout extends StatefulWidget {
   final int total;
 
-  Checkout(this.total);
+  Checkout({ required this.total});
 
   @override
-  _CheckoutState createState() => _CheckoutState(total);
+  _CheckoutState createState() => _CheckoutState();
 }
 
 class _CheckoutState extends State<Checkout> {
-  final int total;
-
-  _CheckoutState(this.total);
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +36,8 @@ class _CheckoutState extends State<Checkout> {
           centerTitle: true,
           backgroundColor: Color.fromARGB(255, 123, 152, 60),
         ),
-        body: Container());
+        body: Container(
+          child: Text("${widget.total}"),
+        ));
   }
 }

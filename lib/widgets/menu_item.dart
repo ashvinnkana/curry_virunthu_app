@@ -516,6 +516,7 @@ class _MenuItemState extends State<MenuItems> {
       "label": widget.title,
       "price": int.parse(widget.price),
       "quantity": 1,
+      "category": widget.category,
       "choices": [
         {"choice": choice, "quantity": 1}
       ]
@@ -536,6 +537,7 @@ class _MenuItemState extends State<MenuItems> {
       "label": widget.title,
       "price": int.parse(widget.price),
       "choices": null,
+      "category": widget.category,
       "quantity": 1
     };
     Temp.dine_in_cart.add(item);

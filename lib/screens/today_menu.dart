@@ -1,6 +1,5 @@
 import 'package:curry_virunthu_app/screens/product_view.dart';
 import 'package:curry_virunthu_app/util/temp.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -29,28 +28,28 @@ class _MenuState extends State<Menu> {
         appBar: AppBar(
           actions: [
         Padding(
-        padding: EdgeInsets.only( right:20, top: 10, bottom: 10),
+        padding: const EdgeInsets.only( right:20, top: 10, bottom: 10),
       child:
       DecoratedBox(
           decoration: BoxDecoration(
-              gradient: LinearGradient(
+              gradient: const LinearGradient(
                   colors: [
                     Color.fromRGBO(0, 0, 0, 1.0),
                     Color.fromRGBO(0, 0, 0, 1.0),
                     //add more colors
                   ]),
               borderRadius: BorderRadius.circular(5),
-              boxShadow: <BoxShadow>[
+              boxShadow: const <BoxShadow>[
                 BoxShadow(
                     color: Color.fromRGBO(0, 0, 0, 0.57), //shadow for button
                     blurRadius: 2) //blur radius of shadow
               ]
           ),
           child: Padding(
-              padding: EdgeInsets.only(left:10, right:10),
+              padding: const EdgeInsets.only(left:10, right:10),
               child:DropdownButton(
                 underline: Container(), //empty line
-                style: TextStyle(fontSize: 12, color: Colors.white),
+                style: const TextStyle(fontSize: 12, color: Colors.white),
                 dropdownColor: Colors.black,
                 iconEnabledColor: Colors.white, //Icon color
                 value: choosen_category,
@@ -72,9 +71,9 @@ class _MenuState extends State<Menu> {
             )
           ],
           automaticallyImplyLeading: false,
-          title: Text("T O D A Y ' S   M E N U",
+          title: const Text("T O D A Y ' S   M E N U",
               style: TextStyle(color: Colors.white)),
-          backgroundColor: Color.fromARGB(255, 123, 152, 60),
+          backgroundColor: const Color.fromARGB(255, 123, 152, 60),
         ),
         body: Padding(
             padding: const EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 20.0),
@@ -115,7 +114,7 @@ class _MenuState extends State<Menu> {
                       return ListView(
                         primary: true,
                         shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
+                        physics: const NeverScrollableScrollPhysics(),
                         children: snapshot.data!.docs
                             .map((DocumentSnapshot document) {
                               Map<String, dynamic> category =
@@ -143,10 +142,10 @@ class _MenuState extends State<Menu> {
     return Column(
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.only(left: 0),
+          padding: const EdgeInsets.only(left: 0),
           child: Text(
-            "${category.toUpperCase().trim().replaceAll("", " ")}",
-            style: TextStyle(
+            category.toUpperCase().trim().replaceAll("", " "),
+            style: const TextStyle(
               fontSize: 15,
             ),
           ),
@@ -180,13 +179,13 @@ class _MenuState extends State<Menu> {
                       width: 2.0,
                     ),
                     borderRadius: BorderRadius.circular(10.0),
-                    gradient: LinearGradient(colors: [
+                    gradient: const LinearGradient(colors: [
                       Color.fromARGB(97, 147, 238, 122),
                       Color.fromARGB(255, 23, 141, 28),
                     ]),
                   ),
-                  padding: EdgeInsets.fromLTRB(20.0, 10, 20.0, 10),
-                  child: Text(
+                  padding: const EdgeInsets.fromLTRB(20.0, 10, 20.0, 10),
+                  child: const Text(
                     "L O A D I N G ...",
                     textAlign: TextAlign.center,
                   ));
@@ -195,7 +194,7 @@ class _MenuState extends State<Menu> {
             var _list = snapshot.data!.docs;
 
             if (_list.isNotEmpty) {
-              return Container(
+              return SizedBox(
                 width: MediaQuery.of(context).size.width,
                 child: Column(
                   children: snapshot.data!.docs
@@ -243,13 +242,13 @@ class _MenuState extends State<Menu> {
                       width: 2.0,
                     ),
                     borderRadius: BorderRadius.circular(10.0),
-                    gradient: LinearGradient(colors: [
+                    gradient: const LinearGradient(colors: [
                       Color.fromARGB(97, 238, 122, 122),
                       Color.fromARGB(255, 246, 82, 82),
                     ]),
                   ),
-                  padding: EdgeInsets.fromLTRB(20.0, 10, 20.0, 10),
-                  child: Text(
+                  padding: const EdgeInsets.fromLTRB(20.0, 10, 20.0, 10),
+                  child: const Text(
                     "SOLD OUT",
                     textAlign: TextAlign.center,
                   ));

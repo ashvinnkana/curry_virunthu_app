@@ -47,7 +47,6 @@ class _CartItemState extends State<CartItem> {
                         "${widget.quantity}",
                         style: TextStyle(
                           fontSize: 15,
-                          fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
                       ))),
@@ -62,7 +61,6 @@ class _CartItemState extends State<CartItem> {
             style: new TextStyle(
               fontSize: 15.0,
               color: Colors.white,
-                fontWeight: FontWeight.bold
             ),
             children: <InlineSpan>[
               new TextSpan(text: "${widget.label}\n"),
@@ -71,8 +69,8 @@ class _CartItemState extends State<CartItem> {
                   child: Container(
                     padding: EdgeInsets.only(top:5.0),
                     child: Text("With ${widget.addon}", style: new TextStyle(
-                      fontSize: 12.0,
-                      color: Colors.orange,
+                      fontSize: 13.0,
+                      color: Colors.yellow,
                     )),
                   )
               )
@@ -80,8 +78,7 @@ class _CartItemState extends State<CartItem> {
           ),
         )),
 
-
-                ],
+               ],
               ),
               Text(
                 "\$${widget.price * widget.quantity}",
