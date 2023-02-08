@@ -17,7 +17,7 @@ class _AddToCartState extends State<AddToCart> {
     Timer(
         const Duration(seconds: 2),
         () => Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (BuildContext context) => MainScreen(1))));
+            builder: (BuildContext context) => MainScreen(1, "All"))));
 
     return Stack(
       children: <Widget>[

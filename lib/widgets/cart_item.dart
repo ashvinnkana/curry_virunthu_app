@@ -6,12 +6,13 @@ class CartItem extends StatefulWidget {
   final String itemid;
   final String label;
   final int quantity;
+  final String addon;
 
   CartItem(
       {required this.price,
       required this.itemid,
       required this.label,
-      required this.quantity});
+      required this.quantity, required this.addon});
 
   @override
   _CartItemState createState() => _CartItemState();
@@ -51,11 +52,35 @@ class _CartItemState extends State<CartItem> {
                         ),
                       ))),
                   const SizedBox(width: 15.0),
-                  Text(
-                    "${widget.label}",
-                    textAlign: TextAlign.left,
-                    style: TextStyle(fontSize: 15),
-                  ),
+
+                  Padding(
+                    padding: EdgeInsets.only(top: 16),
+                    child: RichText(
+          text: new TextSpan(
+            // Note: Styles for TextSpans must be explicitly defined.
+            // Child text spans will inherit styles from parent
+            style: new TextStyle(
+              fontSize: 15.0,
+              color: Colors.white,
+                fontWeight: FontWeight.bold
+            ),
+            children: <InlineSpan>[
+              new TextSpan(text: "${widget.label}\n"),
+              widget.addon == null ? WidgetSpan(child: SizedBox()):
+              WidgetSpan(
+                  child: Container(
+                    padding: EdgeInsets.only(top:5.0),
+                    child: Text("With ${widget.addon}", style: new TextStyle(
+                      fontSize: 12.0,
+                      color: Colors.orange,
+                    )),
+                  )
+              )
+            ],
+          ),
+        )),
+
+
                 ],
               ),
               Text(
@@ -68,7 +93,7 @@ class _CartItemState extends State<CartItem> {
           Divider(
             color: Colors.grey,
           ),
-          const SizedBox(height: 10.0),
+
         ]));
   }
 }

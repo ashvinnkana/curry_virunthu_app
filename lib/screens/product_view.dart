@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:curry_virunthu_app/util/user.dart';
+import 'package:curry_virunthu_app/util/temp.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:quantity_input/quantity_input.dart';
@@ -201,7 +201,7 @@ class _ProductViewState extends State<ProductView> {
                           FirebaseFirestore.instance
                               .collection("customer")
                               .doc(FirebaseAuth.instance.currentUser?.uid)
-                              .update({"dineInCart": CurrentUser.dine_in_cart})
+                              .update({"dineInCart": Temp.dine_in_cart})
                               .then((value) => print("Cart Updated"))
                               .catchError((error) =>
                                   print("Failed to update cart: $error"));
@@ -227,17 +227,17 @@ class _ProductViewState extends State<ProductView> {
   }
 
   void setupCartListWithChoice() {
-    for (int i = 0; i < CurrentUser.dine_in_cart.length; i++) {
-      if (CurrentUser.dine_in_cart[i]["itemid"] == item_id) {
-        for (int j = 0; j < CurrentUser.dine_in_cart[i]["choices"].length; j++) {
-          if (CurrentUser.dine_in_cart[i]["choices"][j]["choice"] ==
+    for (int i = 0; i < Temp.dine_in_cart.length; i++) {
+      if (Temp.dine_in_cart[i]["itemid"] == item_id) {
+        for (int j = 0; j < Temp.dine_in_cart[i]["choices"].length; j++) {
+          if (Temp.dine_in_cart[i]["choices"][j]["choice"] ==
               product["choices"][currentChoice]["label"]) {
-            CurrentUser.dine_in_cart[i]["choices"][j]["quantity"] =
-                CurrentUser.dine_in_cart[i]["choices"][j]["quantity"] + quantity;
+            Temp.dine_in_cart[i]["choices"][j]["quantity"] =
+                Temp.dine_in_cart[i]["choices"][j]["quantity"] + quantity;
             return;
           }
         }
-        CurrentUser.dine_in_cart[i]["choices"].add({
+        Temp.dine_in_cart[i]["choices"].add({
           "choice": product["choices"][currentChoice]["label"],
           "quantity": quantity
         });
@@ -255,15 +255,15 @@ class _ProductViewState extends State<ProductView> {
         }
       ]
     };
-    CurrentUser.dine_in_cart.add(item);
+    Temp.dine_in_cart.add(item);
     return;
   }
 
   void setupCartListWithoutChoice() {
-    for (int i = 0; i < CurrentUser.dine_in_cart.length; i++) {
-      if (CurrentUser.dine_in_cart[i]["itemid"] == item_id) {
-        CurrentUser.dine_in_cart[i]["quantity"] =
-            CurrentUser.dine_in_cart[i]["quantity"] + quantity;
+    for (int i = 0; i < Temp.dine_in_cart.length; i++) {
+      if (Temp.dine_in_cart[i]["itemid"] == item_id) {
+        Temp.dine_in_cart[i]["quantity"] =
+            Temp.dine_in_cart[i]["quantity"] + quantity;
         return;
       }
     }
@@ -275,7 +275,7 @@ class _ProductViewState extends State<ProductView> {
       "quantity": quantity
     };
 
-    CurrentUser.dine_in_cart.add(item);
+    Temp.dine_in_cart.add(item);
     return;
   }
 

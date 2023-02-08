@@ -10,22 +10,24 @@ import 'package:curry_virunthu_app/screens/home.dart';
 import 'package:curry_virunthu_app/screens/profile.dart';
 import 'package:curry_virunthu_app/screens/today_menu.dart';
 
-import '../util/user.dart';
+import '../util/temp.dart';
 
 class MainScreen extends StatefulWidget {
   final int page;
+  final String subPage;
 
-  MainScreen(this.page);
+  MainScreen(this.page, this.subPage);
 
   @override
-  _MainScreenState createState() => _MainScreenState(page);
+  _MainScreenState createState() => _MainScreenState(page, subPage);
 }
 
 class _MainScreenState extends State<MainScreen> {
   late PageController _pageController;
   late int _page;
+  late String subPage;
 
-  _MainScreenState(this._page);
+  _MainScreenState(this._page, this.subPage);
 
   List icons = [
     Icons.home,
@@ -37,7 +39,7 @@ class _MainScreenState extends State<MainScreen> {
 
   List pages = [
     Home(),
-    Menu(),
+    Menu("All"),
     Cart(),
     Notify(),
     Profile(),
@@ -55,7 +57,12 @@ class _MainScreenState extends State<MainScreen> {
         physics: NeverScrollableScrollPhysics(),
         controller: _pageController,
         onPageChanged: onPageChanged,
-        children: List.generate(5, (index) => pages[index]),
+        children: List.generate(5, (index){
+          if (index == 1) {
+            return Menu(subPage);
+          }
+          return pages[index];
+        }),
       ),
       bottomNavigationBar: BottomAppBar(
         color: Theme.of(context).primaryColor,
@@ -108,7 +115,7 @@ class _MainScreenState extends State<MainScreen> {
       FirebaseFirestore.instance
           .collection("customer")
           .doc(FirebaseAuth.instance.currentUser?.uid)
-          .update({"dineInCart": CurrentUser.dine_in_cart})
+          .update({"dineInCart": Temp.dine_in_cart})
           .then((value) => {
         print("Cart Updated")
 

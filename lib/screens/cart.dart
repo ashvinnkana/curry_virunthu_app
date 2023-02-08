@@ -1,12 +1,44 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curry_virunthu_app/screens/checkout.dart';
-import 'package:curry_virunthu_app/util/user.dart';
+import 'package:curry_virunthu_app/util/temp.dart';
 import 'package:curry_virunthu_app/widgets/cart_item.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../widgets/gradient_slide_to_act.dart';
 
 class Cart extends StatelessWidget {
-  const Cart({super.key});
+
+  Cart(){
+  FirebaseFirestore.instance.collection("customer")
+      .doc(FirebaseAuth.instance.currentUser?.uid)
+      .get()
+      .then((value) => {
+        if (value["dineInCart"] != null) {
+          Temp.dine_in_cart = value["dineInCart"]
+        }
+      }).catchError((onError)=> {
+        print(onError.toString())
+  });
+
+
+  FirebaseFirestore.instance
+      .collection('item')
+      .where("category", isEqualTo: "O5ZPchH3c6TEVhjyzeOn")
+      .where("isAvailable", isEqualTo: true)
+      .get()
+      .then((QuerySnapshot querySnapshot) {
+        querySnapshot.docs.forEach((doc) {
+          Temp.curryList.add(doc);
+      });
+      }).catchError((onError)=> {
+        print(onError.toString())
+      });
+
+}
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +53,7 @@ class Cart extends StatelessWidget {
         body: SingleChildScrollView(
             child: Padding(
                 padding: const EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 20.0),
-                child: CurrentUser.dine_in_cart.isEmpty
+                child: Temp.dine_in_cart.isEmpty
                     ? buildEmptyCart(context)
                     : buildListCart(context))));
   }
@@ -38,16 +70,16 @@ class Cart extends StatelessWidget {
 
   findTotal() {
     int total = 0;
-    for (int i = 0; i < CurrentUser.dine_in_cart.length; i++) {
-      if (CurrentUser.dine_in_cart[i]["choices"] == null) {
+    for (int i = 0; i < Temp.dine_in_cart.length; i++) {
+      if (Temp.dine_in_cart[i]["choices"] == null) {
         total = (total +
-            (CurrentUser.dine_in_cart[i]["quantity"] *
-                CurrentUser.dine_in_cart[i]["price"])) as int;
+            (Temp.dine_in_cart[i]["quantity"] *
+                Temp.dine_in_cart[i]["price"])) as int;
       } else {
-        for (int j = 0; j < CurrentUser.dine_in_cart[i]["choices"].length; j++) {
+        for (int j = 0; j < Temp.dine_in_cart[i]["choices"].length; j++) {
           total = (total +
-              (CurrentUser.dine_in_cart[i]["choices"][j]["quantity"] *
-                  CurrentUser.dine_in_cart[i]["price"])) as int;
+              (Temp.dine_in_cart[i]["choices"][j]["quantity"] *
+                  Temp.dine_in_cart[i]["price"])) as int;
         }
       }
     }
@@ -60,31 +92,33 @@ class Cart extends StatelessWidget {
           child: ListView.separated(
               primary: false,
               shrinkWrap: true,
-              itemCount: CurrentUser.dine_in_cart.length,
+              itemCount: Temp.dine_in_cart.length,
               physics: const ClampingScrollPhysics(),
               itemBuilder: (_, index) {
                 return Padding(
                     padding: const EdgeInsets.only(left: 15.0, right: 15.0),
-                    child: CurrentUser.dine_in_cart[index]["choices"] == null
+                    child: Temp.dine_in_cart[index]["choices"] == null
                         ? CartItem(
-                            price: CurrentUser.dine_in_cart[index]["price"],
-                            itemid: CurrentUser.dine_in_cart[index]["itemid"],
-                            label: CurrentUser.dine_in_cart[index]["label"],
-                            quantity: CurrentUser.dine_in_cart[index]["quantity"])
+                            addon: Temp.dine_in_cart[index]["addon"],
+                            price: Temp.dine_in_cart[index]["price"],
+                            itemid: Temp.dine_in_cart[index]["itemid"],
+                            label: Temp.dine_in_cart[index]["label"],
+                            quantity: Temp.dine_in_cart[index]["quantity"])
                         : ListView.separated(
                             primary: false,
                             shrinkWrap: true,
                             itemCount:
-                                CurrentUser.dine_in_cart[index]["choices"].length,
+                                Temp.dine_in_cart[index]["choices"].length,
                             physics: const ClampingScrollPhysics(),
                             itemBuilder: (_, index2) {
                               return CartItem(
-                                  price: CurrentUser.dine_in_cart[index]["price"],
-                                  itemid: CurrentUser.dine_in_cart[index]
+                                  addon: Temp.dine_in_cart[index]["addon"],
+                                  price: Temp.dine_in_cart[index]["price"],
+                                  itemid: Temp.dine_in_cart[index]
                                       ["itemid"],
-                                  label: CurrentUser.dine_in_cart[index]["choices"]
+                                  label: Temp.dine_in_cart[index]["choices"]
                                       [index2]["choice"],
-                                  quantity: CurrentUser.dine_in_cart[index]
+                                  quantity: Temp.dine_in_cart[index]
                                       ["choices"][index2]["quantity"]);
                             },
                             separatorBuilder: (_, index) {

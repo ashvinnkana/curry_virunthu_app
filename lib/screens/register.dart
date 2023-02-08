@@ -369,7 +369,7 @@ class _RegisterState extends State<Register> {
                               context,
                               MaterialPageRoute(
                               builder: (BuildContext context) {
-                              return MainScreen(0);
+                              return MainScreen(0, "All");
                               },
                               ),
                               )

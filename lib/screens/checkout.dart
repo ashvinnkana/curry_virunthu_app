@@ -1,4 +1,4 @@
-import 'package:curry_virunthu_app/util/user.dart';
+import 'package:curry_virunthu_app/util/temp.dart';
 import 'package:flutter/material.dart';
 import 'package:quantity_input/quantity_input.dart';
 import 'package:flutter/services.dart';
@@ -31,7 +31,7 @@ class _CheckoutState extends State<Checkout> {
             icon: Icon(Icons.arrow_back),
             onPressed: () {
               Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (BuildContext context) => MainScreen(2)));
+                  builder: (BuildContext context) => MainScreen(2, "All")));
             },
           ),
           elevation: 0.0,

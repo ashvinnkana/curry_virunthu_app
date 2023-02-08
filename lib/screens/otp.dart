@@ -148,7 +148,7 @@ class _OtpState extends State<Otp> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (BuildContext context) {
-                                          return MainScreen(0);
+                                          return MainScreen(0, "All");
                                         },
                                       ),
                                     );

@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curry_virunthu_app/screens/otp.dart';
+import 'package:curry_virunthu_app/util/temp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -20,8 +22,18 @@ Future<void> main() async {
       print('Internet Connection Successfull!');
     }
   } on SocketException catch (_) {
-
   }
+
+  Temp.categoryLabels = ["All"];
+
+  FirebaseFirestore.instance.collection('category')
+      .orderBy("orderId")
+      .get()
+      .then((QuerySnapshot querySnapshot) {
+    querySnapshot.docs.forEach((doc) {
+      Temp.categoryLabels.add(doc["label"].toString());
+    });
+  });
 }
 
 class MyApp extends StatefulWidget {

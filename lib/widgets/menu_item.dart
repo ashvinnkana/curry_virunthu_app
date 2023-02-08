@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:curry_virunthu_app/util/user.dart';
+import 'package:curry_virunthu_app/util/temp.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class MenuItems extends StatefulWidget {
@@ -13,6 +13,7 @@ class MenuItems extends StatefulWidget {
   final String buyCount;
   final bool isAvailable;
   final String price;
+  final String category;
   final List<dynamic> choices;
 
   MenuItems(
@@ -23,13 +24,15 @@ class MenuItems extends StatefulWidget {
       required this.buyCount,
       required this.isAvailable,
       required this.price,
-      required this.choices});
+      required this.choices,
+        required this.category});
 
   @override
   _MenuItemState createState() => _MenuItemState();
 }
 
 class _MenuItemState extends State<MenuItems> {
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -162,7 +165,9 @@ class _MenuItemState extends State<MenuItems> {
               ),
               checkCartforItem(widget.id) == ""
                   ? buildSelect(widget.choices)
-                  : buildAddedToCart(widget.choices)
+                  : buildAddedToCart(widget.choices),
+              widget.category == "K2vR0XROjDoauN5svgLI"?
+              buildAddons() : SizedBox()
             ],
           ),
         ),
@@ -340,12 +345,94 @@ class _MenuItemState extends State<MenuItems> {
   }
 
   checkCartforItem(String id) {
-    for (int i = 0; i < CurrentUser.dine_in_cart.length; i++) {
-      if (CurrentUser.dine_in_cart[i]["itemid"] == id) {
-        return CurrentUser.dine_in_cart[i];
+    for (int i = 0; i < Temp.dine_in_cart.length; i++) {
+      if (Temp.dine_in_cart[i]["itemid"] == id) {
+        return Temp.dine_in_cart[i];
       }
     }
     return "";
+  }
+
+  buildAddons() {
+    try {
+      if (checkCartforItem(widget.id)["quantity"] > 0) {
+        return Padding(
+            padding: EdgeInsets.all(15),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  Text(
+                    "- - - - -   FREE CURRY ADDONS CHOICES  - - - - -",
+                    style: TextStyle(color: Colors.lightGreen),
+                  ),
+                  const SizedBox(height: 10.0),
+                  SizedBox(
+              child: ListView.separated(
+                shrinkWrap: true,
+                physics: ClampingScrollPhysics(),
+                itemBuilder: (_, index) {
+                  if (Temp.curryList[index]["isAvailable"]) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Radio(
+                            value: Temp.curryList[index]["label"],
+                            groupValue: checkCartforItem(widget.id)["addon"],
+                            onChanged: (flag) {
+                              setState(() {
+                                checkCartforItem(widget.id)["addon"] = Temp.curryList[index]["label"];
+                              });
+                            }),
+                        Expanded(
+                          child: Text(
+                            Temp.curryList[index]["label"].toString(),
+                            style: TextStyle(
+                              fontSize: 15.0,
+                            ),
+                          ),
+                        ),
+                        Card(
+                          margin: EdgeInsets.only(left: 40),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(3.0)),
+                          child: Padding(
+                            padding: EdgeInsets.all(4.0),
+                            child: Text(
+                              Temp.curryList[index]["isVeg"] == true
+                                  ? 'VEG'
+                                  : "NON-VEG",
+                              style: TextStyle(
+                                fontSize: 12.0,
+                                color: Temp.curryList[index]["isVeg"] == true
+                                    ? Colors.lightGreenAccent
+                                    : Colors.deepOrange,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    );
+                  } else {
+                    return SizedBox();
+                  }
+                  },
+                itemCount: Temp.curryList.length,
+                separatorBuilder: (_, index) {
+                  return SizedBox(
+                    height: 5,
+                  );
+                },
+              )
+            )
+                ]));
+      } else {
+        return SizedBox();
+      }
+    } catch (e) {
+      return SizedBox();
+    }
+
   }
 
   buildSelect(List choices) {
@@ -410,15 +497,17 @@ class _MenuItemState extends State<MenuItems> {
   }
 
   void setupCartListWithChoice(String choice) {
-    for (int i = 0; i < CurrentUser.dine_in_cart.length; i++) {
-      if (CurrentUser.dine_in_cart[i]["itemid"] == widget.id) {
-        for (int j = 0; j < CurrentUser.dine_in_cart[i]["choices"].length; j++) {
-          if (CurrentUser.dine_in_cart[i]["choices"][j]["choice"] == choice) {
-            CurrentUser.dine_in_cart[i]["choices"][j]["quantity"]++;
+    for (int i = 0; i < Temp.dine_in_cart.length; i++) {
+      if (Temp.dine_in_cart[i]["itemid"] == widget.id) {
+        for (int j = 0; j < Temp.dine_in_cart[i]["choices"].length; j++) {
+          if (Temp.dine_in_cart[i]["choices"][j]["choice"] == choice) {
+            Temp.dine_in_cart[i]["choices"][j]["quantity"]++;
+            Temp.dine_in_cart[i]["quantity"]++;
             return;
           }
         }
-        CurrentUser.dine_in_cart[i]["choices"].add({"choice": choice, "quantity": 1});
+        Temp.dine_in_cart[i]["choices"].add({"choice": choice, "quantity": 1});
+        Temp.dine_in_cart[i]["quantity"]++;
         return;
       }
     }
@@ -426,18 +515,19 @@ class _MenuItemState extends State<MenuItems> {
       "itemid": widget.id,
       "label": widget.title,
       "price": int.parse(widget.price),
+      "quantity": 1,
       "choices": [
         {"choice": choice, "quantity": 1}
       ]
     };
-    CurrentUser.dine_in_cart.add(item);
+    Temp.dine_in_cart.add(item);
     return;
   }
 
   void setupCartList() {
-    for (int i = 0; i < CurrentUser.dine_in_cart.length; i++) {
-      if (CurrentUser.dine_in_cart[i]["itemid"] == widget.id) {
-        CurrentUser.dine_in_cart[i]["quantity"]++;
+    for (int i = 0; i < Temp.dine_in_cart.length; i++) {
+      if (Temp.dine_in_cart[i]["itemid"] == widget.id) {
+        Temp.dine_in_cart[i]["quantity"]++;
         return;
       }
     }
@@ -448,12 +538,12 @@ class _MenuItemState extends State<MenuItems> {
       "choices": null,
       "quantity": 1
     };
-    CurrentUser.dine_in_cart.add(item);
+    Temp.dine_in_cart.add(item);
     return;
   }
 
   void deleteItemInCart(String id, String title) {
-    CurrentUser.dine_in_cart.remove(checkCartforItem(id));
+    Temp.dine_in_cart.remove(checkCartforItem(id));
     Fluttertoast.showToast(
         msg: title + " Removed from Cart!",
         toastLength: Toast.LENGTH_SHORT,
@@ -466,12 +556,13 @@ class _MenuItemState extends State<MenuItems> {
   }
 
   void deleteChoiceInCart(String id, String title, String choice) {
-    for (int i = 0; i < CurrentUser.dine_in_cart.length; i++) {
-      if (CurrentUser.dine_in_cart[i]["itemid"] == id) {
-        if (CurrentUser.dine_in_cart[i]["choices"].length > 1) {
-          for (int j = 0; j < CurrentUser.dine_in_cart[i]["choices"].length; j++) {
-            if (CurrentUser.dine_in_cart[i]["choices"][j]["choice"] == choice) {
-              CurrentUser.dine_in_cart[i]["choices"].removeAt(j);
+    for (int i = 0; i < Temp.dine_in_cart.length; i++) {
+      if (Temp.dine_in_cart[i]["itemid"] == id) {
+        if (Temp.dine_in_cart[i]["choices"].length > 1) {
+          for (int j = 0; j < Temp.dine_in_cart[i]["choices"].length; j++) {
+            if (Temp.dine_in_cart[i]["choices"][j]["choice"] == choice) {
+              Temp.dine_in_cart[i]["quantity"] = Temp.dine_in_cart[i]["quantity"] - (Temp.dine_in_cart[i]["choices"][j]["quantity"]) as int;
+              Temp.dine_in_cart[i]["choices"].removeAt(j);
               Fluttertoast.showToast(
                   msg: choice + " Removed from Cart!",
                   toastLength: Toast.LENGTH_SHORT,
@@ -483,7 +574,7 @@ class _MenuItemState extends State<MenuItems> {
             }
           }
         } else {
-          CurrentUser.dine_in_cart.removeAt(i);
+          Temp.dine_in_cart.removeAt(i);
           Fluttertoast.showToast(
               msg: title + " Removed from Cart!",
               toastLength: Toast.LENGTH_SHORT,
