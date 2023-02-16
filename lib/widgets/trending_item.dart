@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:curry_virunthu_app/util/const.dart';
 
@@ -27,8 +28,6 @@ class _TrendingItemState extends State<TrendingItem> {
     return Padding(
       padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
       child: Container(
-        height: MediaQuery.of(context).size.height / 2.5,
-        width: MediaQuery.of(context).size.width,
         child: Card(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
@@ -38,21 +37,52 @@ class _TrendingItemState extends State<TrendingItem> {
               Stack(
                 children: <Widget>[
                   Container(
-                    height: MediaQuery.of(context).size.height / 3.5,
+                    height: MediaQuery.of(context).size.height / 3.7,
                     width: MediaQuery.of(context).size.width,
                     child: ClipRRect(
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(10),
-                        topRight: Radius.circular(10),
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10.0),
+                        topRight: Radius.circular(10.0),
                       ),
-                      child: Image.asset(
-                        "${widget.img}",
-                        fit: BoxFit.cover,
+                      child: CachedNetworkImage(
+                        imageUrl: widget.img,
+                        imageBuilder: (context, imageProvider) => Container(
+                          decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.cover,
+                              )
+                          ),
+                        ),
+                        errorWidget: (context, url, error) => Icon(Icons.error),
                       ),
                     ),
                   ),
                   Positioned(
                     top: 6.0,
+                    right: 6.0,
+                    child: Card(
+                      color: Color.fromARGB(255, 255, 255, 255),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4.0)),
+                      child: Padding(
+                        padding: EdgeInsets.all(2.0),
+                        child: Row(
+                          children: <Widget>[
+                            Text(
+                              "A\$ ${widget.price}",
+                              style: const TextStyle(
+                                  fontSize: 20.0,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 6.0,
                     right: 6.0,
                     child: Card(
                       shape: RoundedRectangleBorder(
@@ -62,14 +92,14 @@ class _TrendingItemState extends State<TrendingItem> {
                         child: Row(
                           children: <Widget>[
                             Icon(
-                              Icons.data_exploration,
-                              color: Constants.ratingBG,
-                              size: 10.0,
+                              Icons.favorite,
+                              color: Colors.pink,
+                              size: 12,
                             ),
                             Text(
                               " ${widget.buyCount} ",
-                              style: const TextStyle(
-                                fontSize: 10.0,
+                              style: TextStyle(
+                                fontSize: 12.0,
                               ),
                             ),
                           ],
@@ -86,10 +116,12 @@ class _TrendingItemState extends State<TrendingItem> {
                       child: Padding(
                         padding: EdgeInsets.all(4.0),
                         child: Text(
-                          " ${widget.isAvailable} ",
+                          widget.isAvailable == true ? 'AVAILABLE' : "SOLD OUT",
                           style: TextStyle(
-                            fontSize: 10.0,
-                            color: Colors.green,
+                            fontSize: 12.0,
+                            color: widget.isAvailable == true
+                                ? Colors.lightGreenAccent
+                                : Colors.deepOrange,
                             fontWeight: FontWeight.bold,
                           ),
                         ),

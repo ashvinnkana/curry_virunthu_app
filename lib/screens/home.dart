@@ -300,7 +300,19 @@ class Home extends StatelessWidget {
                   Map<String, dynamic> category =
                       document.data()! as Map<String, dynamic>;
                   String id = document.id;
-                  return CategoryItem(cat: category);
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) {
+                            return MainScreen(1, category["label"]);
+                          },
+                        ),
+                      );
+                    },
+                    child: CategoryItem(cat: category)
+                  );
                 })
                 .toList()
                 .cast(),

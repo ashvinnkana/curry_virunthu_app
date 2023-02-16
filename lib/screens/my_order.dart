@@ -86,8 +86,8 @@ class MyOrder extends StatelessWidget {
                                 ),
                                 borderRadius: BorderRadius.circular(10.0),
                                 gradient: const LinearGradient(colors: [
-                                  Color.fromARGB(255, 24, 56, 27),
-                                  Color.fromARGB(255, 40, 133, 36),
+                                  Color.fromARGB(255, 83, 129, 86),
+                                  Color.fromARGB(255, 96, 171, 93),
                                 ]),
                               ),
                               padding: const EdgeInsets.fromLTRB(20.0, 10, 20.0, 10),

@@ -452,7 +452,9 @@ class _LoginState extends State<Login> {
           ));
     } else {
       print("Logged in ${FirebaseAuth.instance.currentUser?.phoneNumber}");
-      return MainScreen(0,"All");
+
+      return MainScreen(0, "All");
+
     }
 
 

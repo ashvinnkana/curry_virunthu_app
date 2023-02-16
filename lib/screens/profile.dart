@@ -15,7 +15,6 @@ class Profile extends StatelessWidget {
     FirebaseFirestore.instance.collection('customer').doc(FirebaseAuth.instance.currentUser?.uid)
     .get()
     .then((value) => {
-      print(value["fname"]),
         _controller.text = value["mobile"].replaceAll("+61",""),
         fname_controller.text = value["fname"],
         lname_controller.text = value["lname"],

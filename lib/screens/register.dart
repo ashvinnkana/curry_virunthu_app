@@ -345,6 +345,9 @@ class _RegisterState extends State<Register> {
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(5))),
                               onPressed: () {
+                                setState(() {
+                                  loading = true;
+                                });
                                 FirebaseFirestore.instance
                                     .collection('customer')
                                     .doc(FirebaseAuth.instance.currentUser?.uid)
@@ -386,6 +389,9 @@ class _RegisterState extends State<Register> {
                                                     ),
                                                     child: const Text('Okay'),
                                                     onPressed: () {
+                                                      setState(() {
+                                                        loading = false;
+                                                      });
                                                       Navigator.of(context)
                                                           .pop();
                                                     },
@@ -419,10 +425,11 @@ class _RegisterState extends State<Register> {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 // Add one stop for each color. Stops should increase from 0 to 1
-                stops: [0.2, 0.5],
+                stops: [0.4, 0.7],
                 colors: [
-                  Color.fromARGB(180, 27, 54, 3),
                   Color.fromARGB(180, 0, 0, 0),
+                  Color.fromARGB(180, 27, 54, 3),
+
                 ],
                 // stops: [0.0, 0.1],
               ),
@@ -431,18 +438,18 @@ class _RegisterState extends State<Register> {
             width: MediaQuery.of(context).size.width,
           ),
           Positioned(
-              top: 60,
+              bottom: 80,
               left: MediaQuery.of(context).size.width / 4,
               child: Image.asset(
                 "assets/loading.gif",
                 width: MediaQuery.of(context).size.width / 2,
               )),
           Positioned(
-              top: 210,
+              bottom: 50,
               child: SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: Text(
-                    "S E N D I N G   C O D E\n>>>",
+                    "R E G I S T E R I N G   U S E R\n. . .",
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   )))
