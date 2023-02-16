@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
-import 'package:curry_virunthu_app/screens/notification.dart';
+import 'package:curry_virunthu_app/screens/my_order.dart';
 import 'package:curry_virunthu_app/screens/cart.dart';
 import 'package:curry_virunthu_app/screens/home.dart';
 import 'package:curry_virunthu_app/screens/profile.dart';
@@ -44,7 +44,7 @@ class _MainScreenState extends State<MainScreen> {
     Home(),
     Menu("All"),
     Cart(),
-    Notify(),
+    MyOrder(),
     Profile(),
   ];
 
