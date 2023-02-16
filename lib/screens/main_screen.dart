@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:curry_virunthu_app/util/noti.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 import 'package:curry_virunthu_app/screens/notification.dart';
@@ -9,6 +11,7 @@ import 'package:curry_virunthu_app/screens/cart.dart';
 import 'package:curry_virunthu_app/screens/home.dart';
 import 'package:curry_virunthu_app/screens/profile.dart';
 import 'package:curry_virunthu_app/screens/today_menu.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import '../util/temp.dart';
 
@@ -97,10 +100,53 @@ class _MainScreenState extends State<MainScreen> {
   //    _pageController.jumpToPage(page);
   //  }
 
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+  FlutterLocalNotificationsPlugin();
+
   @override
   void initState() {
     super.initState();
     _pageController = PageController();
+    Noti.initialize(flutterLocalNotificationsPlugin);
+    getToken();
+    initInfo();
+  }
+
+
+
+
+  initInfo() {
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) async{
+      print("--------------ON MESSAGE------------------");
+      print("onMessage: ${message.notification?.title}/${message.notification?.body}");
+
+
+      // Noti.showBigTextNotification(title: message.notification?.title.toString(),
+      //     body: message.notification?.title,
+      //     fln: flutterLocalNotificationsPlugin);
+      final snackBar = SnackBar(content: Text(message.notification?.title ?? ""));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+
+    });
+  }
+
+  String? mtoken = " ";
+
+  void getToken() async {
+    await FirebaseMessaging.instance.getToken().then((token) {
+      setState(() {
+        mtoken = token;
+        print("My token is $mtoken");
+      });
+      saveToken(token!);
+    });
+  }
+
+  void saveToken(String token) async {
+    await FirebaseFirestore.instance.collection("DeviceTokens").doc(FirebaseAuth.instance.currentUser?.uid)
+        .set({'token': token});
   }
 
   @override

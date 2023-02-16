@@ -16,7 +16,7 @@ class Cart extends StatefulWidget {
                 {Temp.dine_in_cart = value["dineInCart"]}
             })
         .catchError((onError) => {print(onError.toString())});
-
+    Temp.curryList = [];
     FirebaseFirestore.instance
         .collection('item')
         .where("category", isEqualTo: "O5ZPchH3c6TEVhjyzeOn")
@@ -35,11 +35,14 @@ class Cart extends StatefulWidget {
 
 class _CartState extends State<Cart> {
   TextEditingController table_controller = TextEditingController();
-  TextEditingController phone_controller = TextEditingController();
+  TextEditingController customer_controller = TextEditingController();
 
   String choosenCheckout = "Dine-in";
+  bool loading = false;
 
-  var checkoutOptions = ["Dine-in"];
+  dynamic orderData ={};
+
+  var checkoutOptions = ["Dine-in", "Takeaway"];
 
   @override
   Widget build(BuildContext context) {
@@ -51,12 +54,62 @@ class _CartState extends State<Cart> {
               const Text("M Y  C A R T", style: TextStyle(color: Colors.white)),
           backgroundColor: const Color.fromARGB(255, 123, 152, 60),
         ),
-        body: SingleChildScrollView(
-            child: Padding(
-                padding: const EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 20.0),
-                child: Temp.dine_in_cart.isEmpty
-                    ? buildEmptyCart(context)
-                    : buildListCart(context))));
+        body: Stack(
+          children: <Widget>[
+        SingleChildScrollView(
+        child: Padding(
+            padding: const EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 20.0),
+        child: Temp.dine_in_cart.isEmpty
+            ? buildEmptyCart(context)
+            : buildListCart(context))),
+    getLoadingScreen()
+          ],
+        )
+    );
+  }
+
+  getLoadingScreen() {
+    if (loading) {
+      return Stack(
+        children: <Widget>[
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                // Add one stop for each color. Stops should increase from 0 to 1
+                stops: [0.2, 0.5],
+                colors: [
+                  Color.fromARGB(180, 27, 54, 3),
+                  Color.fromARGB(180, 0, 0, 0),
+                ],
+                // stops: [0.0, 0.1],
+              ),
+            ),
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+          ),
+          Positioned(
+              top: 60,
+              left: MediaQuery.of(context).size.width / 4,
+              child: Image.asset(
+                "assets/loading.gif",
+                width: MediaQuery.of(context).size.width / 2,
+              )),
+          Positioned(
+              top: 210,
+              child: SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: Text(
+                    "C O N F I R M I N G   O R D E R\n. . .",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  )))
+        ],
+      );
+    } else {
+      return Container();
+    }
   }
 
   buildEmptyCart(BuildContext context) {
@@ -185,6 +238,7 @@ class _CartState extends State<Cart> {
                             });
                           }),
                     ])),
+            choosenCheckout == "Dine-in"?
             Padding(
                 padding: const EdgeInsets.only(left: 40.0, right: 40.0),
                 child: Row(
@@ -207,38 +261,46 @@ class _CartState extends State<Cart> {
                             ),
                             onChanged: (text) => setState(() {}),
                           )),
-                    ])),
-            const SizedBox(height: 10),
+                    ])): Container(),
+            choosenCheckout == "Takeaway"?
             Padding(
                 padding: const EdgeInsets.only(left: 40.0, right: 40.0),
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Cutomer Number : ",
+                        "Customer Name : ",
                         style: TextStyle(
                             color: Color.fromARGB(255, 166, 232, 20),
                             fontSize: 15),
-                      ),
+                      )
+                    ])): Container(),
+            choosenCheckout == "Takeaway"?
+            Padding(
+                padding: const EdgeInsets.only(left: 40.0, right: 40.0),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
                       Container(
-                          width: 70,
+                          width: 200,
                           child: TextField(
-                            controller: phone_controller,
+                            controller: customer_controller,
                             textAlign: TextAlign.center,
-                            keyboardType: TextInputType.number,
+                            keyboardType: TextInputType.text,
                             decoration: InputDecoration(
                               hintText: "-",
                             ),
                             onChanged: (text) => setState(() {}),
                           )),
-                    ])),
+                    ])): Container(),
             const SizedBox(height: 20.0),
             Container(
                 width: MediaQuery.of(context).size.width,
                 child: Padding(
                     padding: const EdgeInsets.only(left: 30.0, right: 30.0),
                     child: (choosenCheckout == "Dine-in" &&
-                            table_controller.text == "")
+                            table_controller.text == "") || (choosenCheckout == "Takeaway" &&
+                        customer_controller.text == "")
                         ? ElevatedButton.icon(
                             style: ElevatedButton.styleFrom(
                                 primary: const Color.fromARGB(255, 93, 93, 93),
@@ -285,6 +347,10 @@ class _CartState extends State<Cart> {
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(5))),
                             onPressed: () {
+
+                              setState(() {
+                                loading = true;
+                              });
                               //////////////////////////////////////////////////////////////////
                               List<dynamic> foodOrderData = [];
                               List<dynamic> drinksOrderData = [];
@@ -319,6 +385,7 @@ class _CartState extends State<Cart> {
                                       "state": "ORDERED",
                                     });
                                   } else {
+
                                     foodOrderData.add({
                                       "label": Temp.dine_in_cart[i]["label"],
                                       "unitPrice": Temp.dine_in_cart[i]
@@ -335,6 +402,11 @@ class _CartState extends State<Cart> {
                                           ["category"],
                                       "state": "ORDERED",
                                     });
+
+                                    if (Temp.dine_in_cart[i]["addon"] != null) {
+                                      foodOrderData[foodOrderData.length-1]["addon"] = "With ${Temp.dine_in_cart[i]["addon"]}";
+                                    }
+
                                   }
                                 } else {
                                   for (int j = 0;
@@ -384,29 +456,87 @@ class _CartState extends State<Cart> {
                                             ["category"],
                                         "state": "ORDERED",
                                       });
+
+                                      if (Temp.dine_in_cart[i]["addon"] != null) {
+                                        foodOrderData[foodOrderData.length-1]["addon"] = "With ${Temp.dine_in_cart[i]["addon"]}";
+                                      }
                                     }
                                   }
                                 }
                               }
 
-                              var orderData = {
-                                "total": total,
-                                "drinkOrder": drinksOrderData,
-                                "foodORder": foodOrderData,
-                                "completedPercent": 0,
-                                "completedCount": 0,
-                                "orderQuantity": quantityTotal,
-                                "state": "ORDERED",
-                                "tableNum": table_controller.text,
-                                "customer": phone_controller.text,
-                                "orderTime": DateTime.now()
-                              };
+                              if (choosenCheckout == "Dine-in")
+                                orderData = {
+                                  "total": total,
+                                  "drinkOrder": drinksOrderData,
+                                  "foodOrder": foodOrderData,
+                                  "completedPercent": 0,
+                                  "completedCount": 0,
+                                  "orderQuantity": quantityTotal,
+                                  "state": "ORDERED",
+                                  "tableNum": table_controller.text,
+                                  "customer": FirebaseAuth.instance.currentUser?.phoneNumber,
+                                  "orderTime": DateTime.now(),
+                                  "orderType": choosenCheckout
+                                };
+                              else
+                                orderData = {
+                                  "total": total,
+                                  "drinkOrder": drinksOrderData,
+                                  "foodOrder": foodOrderData,
+                                  "completedPercent": 0,
+                                  "completedCount": 0,
+                                  "orderQuantity": quantityTotal,
+                                  "state": "ORDERED",
+                                  "customer": customer_controller.text,
+                                  "orderTime": DateTime.now(),
+                                  "orderType": choosenCheckout
+                                };
 
-
+                              Temp.dine_in_cart = [];
                               FirebaseFirestore.instance.collection('order')
                                   .add(orderData)
                                   .then((value) => {
-                                print("Order has been confirmed!"),
+                              FirebaseFirestore.instance
+                                  .collection("customer")
+                                  .doc(FirebaseAuth.instance.currentUser?.uid)
+                                  .update({"dineInCart": Temp.dine_in_cart})
+                                  .then((value) => {
+                                    print("Cart Updated"),
+                                    table_controller.text = "",
+                                customer_controller.text = "",
+                                showDialog<void>(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: const Text(
+                                          'Order Confirmed'),
+                                      content: const Text('Please wait, Your order will be ready soon!'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          style:
+                                          TextButton.styleFrom(
+                                            textStyle:
+                                            Theme.of(context)
+                                                .textTheme
+                                                .labelLarge,
+                                          ),
+                                          child: const Text('Okay'),
+                                          onPressed: () {
+                                            setState(() {
+                                              loading = false;
+                                            });
+                                            Navigator.of(context)
+                                                .pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                )
+                                  })
+                                  .catchError((error) =>
+                              print("Failed to update cart: $error"))
                               }).catchError((onError) => {
                                 showDialog<void>(
                                   context: context,
@@ -438,7 +568,7 @@ class _CartState extends State<Cart> {
                               });
                             },
                             icon: Icon(
-                              Icons.save,
+                              Icons.add_task_outlined,
                               size: 24.0,
                               color: const Color.fromARGB(255, 255, 255, 255),
                             ),

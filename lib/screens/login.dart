@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:curry_virunthu_app/screens/main_screen.dart';
 import 'package:curry_virunthu_app/screens/otp.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -505,6 +506,8 @@ class _LoginState extends State<Login> {
   void initState() {
     super.initState();
   }
+
+
 
   String _emoji() {
     int flagOffset = 0x1F1E6;

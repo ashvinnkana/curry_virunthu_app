@@ -2,6 +2,7 @@ import 'package:curry_virunthu_app/screens/product_view.dart';
 import 'package:curry_virunthu_app/util/temp.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:async';
 
 import '../widgets/menu_item.dart';
 
@@ -17,10 +18,9 @@ class Menu extends StatefulWidget {
 class _MenuState extends State<Menu> {
 
   late String choosen_category;
+  bool loading = false;
 
-  _MenuState(this.choosen_category) {
-
-  }
+  _MenuState(this.choosen_category);
 
   @override
   Widget build(BuildContext context) {
@@ -75,67 +75,105 @@ class _MenuState extends State<Menu> {
               style: TextStyle(color: Colors.white)),
           backgroundColor: const Color.fromARGB(255, 123, 152, 60),
         ),
-        body: Padding(
-            padding: const EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 20.0),
-            child: SingleChildScrollView(
-                child: StreamBuilder<QuerySnapshot>(
-                    stream: FirebaseFirestore.instance
-                        .collection('category')
-                        .orderBy("orderId")
-                        .snapshots(),
-                    builder: (BuildContext context,
-                        AsyncSnapshot<QuerySnapshot> snapshot) {
-                      if (snapshot.hasError) {
-                        return Text('${snapshot.error}');
-                      }
+        body: Stack(
+          children: <Widget>[
+            Padding(
+                padding: const EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 20.0),
+                child: SingleChildScrollView(
+                    child: StreamBuilder<QuerySnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection('category')
+                            .orderBy("orderId")
+                            .snapshots(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (snapshot.hasError) {
+                            return Text('${snapshot.error}');
+                          }
 
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Container(
-                            width: MediaQuery.of(context).size.width / 2,
-                            decoration: BoxDecoration(
-                              color: Colors.blueAccent,
-                              border: Border.all(
-                                color: Colors.black,
-                                width: 2.0,
-                              ),
-                              borderRadius: BorderRadius.circular(10.0),
-                              gradient: LinearGradient(colors: [
-                                Color.fromARGB(97, 147, 238, 122),
-                                Color.fromARGB(255, 23, 141, 28),
-                              ]),
-                            ),
-                            padding: EdgeInsets.fromLTRB(20.0, 10, 20.0, 10),
-                            child: Text(
-                              "L O A D I N G ...",
-                              textAlign: TextAlign.center,
-                            ));
-                      }
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return Container();
+                          }
 
-                      return ListView(
-                        primary: true,
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        children: snapshot.data!.docs
-                            .map((DocumentSnapshot document) {
+                          return ListView(
+                            primary: true,
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            children: snapshot.data!.docs
+                                .map((DocumentSnapshot document) {
                               Map<String, dynamic> category =
-                                  document.data()! as Map<String, dynamic>;
+                              document.data()! as Map<String, dynamic>;
                               String id = document.id;
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   (choosen_category == "All") ?
                                   buildHeading(context, category["label"]):
-                          Container(),
+                                  Container(),
                                   (choosen_category == "All" || choosen_category == category["label"]) ?
                                   buildList(context, id) : Container(),
 
                                 ],
                               );
                             })
-                            .toList()
-                            .cast(),
-                      );
-                    }))));
+                                .toList()
+                                .cast(),
+                          );
+                        }))),
+            getLoadingScreen()
+          ],
+        )
+    );
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  getLoadingScreen() {
+    if (loading) {
+      return Stack(
+        children: <Widget>[
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                // Add one stop for each color. Stops should increase from 0 to 1
+                stops: [0.2, 0.5],
+                colors: [
+                  Color.fromARGB(180, 27, 54, 3),
+                  Color.fromARGB(180, 0, 0, 0),
+                ],
+                // stops: [0.0, 0.1],
+              ),
+            ),
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+          ),
+          Positioned(
+              top: 60,
+              left: MediaQuery.of(context).size.width / 4,
+              child: Image.asset(
+                "assets/loading.gif",
+                width: MediaQuery.of(context).size.width / 2,
+              )),
+          Positioned(
+              top: 210,
+              child: SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: Text(
+                    "L O A D I N G\n. . .",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  )))
+        ],
+      );
+    } else {
+      return Container();
+    }
   }
 
   buildHeading(BuildContext context, String category) {
@@ -170,25 +208,7 @@ class _MenuState extends State<Menu> {
             }
 
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Container(
-                  width: MediaQuery.of(context).size.width / 2,
-                  decoration: BoxDecoration(
-                    color: Colors.blueAccent,
-                    border: Border.all(
-                      color: Colors.black,
-                      width: 2.0,
-                    ),
-                    borderRadius: BorderRadius.circular(10.0),
-                    gradient: const LinearGradient(colors: [
-                      Color.fromARGB(97, 147, 238, 122),
-                      Color.fromARGB(255, 23, 141, 28),
-                    ]),
-                  ),
-                  padding: const EdgeInsets.fromLTRB(20.0, 10, 20.0, 10),
-                  child: const Text(
-                    "L O A D I N G ...",
-                    textAlign: TextAlign.center,
-                  ));
+              return Container();
             }
 
             var _list = snapshot.data!.docs;

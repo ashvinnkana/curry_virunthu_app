@@ -95,25 +95,7 @@ class Home extends StatelessWidget {
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Container(
-              width: MediaQuery.of(context).size.width / 2,
-              decoration: BoxDecoration(
-                color: Colors.blueAccent,
-                border: Border.all(
-                  color: Colors.black,
-                  width: 2.0,
-                ),
-                borderRadius: BorderRadius.circular(10.0),
-                gradient: LinearGradient(colors: [
-                  Color.fromARGB(97, 147, 238, 122),
-                  Color.fromARGB(255, 23, 141, 28),
-                ]),
-              ),
-              padding: EdgeInsets.fromLTRB(20.0, 10, 20.0, 10),
-              child: Text(
-                "L O A D I N G ...",
-                textAlign: TextAlign.center,
-              ));
+          return Container();
         }
         return SizedBox(
           height: MediaQuery.of(context).size.height / 6,
@@ -202,25 +184,7 @@ class Home extends StatelessWidget {
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Container(
-              width: MediaQuery.of(context).size.width / 2,
-              decoration: BoxDecoration(
-                color: Colors.blueAccent,
-                border: Border.all(
-                  color: Colors.black,
-                  width: 2.0,
-                ),
-                borderRadius: BorderRadius.circular(10.0),
-                gradient: LinearGradient(colors: [
-                  Color.fromARGB(97, 147, 238, 122),
-                  Color.fromARGB(255, 23, 141, 28),
-                ]),
-              ),
-              padding: EdgeInsets.fromLTRB(20.0, 10, 20.0, 10),
-              child: Text(
-                "L O A D I N G ...",
-                textAlign: TextAlign.center,
-              ));
+          return Container();
         }
         return Container(
           height: MediaQuery.of(context).size.height / 2.4,
@@ -323,25 +287,7 @@ class Home extends StatelessWidget {
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Container(
-              width: MediaQuery.of(context).size.width / 2,
-              decoration: BoxDecoration(
-                color: Colors.blueAccent,
-                border: Border.all(
-                  color: Colors.black,
-                  width: 2.0,
-                ),
-                borderRadius: BorderRadius.circular(10.0),
-                gradient: LinearGradient(colors: [
-                  Color.fromARGB(97, 147, 238, 122),
-                  Color.fromARGB(255, 23, 141, 28),
-                ]),
-              ),
-              padding: EdgeInsets.fromLTRB(20.0, 10, 20.0, 10),
-              child: Text(
-                "L O A D I N G ...",
-                textAlign: TextAlign.center,
-              ));
+          return Container();
         }
         return Container(
           height: MediaQuery.of(context).size.height / 6,
