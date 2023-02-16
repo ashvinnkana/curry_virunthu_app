@@ -77,7 +77,7 @@ class MyOrder extends StatelessWidget {
                           );
                         } else {
                           return Container(
-                              width: MediaQuery.of(context).size.width / 2,
+                              width: MediaQuery.of(context).size.width ,
                               decoration: BoxDecoration(
                                 color: Colors.blueAccent,
                                 border: Border.all(
@@ -86,13 +86,13 @@ class MyOrder extends StatelessWidget {
                                 ),
                                 borderRadius: BorderRadius.circular(10.0),
                                 gradient: const LinearGradient(colors: [
-                                  Color.fromARGB(97, 238, 122, 122),
-                                  Color.fromARGB(255, 246, 82, 82),
+                                  Color.fromARGB(255, 24, 56, 27),
+                                  Color.fromARGB(255, 40, 133, 36),
                                 ]),
                               ),
                               padding: const EdgeInsets.fromLTRB(20.0, 10, 20.0, 10),
                               child: const Text(
-                                "SOLD OUT",
+                                "NO ORDERS YET",
                                 textAlign: TextAlign.center,
                               ));
                         }

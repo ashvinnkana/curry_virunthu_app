@@ -1,10 +1,13 @@
 import 'dart:async';
 
 import 'package:curry_virunthu_app/screens/main_screen.dart';
+import 'package:curry_virunthu_app/screens/product_view.dart';
 import 'package:flutter/material.dart';
 
 class AddToCart extends StatefulWidget {
-  const AddToCart({super.key});
+  final Map<String, dynamic> product;
+  final String item_id;
+  const AddToCart({required this.product, required this.item_id});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -16,8 +19,7 @@ class _AddToCartState extends State<AddToCart> {
   Widget build(BuildContext context) {
     Timer(
         const Duration(seconds: 2),
-        () => Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (BuildContext context) => MainScreen(1, "All"))));
+        () => Navigator.pop(context));
 
     return Stack(
       children: <Widget>[

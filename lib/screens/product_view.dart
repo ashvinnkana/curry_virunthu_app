@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:curry_virunthu_app/screens/main_screen.dart';
+import 'package:curry_virunthu_app/screens/today_menu.dart';
 import 'package:curry_virunthu_app/util/temp.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -25,17 +27,33 @@ class _ProductViewState extends State<ProductView> {
   final Map<String, dynamic> product;
   int currentChoice = 0;
   dynamic quantity = 1;
+  bool isAdded = false;
 
   _ProductViewState(this.product, this.item_id);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope(
+        onWillPop: () async {
+          if (isAdded) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) {
+                  return MainScreen(1, "All");
+                },
+              ),
+            );
+            return false;
+          }
+          return true;
+        },
+    child: Scaffold(
       backgroundColor: Color.fromARGB(255, 30, 30, 30),
       appBar: AppBar(
         elevation: 0.0,
         title:
-            Text(product['label'].toString().toUpperCase().replaceAll("", " ")),
+        Text(product['label'].toString().toUpperCase().replaceAll("", " ")),
         centerTitle: true,
         backgroundColor: Color.fromARGB(255, 123, 152, 60),
       ),
@@ -48,20 +66,20 @@ class _ProductViewState extends State<ProductView> {
               Stack(
                 children: [
                   Container(
-                      height: MediaQuery.of(context).size.height / 3,
-                      width: MediaQuery.of(context).size.width,
-                      child: CachedNetworkImage(
-                        imageUrl: product["img"],
-                        imageBuilder: (context, imageProvider) => Container(
-                          decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: imageProvider,
-                                fit: BoxFit.cover,
-                              )
-                          ),
+                    height: MediaQuery.of(context).size.height / 3,
+                    width: MediaQuery.of(context).size.width,
+                    child: CachedNetworkImage(
+                      imageUrl: product["img"],
+                      imageBuilder: (context, imageProvider) => Container(
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.cover,
+                            )
                         ),
-                        errorWidget: (context, url, error) => Icon(Icons.error),
-                      ),),
+                      ),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                    ),),
                   Container(
                     decoration: const BoxDecoration(
                       gradient: LinearGradient(
@@ -135,25 +153,25 @@ class _ProductViewState extends State<ProductView> {
               const SizedBox(height: 20.0),
               product["choices"].length != 0
                   ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        const Padding(
-                            padding: EdgeInsets.only(left: 20.0),
-                            child: Text(
-                              "Pick your choice",
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.lightGreen),
-                            )),
-                        const SizedBox(height: 10.0),
-                        Padding(
-                            padding:
-                                const EdgeInsets.only(left: 20.0, right: 20.0),
-                            child: listItemChoice()),
-                        const SizedBox(height: 20.0),
-                      ],
-                    )
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  const Padding(
+                      padding: EdgeInsets.only(left: 20.0),
+                      child: Text(
+                        "Pick your choice",
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.lightGreen),
+                      )),
+                  const SizedBox(height: 10.0),
+                  Padding(
+                      padding:
+                      const EdgeInsets.only(left: 20.0, right: 20.0),
+                      child: listItemChoice()),
+                  const SizedBox(height: 20.0),
+                ],
+              )
                   : SizedBox(),
               const Padding(
                   padding: EdgeInsets.only(left: 20.0),
@@ -171,60 +189,143 @@ class _ProductViewState extends State<ProductView> {
                   QuantityInput(
                     value: quantity,
                     onChanged: (value) => setState(
-                        () => quantity = int.parse(value.replaceAll(',', ''))),
+                            () => quantity = int.parse(value.replaceAll(',', ''))),
                     minValue: 1,
                     buttonColor: Color.fromARGB(255, 68, 67, 67),
                   ),
                 ],
               ),
+              product["category"] == 'K2vR0XROjDoauN5svgLI' ?
+              const SizedBox(height: 20.0) : SizedBox(),
+              product["category"] == 'K2vR0XROjDoauN5svgLI' ?
+              Padding(
+                padding: EdgeInsets.only(left: 20.0),
+                child: Container(
+                    child: Text(
+                      "Inclusive Curry Addon Choices",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.lightGreen),
+                    )),
+              ) : SizedBox(),
+              product["category"] == 'K2vR0XROjDoauN5svgLI' ?
+              buildAddons() : SizedBox(),
+
               const SizedBox(height: 30.0),
               Padding(
-                padding: const EdgeInsets.only(left: 70.0, right: 70.0),
-                child: GradientSlideToAct(
-                  text: "ADD TO CART",
-                  width: 400,
-                  dragableIconBackgroundColor:
-                      Color.fromARGB(255, 148, 182, 117),
-                  textStyle: TextStyle(color: Colors.black, fontSize: 15),
-                  backgroundColor: Color.fromARGB(255, 148, 182, 117),
-                  onSubmit: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (BuildContext context) {
-                          HapticFeedback.heavyImpact();
-                          SystemSound.play(SystemSoundType.click);
+                  padding: const EdgeInsets.only(left: 70.0, right: 70.0),
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          primary: Colors.lightGreen.shade800,
+                          shape: RoundedRectangleBorder(
+                              borderRadius:
+                              BorderRadius.circular(10))),
+                      onPressed: ()  {
+                        isAdded = true;
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) {
+                              HapticFeedback.heavyImpact();
+                              SystemSound.play(SystemSoundType.click);
 
-                          product["choices"].length != 0
-                              ? setupCartListWithChoice()
-                              : setupCartListWithoutChoice();
-                          FirebaseFirestore.instance
-                              .collection("customer")
-                              .doc(FirebaseAuth.instance.currentUser?.uid)
-                              .update({"dineInCart": Temp.dine_in_cart})
-                              .then((value) => print("Cart Updated"))
-                              .catchError((error) =>
+                              product["choices"].length != 0
+                                  ? setupCartListWithChoice()
+                                  : setupCartListWithoutChoice();
+                              FirebaseFirestore.instance
+                                  .collection("customer")
+                                  .doc(FirebaseAuth.instance.currentUser?.uid)
+                                  .update({"dineInCart": Temp.dine_in_cart})
+                                  .then((value) => print("Cart Updated"))
+                                  .catchError((error) =>
                                   print("Failed to update cart: $error"));
 
-                          return AddToCart();
-                        },
-                      ),
-                    );
-                  },
-                  gradient: const LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        Color(0Xff11998E),
-                        Color(0Xff38EF7D),
-                      ]),
-                ),
+                              return AddToCart(product: product, item_id: item_id);
+                            },
+                          ),
+                        );
+                      },
+                      child: Text("ADD TO CART"))
               ),
               const SizedBox(height: 20.0),
             ],
           )),
+    )
     );
   }
+
+  buildAddons() {
+        return Padding(
+            padding: EdgeInsets.all(15),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  SizedBox(
+                      child: ListView.separated(
+                        shrinkWrap: true,
+                        physics: ClampingScrollPhysics(),
+                        itemBuilder: (_, index) {
+                          if (Temp.curryList[index]["isAvailable"]) {
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Radio(
+                                    value: Temp.curryList[index]["label"],
+                                    groupValue: addonChoice,
+                                    onChanged: (flag) {
+                                      setState(() {
+                                        addonChoice = Temp.curryList[index]["label"];
+                                      });
+                                    }),
+                                Expanded(
+                                  child: Text(
+                                    Temp.curryList[index]["label"].toString(),
+                                    style: TextStyle(
+                                      fontSize: 15.0,
+                                    ),
+                                  ),
+                                ),
+                                Card(
+                                  margin: EdgeInsets.only(left: 40),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(3.0)),
+                                  child: Padding(
+                                    padding: EdgeInsets.all(4.0),
+                                    child: Text(
+                                      Temp.curryList[index]["isVeg"] == true
+                                          ? 'VEG'
+                                          : "NON-VEG",
+                                      style: TextStyle(
+                                        fontSize: 12.0,
+                                        color: Temp.curryList[index]["isVeg"] == true
+                                            ? Colors.lightGreenAccent
+                                            : Colors.deepOrange,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            );
+                          } else {
+                            return SizedBox();
+                          }
+                        },
+                        itemCount: Temp.curryList.length,
+                        separatorBuilder: (_, index) {
+                          return SizedBox(
+                            height: 5,
+                          );
+                        },
+                      )
+                  )
+                ]));
+
+  }
+
+  String addonChoice = "";
 
   void setupCartListWithChoice() {
     for (int i = 0; i < Temp.dine_in_cart.length; i++) {
@@ -234,6 +335,9 @@ class _ProductViewState extends State<ProductView> {
               product["choices"][currentChoice]["label"]) {
             Temp.dine_in_cart[i]["choices"][j]["quantity"] =
                 Temp.dine_in_cart[i]["choices"][j]["quantity"] + quantity;
+            if (addonChoice != "") {
+              Temp.dine_in_cart[i]["addon"] = addonChoice;
+            }
             return;
           }
         }
@@ -241,20 +345,41 @@ class _ProductViewState extends State<ProductView> {
           "choice": product["choices"][currentChoice]["label"],
           "quantity": quantity
         });
+        if (addonChoice != "") {
+          Temp.dine_in_cart[i]["addon"] = addonChoice;
+        }
         return;
       }
     }
-    Map<String, dynamic> item = {
-      "itemid": item_id,
-      "label": product["label"],
-      "price": int.parse(product["price"]),
-      "choices": [
-        {
-          "choice": product["choices"][currentChoice]["label"],
-          "quantity": quantity
-        }
-      ]
-    };
+
+    Map<String, dynamic> item = {};
+
+    if (addonChoice != "") {
+      item = {
+        "itemid": item_id,
+        "label": product["label"],
+        "price": int.parse(product["price"]),
+        "addon": addonChoice,
+        "choices": [
+          {
+            "choice": product["choices"][currentChoice]["label"],
+            "quantity": quantity
+          }
+        ]
+      };
+    } else {
+      item = {
+        "itemid": item_id,
+        "label": product["label"],
+        "price": int.parse(product["price"]),
+        "choices": [
+          {
+            "choice": product["choices"][currentChoice]["label"],
+            "quantity": quantity
+          }
+        ]
+      };
+    }
     Temp.dine_in_cart.add(item);
     return;
   }
@@ -264,16 +389,34 @@ class _ProductViewState extends State<ProductView> {
       if (Temp.dine_in_cart[i]["itemid"] == item_id) {
         Temp.dine_in_cart[i]["quantity"] =
             Temp.dine_in_cart[i]["quantity"] + quantity;
+        if (addonChoice != "") {
+          Temp.dine_in_cart[i]["addon"] = addonChoice;
+        }
         return;
       }
     }
-    Map<String, dynamic> item = {
-      "itemid": item_id,
-      "label": product["label"],
-      "price": int.parse(product["price"]),
-      "choices": null,
-      "quantity": quantity
-    };
+
+    Map<String, dynamic> item = {};
+
+    if (addonChoice != "") {
+      item = {
+        "itemid": item_id,
+        "label": product["label"],
+        "price": int.parse(product["price"]),
+        "choices": null,
+        "quantity": quantity,
+        "addon" : addonChoice
+      };
+    } else {
+      item = {
+        "itemid": item_id,
+        "label": product["label"],
+        "price": int.parse(product["price"]),
+        "choices": null,
+        "quantity": quantity
+      };
+    }
+
 
     Temp.dine_in_cart.add(item);
     return;

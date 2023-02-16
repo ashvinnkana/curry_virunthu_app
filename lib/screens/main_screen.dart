@@ -36,7 +36,7 @@ class _MainScreenState extends State<MainScreen> {
     Icons.home,
     Icons.label,
     Icons.shopping_cart,
-    Icons.notifications,
+    Icons.filter_list_sharp,
     Icons.person,
   ];
 
@@ -125,7 +125,19 @@ class _MainScreenState extends State<MainScreen> {
       // Noti.showBigTextNotification(title: message.notification?.title.toString(),
       //     body: message.notification?.title,
       //     fln: flutterLocalNotificationsPlugin);
-      final snackBar = SnackBar(content: Text(message.notification?.title ?? ""));
+      final snackBar = SnackBar(
+          content: Text(message.notification?.body ?? ""),
+        backgroundColor: Colors.teal,
+        behavior: SnackBarBehavior.floating,
+        action: SnackBarAction(
+          label: 'Okay',
+          disabledTextColor: Colors.white,
+          textColor: Colors.yellow,
+          onPressed: () {
+            //Do whatever you want
+          },
+        ),
+      );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
 

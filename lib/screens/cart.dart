@@ -152,12 +152,48 @@ class _CartState extends State<Cart> {
                 return Padding(
                     padding: const EdgeInsets.only(left: 15.0, right: 15.0),
                     child: Temp.dine_in_cart[index]["choices"] == null
-                        ? CartItem(
+                        ? GestureDetector(
+                            onHorizontalDragStart: (detail) {
+                              showDialog<void>(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('Alert!'),
+                                    content: Text('Do you want to continue to delete item : ${Temp.dine_in_cart[index]["label"]}?'),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        style: TextButton.styleFrom(
+                                          textStyle: Theme.of(context).textTheme.labelLarge,
+                                        ),
+                                        child: const Text('No'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                      TextButton(
+                                        style: TextButton.styleFrom(
+                                          textStyle: Theme.of(context).textTheme.labelLarge,
+                                        ),
+                                        child: const Text('Yes'),
+                                        onPressed: () {
+                                          Temp.dine_in_cart.removeAt(index);
+                                          setState(() {
+                                            Navigator.of(context).pop();
+                                          });
+
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            child: CartItem(
                             addon: Temp.dine_in_cart[index]["addon"],
                             price: Temp.dine_in_cart[index]["price"],
                             itemid: Temp.dine_in_cart[index]["itemid"],
                             label: Temp.dine_in_cart[index]["label"],
-                            quantity: Temp.dine_in_cart[index]["quantity"])
+                            quantity: Temp.dine_in_cart[index]["quantity"]))
                         : ListView.separated(
                             primary: false,
                             shrinkWrap: true,
@@ -165,14 +201,54 @@ class _CartState extends State<Cart> {
                                 Temp.dine_in_cart[index]["choices"].length,
                             physics: const ClampingScrollPhysics(),
                             itemBuilder: (_, index2) {
-                              return CartItem(
+                              return GestureDetector(
+                                  onHorizontalDragStart: (detail) {
+                                    showDialog<void>(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: const Text('Alert!'),
+                                          content: Text('Do you want to continue to delete item : ${Temp.dine_in_cart[index]["choices"]
+                                          [index2]["choice"]}?'),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              style: TextButton.styleFrom(
+                                                textStyle: Theme.of(context).textTheme.labelLarge,
+                                              ),
+                                              child: const Text('No'),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                            TextButton(
+                                              style: TextButton.styleFrom(
+                                                textStyle: Theme.of(context).textTheme.labelLarge,
+                                              ),
+                                              child: const Text('Yes'),
+                                              onPressed: () {
+                                                Temp.dine_in_cart[index]["choices"].removeAt(index2);
+                                                if (Temp.dine_in_cart[index]["choices"].length == 0) {
+                                                  Temp.dine_in_cart.removeAt(index);
+                                                }
+                                                setState(() {
+                                                  Navigator.of(context).pop();
+                                                });
+
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                  child: CartItem(
                                   addon: Temp.dine_in_cart[index]["addon"],
                                   price: Temp.dine_in_cart[index]["price"],
                                   itemid: Temp.dine_in_cart[index]["itemid"],
                                   label: Temp.dine_in_cart[index]["choices"]
                                       [index2]["choice"],
                                   quantity: Temp.dine_in_cart[index]["choices"]
-                                      [index2]["quantity"]);
+                                      [index2]["quantity"]));
                             },
                             separatorBuilder: (_, index) {
                               return const SizedBox(
@@ -268,27 +344,14 @@ class _CartState extends State<Cart> {
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        "Customer Name : ",
-                        style: TextStyle(
-                            color: Color.fromARGB(255, 166, 232, 20),
-                            fontSize: 15),
-                      )
-                    ])): Container(),
-            choosenCheckout == "Takeaway"?
-            Padding(
-                padding: const EdgeInsets.only(left: 40.0, right: 40.0),
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
                       Container(
-                          width: 200,
+                          width: 260,
                           child: TextField(
                             controller: customer_controller,
                             textAlign: TextAlign.center,
                             keyboardType: TextInputType.text,
                             decoration: InputDecoration(
-                              hintText: "-",
+                              label: Text("Takeaway Person Name"),
                             ),
                             onChanged: (text) => setState(() {}),
                           )),
@@ -488,7 +551,8 @@ class _CartState extends State<Cart> {
                                   "completedCount": 0,
                                   "orderQuantity": quantityTotal,
                                   "state": "ORDERED",
-                                  "customer": customer_controller.text,
+                                  "customer": FirebaseAuth.instance.currentUser?.phoneNumber,
+                                  "takeawayPerson": customer_controller.text,
                                   "orderTime": DateTime.now(),
                                   "orderType": choosenCheckout
                                 };
@@ -505,35 +569,9 @@ class _CartState extends State<Cart> {
                                     print("Cart Updated"),
                                     table_controller.text = "",
                                 customer_controller.text = "",
-                                showDialog<void>(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: const Text(
-                                          'Order Confirmed'),
-                                      content: const Text('Please wait, Your order will be ready soon!'),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          style:
-                                          TextButton.styleFrom(
-                                            textStyle:
-                                            Theme.of(context)
-                                                .textTheme
-                                                .labelLarge,
-                                          ),
-                                          child: const Text('Okay'),
-                                          onPressed: () {
-                                            setState(() {
-                                              loading = false;
-                                            });
-                                            Navigator.of(context)
-                                                .pop();
-                                          },
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                )
+                              setState(() {
+                              loading = false;
+                              })
                                   })
                                   .catchError((error) =>
                               print("Failed to update cart: $error"))
