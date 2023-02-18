@@ -6,7 +6,7 @@ class CartItem extends StatefulWidget {
   final String itemid;
   final String label;
   final int quantity;
-  final String addon;
+  final dynamic addon;
 
   CartItem(
       {required this.price,

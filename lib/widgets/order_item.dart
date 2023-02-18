@@ -16,7 +16,7 @@ class OrderItem extends StatefulWidget {
   final int completedPercent;
   final String state;
   final String orderType;
-  final String tableNum;
+  final dynamic tableNum;
   final int total;
   final List<dynamic> foodOrder;
   final List<dynamic> drinkOrder;

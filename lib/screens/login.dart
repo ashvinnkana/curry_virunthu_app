@@ -133,7 +133,7 @@ class _LoginState extends State<Login> {
                                 ),
                                 child: const Center(
                                   child: Text(
-                                    "C U R R Y   V I R U N T H U",
+                                    "C U R R Y   V I R U N D H U",
                                     style: TextStyle(
                                       color: Colors.lightGreenAccent,
                                       fontSize: 25,

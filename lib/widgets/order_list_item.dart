@@ -6,7 +6,7 @@ class OrderListItem extends StatefulWidget {
   final String itemid;
   final String label;
   final int quantity;
-  final String addon;
+  final dynamic addon;
   final String state;
   final String orderState;
 
