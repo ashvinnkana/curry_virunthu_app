@@ -195,9 +195,9 @@ class _ProductViewState extends State<ProductView> {
                   ),
                 ],
               ),
-              product["category"] == 'K2vR0XROjDoauN5svgLI' ?
+              product["category"] == 'K2vR0XROjDoauN5svgLI' && product["id"] != 'LrXQ92Vb7GrocfQt6i95' ?
               const SizedBox(height: 20.0) : SizedBox(),
-              product["category"] == 'K2vR0XROjDoauN5svgLI' ?
+              product["category"] == 'K2vR0XROjDoauN5svgLI' && product["id"] != 'LrXQ92Vb7GrocfQt6i95' ?
               Padding(
                 padding: EdgeInsets.only(left: 20.0),
                 child: Container(
@@ -210,7 +210,7 @@ class _ProductViewState extends State<ProductView> {
                           color: Colors.lightGreen),
                     )),
               ) : SizedBox(),
-              product["category"] == 'K2vR0XROjDoauN5svgLI' ?
+              product["category"] == 'K2vR0XROjDoauN5svgLI' && product["id"] != 'LrXQ92Vb7GrocfQt6i95' ?
               buildAddons() : SizedBox(),
 
               const SizedBox(height: 30.0),
