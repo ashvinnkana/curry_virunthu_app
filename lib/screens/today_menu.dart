@@ -222,8 +222,7 @@ class _MenuState extends State<Menu> {
                     Map<String, dynamic> product =
                     document.data()! as Map<String, dynamic>;
                     String id = document.id;
-                    return GestureDetector(
-                      child: Padding(
+                    return Padding(
                           padding: const EdgeInsets.only(right: 0.0),
                           child: MenuItems(
                               id: id,
@@ -234,19 +233,9 @@ class _MenuState extends State<Menu> {
                               isAvailable: product["isAvailable"],
                               price: product["price"],
                               choices: product["choices"],
-                            category : categoryId
-                          )),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (BuildContext context) {
-                              return ProductView(product, id);
-                            },
-                          ),
-                        );
-                      },
-                    );
+                            category : categoryId,
+                            data: product
+                          ));
                   })
                       .toList()
                       .cast(),

@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:curry_virunthu_app/util/temp.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import '../screens/product_view.dart';
+
 class MenuItems extends StatefulWidget {
   final String id;
   final String img;
@@ -15,6 +17,7 @@ class MenuItems extends StatefulWidget {
   final String price;
   final String category;
   final List<dynamic> choices;
+  final dynamic data;
 
   MenuItems(
       {required this.id,
@@ -25,7 +28,8 @@ class MenuItems extends StatefulWidget {
       required this.isAvailable,
       required this.price,
       required this.choices,
-        required this.category});
+        required this.category,
+      required this.data});
 
   @override
   _MenuItemState createState() => _MenuItemState();
@@ -131,6 +135,40 @@ class _MenuItemState extends State<MenuItems> {
                             ),
                           ),
                         ),
+                      ),
+                      Positioned(
+                        top: 6.0,
+                        right: 6.0,
+                        child: GestureDetector(
+                          child: Card(
+                            color: Color.fromRGBO(0, 0, 0, 0.4),
+                            shape: RoundedRectangleBorder(
+
+                                borderRadius: BorderRadius.circular(4.0)),
+                            child: Padding(
+                              padding: EdgeInsets.all(2.0),
+                              child: Row(
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.info_outline,
+                                    color: Colors.white,
+                                    size: 25,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (BuildContext context) {
+                                  return ProductView(widget.data, widget.id);
+                                },
+                              ),
+                            );
+                          },
+                        )
                       ),
                     ],
                   )),
