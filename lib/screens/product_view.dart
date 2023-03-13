@@ -335,6 +335,7 @@ class _ProductViewState extends State<ProductView> {
               product["choices"][currentChoice]["label"]) {
             Temp.dine_in_cart[i]["choices"][j]["quantity"] =
                 Temp.dine_in_cart[i]["choices"][j]["quantity"] + quantity;
+            Temp.dine_in_cart[i]["quantity"] = Temp.dine_in_cart[i]["quantity"] + quantity;
             if (addonChoice != "") {
               Temp.dine_in_cart[i]["addon"] = addonChoice;
             }
@@ -345,6 +346,7 @@ class _ProductViewState extends State<ProductView> {
           "choice": product["choices"][currentChoice]["label"],
           "quantity": quantity
         });
+        Temp.dine_in_cart[i]["quantity"] = Temp.dine_in_cart[i]["quantity"] + quantity;
         if (addonChoice != "") {
           Temp.dine_in_cart[i]["addon"] = addonChoice;
         }
@@ -356,6 +358,7 @@ class _ProductViewState extends State<ProductView> {
 
     if (addonChoice != "") {
       item = {
+        "category": product["category"],
         "itemid": item_id,
         "label": product["label"],
         "price": int.parse(product["price"]),
@@ -365,10 +368,12 @@ class _ProductViewState extends State<ProductView> {
             "choice": product["choices"][currentChoice]["label"],
             "quantity": quantity
           }
-        ]
+        ],
+        "quantity": quantity
       };
     } else {
       item = {
+        "category": product["category"],
         "itemid": item_id,
         "label": product["label"],
         "price": int.parse(product["price"]),
@@ -377,7 +382,8 @@ class _ProductViewState extends State<ProductView> {
             "choice": product["choices"][currentChoice]["label"],
             "quantity": quantity
           }
-        ]
+        ],
+        "quantity": quantity
       };
     }
     Temp.dine_in_cart.add(item);
@@ -400,6 +406,7 @@ class _ProductViewState extends State<ProductView> {
 
     if (addonChoice != "") {
       item = {
+        "category": product["category"],
         "itemid": item_id,
         "label": product["label"],
         "price": int.parse(product["price"]),
@@ -409,6 +416,7 @@ class _ProductViewState extends State<ProductView> {
       };
     } else {
       item = {
+        "category": product["category"],
         "itemid": item_id,
         "label": product["label"],
         "price": int.parse(product["price"]),

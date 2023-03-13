@@ -13,6 +13,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'main_screen.dart';
 
 class Home extends StatelessWidget {
+
+
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -32,6 +35,10 @@ class Home extends StatelessWidget {
               buildMenuHeadingRow(context),
               const SizedBox(height: 10.0),
               buildMenuList(context),
+              const SizedBox(height: 10.0),
+              buildGroceryHeadingRow(context),
+              const SizedBox(height: 10.0),
+              buildGroceryList(context),
               const SizedBox(height: 10.0),
               buildTrendingHeadingRow(context),
               const SizedBox(height: 10.0),
@@ -83,11 +90,45 @@ class Home extends StatelessWidget {
     );
   }
 
+  buildGroceryHeadingRow(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        const Text(
+          "Mini Market",
+          style: TextStyle(
+            fontSize: 20.0,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+        TextButton(
+          child: Text(
+            "See all",
+            style: TextStyle(
+              color: Theme.of(context).accentColor,
+            ),
+          ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) {
+                  return MainScreen(1, "Grocery");
+                },
+              ),
+            );
+          },
+        ),
+      ],
+    );
+  }
+
   buildMenuList(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
           .collection('item')
           .where("isAvailable", isEqualTo: true)
+          .where("category", isNotEqualTo: "zMyEDUtUyDBHPFfERBBD")
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
@@ -130,6 +171,52 @@ class Home extends StatelessWidget {
     );
   }
 
+  buildGroceryList(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('item')
+          .where("category", isEqualTo: "zMyEDUtUyDBHPFfERBBD")
+          .snapshots(),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return Text('${snapshot.error}');
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Container();
+        }
+        return SizedBox(
+          height: MediaQuery.of(context).size.height / 6,
+          child: ListView(
+            primary: false,
+            scrollDirection: Axis.horizontal,
+            shrinkWrap: true,
+            children: snapshot.data!.docs
+                .map((DocumentSnapshot document) {
+              Map<String, dynamic> product =
+              document.data()! as Map<String, dynamic>;
+              String id = document.id;
+              return GestureDetector(
+                child: ProductItem(prod: product),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) {
+                        return ProductView(product, id);
+                      },
+                    ),
+                  );
+                },
+              );
+            })
+                .toList()
+                .cast(),
+          ),
+        );
+      },
+    );
+  }
   //SEARCH
 
   buildSearchBar(BuildContext context) {

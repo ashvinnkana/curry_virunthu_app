@@ -22,7 +22,10 @@ class Login extends StatefulWidget {
         .collection('customer')
         .doc(FirebaseAuth.instance.currentUser?.uid)
         .get()
-        .then((data) => {Session.userData = data});
+        .then((data) => {
+          Session.userData = data,
+          print('USERDATA : $data')
+        });
   }
 
   @override
@@ -259,7 +262,7 @@ class _LoginState extends State<Login> {
                       style: TextStyle(fontSize: 15),
                     ),
                     Container(
-                        width: 200,
+                        width: MediaQuery.of(context).size.width/2,
                         child: TextField(
                           controller: phoneNumController,
                           keyboardType: TextInputType.phone,

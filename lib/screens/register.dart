@@ -155,7 +155,7 @@ class _RegisterState extends State<Register> {
                                 style: TextStyle(fontSize: 15),
                               ),
                               Container(
-                                  width: 200,
+                                  width: MediaQuery.of(context).size.width/2,
                                   child: TextField(
                                     enabled: false,
                                     controller: _controller,
@@ -221,6 +221,11 @@ class _RegisterState extends State<Register> {
                                   border: InputBorder.none,
                                   labelText: "First Name",
                                 ),
+                                onChanged: (text){
+                                  setState(() {
+
+                                  });
+                                },
                               )),
                         ),
                         SizedBox(
@@ -249,6 +254,11 @@ class _RegisterState extends State<Register> {
                                   border: InputBorder.none,
                                   labelText: "Last Name",
                                 ),
+                                onChanged: (text){
+                                  setState(() {
+
+                                  });
+                                },
                               )),
                         )
                       ],
@@ -279,7 +289,11 @@ class _RegisterState extends State<Register> {
                                 border: InputBorder.none,
                                 labelText: "Email Address",
                               ),
-                              onChanged: (text) {},
+                              onChanged: (text){
+                                setState(() {
+
+                                });
+                              },
                             )),
                       )),
                   const SizedBox(height: 5.0),
