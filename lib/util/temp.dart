@@ -10,5 +10,5 @@ class Temp {
 
   static List<dynamic> curryList = [];
 
-  static List<int> availableTables = [];
+  static List<dynamic> availableTables = [];
 }

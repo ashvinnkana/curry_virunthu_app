@@ -76,6 +76,9 @@ class _CartState extends State<Cart> {
                       textStyle: TextStyle(color: Colors.black, fontSize: 15),
                       backgroundColor: Color.fromARGB(255, 148, 182, 117),
                       onSubmit: () {
+                        setState(() {
+                          loading = true;
+                        });
                         //////////////////////////////////////////////////////////////////
                         List<dynamic> foodOrderData = [];
                         List<dynamic> drinksOrderData = [];
@@ -169,56 +172,31 @@ class _CartState extends State<Cart> {
                             }
                           }
                         }
-                        Temp.availableTables = [
-                          1,
-                          2,
-                          3,
-                          4,
-                          5,
-                          6,
-                          7,
-                          8,
-                          9,
-                          10,
-                          11,
-                          12,
-                          13,
-                          14,
-                          15,
-                          16,
-                          17,
-                          18,
-                          19,
-                          20,
-                          21,
-                          22,
-                          23,
-                          24,
-                          25
-                        ];
+
+                        Temp.availableTables = [];
                         FirebaseFirestore.instance
-                            .collection('order')
-                            .where("orderType", isEqualTo: "Dine-in")
+                            .collection('tableData')
+                            .orderBy("tableNum", descending: false)
                             .get()
                             .then((QuerySnapshot querySnapshot) {
                           querySnapshot.docs.forEach((doc) {
-                            Temp.availableTables.removeAt(
-                                Temp.availableTables.indexOf(doc["tableNum"]));
+                            Temp.availableTables.add(doc);
                           });
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext context) {
+                                print(Temp.availableTables.length);
+                                return Checkout(
+                                    foodOrder: foodOrderData,
+                                    drinkOrder: drinksOrderData,
+                                    total: findTotal());
+                              },
+                            ),
+                          );
                         }).catchError((onError) => {print(onError.toString())});
 
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (BuildContext context) {
-                              print(Temp.availableTables.length);
-                              return Checkout(
-                                  foodOrder: foodOrderData,
-                                  drinkOrder: drinksOrderData,
-                                  total: findTotal());
-                            },
-                          ),
-                        );
+
                       },
                       gradient: const LinearGradient(
                           begin: Alignment.topLeft,
@@ -253,10 +231,11 @@ class _CartState extends State<Cart> {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 // Add one stop for each color. Stops should increase from 0 to 1
-                stops: [0.2, 0.5],
+                stops: [0.3, 0.5],
                 colors: [
-                  Color.fromARGB(180, 27, 54, 3),
                   Color.fromARGB(180, 0, 0, 0),
+                  Color.fromARGB(180, 27, 54, 3),
+
                 ],
                 // stops: [0.0, 0.1],
               ),
@@ -265,18 +244,18 @@ class _CartState extends State<Cart> {
             width: MediaQuery.of(context).size.width,
           ),
           Positioned(
-              top: 60,
+              bottom: 110,
               left: MediaQuery.of(context).size.width / 4,
               child: Image.asset(
                 "assets/loading.gif",
                 width: MediaQuery.of(context).size.width / 2,
               )),
           Positioned(
-              top: 210,
+              bottom: 90,
               child: SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: Text(
-                    "C O N F I R M I N G   O R D E R\n. . .",
+                    "L O A D I N G\n. . .",
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   )))
