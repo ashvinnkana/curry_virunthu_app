@@ -27,6 +27,8 @@ class Cart extends StatefulWidget {
         Temp.curryList.add(doc);
       });
     }).catchError((onError) => {print(onError.toString())});
+
+
   }
 
   @override

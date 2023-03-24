@@ -5,5 +5,8 @@ class Temp {
 
   static List<String> categoryLabels = [];
 
+  static List<String> items = [];
+  static Map<String, dynamic> itemDatas = {};
+
   static List<dynamic> curryList = [];
 }

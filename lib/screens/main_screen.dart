@@ -20,7 +20,9 @@ class MainScreen extends StatefulWidget {
   final int page;
   final String subPage;
 
-  MainScreen(this.page, this.subPage);
+  MainScreen(this.page, this.subPage) {
+
+  }
 
   @override
   _MainScreenState createState() => _MainScreenState(page, subPage);
