@@ -58,7 +58,6 @@ class _HomeState extends State<Home> {
           GestureDetector(
             onTap: () {
               if (!refresh) {
-                print("sfsdfsdfdsf");
                 setState(() {
                   refresh = true;
                 });

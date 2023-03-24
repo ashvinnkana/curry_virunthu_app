@@ -370,6 +370,7 @@ class _RegisterState extends State<Register> {
                                       'lname': lname_controller.text,
                                       'email': email_controller.text,
                                       'dineInCart': [],
+                                      'admin':false,
                                       'mobile': "+61$phoneNum"
                                     })
                                     .then((value) => {

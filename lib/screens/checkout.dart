@@ -9,9 +9,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'main_screen.dart';
 
 class Checkout extends StatefulWidget {
-  final int total;
+  final List<dynamic> foodOrder;
+  final List<dynamic> drinkOrder;
+  final total;
 
-  Checkout({ required this.total});
+  Checkout({
+    required this.foodOrder,
+    required this.drinkOrder,
+    required this.total
+  });
 
   @override
   _CheckoutState createState() => _CheckoutState();

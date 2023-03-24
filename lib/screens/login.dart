@@ -23,8 +23,7 @@ class Login extends StatefulWidget {
         .doc(FirebaseAuth.instance.currentUser?.uid)
         .get()
         .then((data) => {
-          Session.userData = data,
-          print('USERDATA : $data')
+          Session.userData = data
         });
   }
 
