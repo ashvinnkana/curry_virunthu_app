@@ -37,6 +37,7 @@ class _LoginState extends State<Login> {
   double screenWidth = 0.0;
   double screenHeight = 0.0;
 
+
   @override
   Widget build(BuildContext context) {
     //FINDING SCREEN RESOLUTION

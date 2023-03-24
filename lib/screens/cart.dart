@@ -68,8 +68,7 @@ class _CartState extends State<Cart> {
                     )),
                 Padding(
                     padding: const EdgeInsets.fromLTRB(40.0, 20.0, 40.0, 20.0),
-                    child:
-                    GradientSlideToAct(
+                    child: GradientSlideToAct(
                       text: "PROCEED TO CHECKOUT",
                       width: 400,
                       dragableIconBackgroundColor:
@@ -77,7 +76,6 @@ class _CartState extends State<Cart> {
                       textStyle: TextStyle(color: Colors.black, fontSize: 15),
                       backgroundColor: Color.fromARGB(255, 148, 182, 117),
                       onSubmit: () {
-
                         //////////////////////////////////////////////////////////////////
                         List<dynamic> foodOrderData = [];
                         List<dynamic> drinksOrderData = [];
@@ -171,13 +169,53 @@ class _CartState extends State<Cart> {
                             }
                           }
                         }
-
+                        Temp.availableTables = [
+                          1,
+                          2,
+                          3,
+                          4,
+                          5,
+                          6,
+                          7,
+                          8,
+                          9,
+                          10,
+                          11,
+                          12,
+                          13,
+                          14,
+                          15,
+                          16,
+                          17,
+                          18,
+                          19,
+                          20,
+                          21,
+                          22,
+                          23,
+                          24,
+                          25
+                        ];
+                        FirebaseFirestore.instance
+                            .collection('order')
+                            .where("orderType", isEqualTo: "Dine-in")
+                            .get()
+                            .then((QuerySnapshot querySnapshot) {
+                          querySnapshot.docs.forEach((doc) {
+                            Temp.availableTables.removeAt(
+                                Temp.availableTables.indexOf(doc["tableNum"]));
+                          });
+                        }).catchError((onError) => {print(onError.toString())});
 
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (BuildContext context) {
-                              return Checkout(foodOrder: foodOrderData, drinkOrder: drinksOrderData, total: findTotal());
+                              print(Temp.availableTables.length);
+                              return Checkout(
+                                  foodOrder: foodOrderData,
+                                  drinkOrder: drinksOrderData,
+                                  total: findTotal());
                             },
                           ),
                         );

@@ -9,4 +9,6 @@ class Temp {
   static Map<String, dynamic> itemDatas = {};
 
   static List<dynamic> curryList = [];
+
+  static List<int> availableTables = [];
 }
