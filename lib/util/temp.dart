@@ -11,4 +11,6 @@ class Temp {
   static List<dynamic> curryList = [];
 
   static List<dynamic> availableTables = [];
+
+  static bool selfOrderUnlock = false;
 }

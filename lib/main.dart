@@ -50,16 +50,7 @@ Future<void> main() async {
   } on SocketException catch (_) {
   }
 
-  Temp.categoryLabels = ["All"];
 
-  FirebaseFirestore.instance.collection('category')
-      .orderBy("orderId")
-      .get()
-      .then((QuerySnapshot querySnapshot) {
-    querySnapshot.docs.forEach((doc) {
-      Temp.categoryLabels.add(doc["label"].toString());
-    });
-  });
 }
 
 class MyApp extends StatefulWidget {

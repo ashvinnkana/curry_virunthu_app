@@ -58,15 +58,15 @@ class _CartState extends State<Cart> {
           children: <Widget>[
             Column(
               children: [
-                const SizedBox(
+                Temp.dine_in_cart.length != 0 ?const SizedBox(
                   height: 20,
-                ),
-                Text("\$${findTotal().toString()}",
+                ): SizedBox(),
+                Temp.dine_in_cart.length != 0 ?Text("\$${findTotal().toString()}",
                     style: const TextStyle(
                       fontSize: 45,
                       color: Colors.orange,
-                    )),
-                Padding(
+                    )): SizedBox(),
+                Temp.dine_in_cart.length != 0 ?Padding(
                     padding: const EdgeInsets.fromLTRB(40.0, 20.0, 40.0, 20.0),
                     child: GradientSlideToAct(
                       text: "PROCEED TO CHECKOUT",
@@ -190,7 +190,9 @@ class _CartState extends State<Cart> {
                                 return Checkout(
                                     foodOrder: foodOrderData,
                                     drinkOrder: drinksOrderData,
-                                    total: findTotal());
+                                    total: total,
+                                    quantityTotal: quantityTotal
+                                );
                               },
                             ),
                           );
@@ -205,7 +207,7 @@ class _CartState extends State<Cart> {
                             Color(0Xff11998E),
                             Color(0Xff38EF7D),
                           ]),
-                    )),
+                    )): SizedBox(),
                 Expanded(
                     child: SingleChildScrollView(
                         child: Padding(

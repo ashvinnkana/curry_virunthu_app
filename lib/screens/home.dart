@@ -17,6 +17,8 @@ import 'main_screen.dart';
 
 class Home extends StatefulWidget {
   Home() {
+    Temp.items = [];
+    Temp.itemDatas = {};
     FirebaseFirestore.instance
         .collection('item')
         .get()
@@ -30,6 +32,17 @@ class Home extends StatefulWidget {
       });
     }).catchError((e) {
       print(e.message);
+    });
+
+    Temp.categoryLabels = ["All"];
+
+    FirebaseFirestore.instance.collection('category')
+        .orderBy("orderId")
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        Temp.categoryLabels.add(doc["label"].toString());
+      });
     });
   }
 
