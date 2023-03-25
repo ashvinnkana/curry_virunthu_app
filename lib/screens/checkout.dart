@@ -2,13 +2,14 @@ import 'package:curry_virunthu_app/util/temp.dart';
 import 'package:curry_virunthu_app/util/user_session.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:quantity_input/quantity_input.dart';
 import 'package:flutter/services.dart';
 import '../widgets/gradient_slide_to_act.dart';
-import 'add_to_cart.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'cart.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:flutter_stripe/flutter_stripe.dart';
+
 import 'main_screen.dart';
 
 class Checkout extends StatefulWidget {
@@ -37,12 +38,16 @@ class Checkout extends StatefulWidget {
 
 class _CheckoutState extends State<Checkout> {
   bool loading = false;
+  String loading_text = "C O N F I R M I N G   O R D E R";
   String choosenCheckout = "Dine-in";
   var checkoutOptions = ["Dine-in", "Takeaway"];
   TextEditingController phoneNumController = TextEditingController();
   TextEditingController cusComment = TextEditingController();
   dynamic orderData = {};
   var selectedTable = null;
+
+  Map<String, dynamic>? paymentIntent;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -312,7 +317,8 @@ class _CheckoutState extends State<Checkout> {
                         SizedBox(
                           height: 15,
                         ),
-                        checkAllFields() ? GradientSlideToAct(
+                        checkAllFields() ? (choosenCheckout == "Dine-in"?
+                        GradientSlideToAct(
                           text: "CONFIRM ORDER",
                           width: 400,
                           dragableIconBackgroundColor:
@@ -360,7 +366,7 @@ class _CheckoutState extends State<Checkout> {
                                 "completedCount": 0,
                                 "orderQuantity": widget.quantityTotal,
                                 "state": "ORDERED",
-                                "customer": customer_num,
+                                "customer": FirebaseAuth.instance.currentUser?.phoneNumber,
                                 "orderTime": DateTime.now(),
                                 "orderType": choosenCheckout,
                                 "comment": cusComment.text
@@ -428,7 +434,16 @@ class _CheckoutState extends State<Checkout> {
                                 Color(0Xff11998E),
                                 Color(0Xff38EF7D),
                               ]),
-                        ):Text("All Fields Required!",
+                        ):
+                        ElevatedButton(onPressed: () async {
+                          setState(() {
+                            loading = true;
+                          });
+                          await makePayment();
+                        }, child: Text('Proceed to Payment'),
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.lightGreen.shade800,),)
+                        ) :Text("All Fields Required!",
                           style: TextStyle(
                               color: Colors.red
                           ),) ,
@@ -445,6 +460,199 @@ class _CheckoutState extends State<Checkout> {
             getLoadingScreen()
           ],
         ) );
+  }
+
+  Future<void> makePayment() async {
+    try {
+      paymentIntent = await createPaymentIntent(widget.total.toString(), 'AUD');
+      //Payment Sheet
+      await Stripe.instance.initPaymentSheet(
+          paymentSheetParameters: SetupPaymentSheetParameters(
+              paymentIntentClientSecret: paymentIntent!['client_secret'],
+              //applePay: const PaymentSheetApplePay(merchantCountryCode: '+61',),
+              //googlePay: const PaymentSheetGooglePay(testEnv: true, currencyCode: "AU", merchantCountryCode: "+61"),
+              style: ThemeMode.dark,
+              merchantDisplayName: 'Curry Virunthu')).then((value){
+      });
+      displayPaymentSheet();
+    } catch (e, s) {
+      setState(() {
+        loading = false;
+      });
+      print('exception:$e$s');
+      showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  children: const [
+                    Icon(Icons.warning_amber, color: Colors.red,),
+                    SizedBox(width: 3,),
+                    Text("Payment Failed!"),
+                  ],
+                ),
+              ],
+            ),
+          ));
+    }
+  }
+
+  displayPaymentSheet() async {
+    try {
+      await Stripe.instance.presentPaymentSheet(
+      ).then((value){
+        showDialog(
+            context: context,
+            builder: (_) => AlertDialog(
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: const [
+                      Icon(Icons.check_circle, color: Colors.green,),
+                      SizedBox(width: 3,),
+                      Text("Payment Successfull!"),
+                    ],
+                  ),
+                ],
+              ),
+            ));
+        orderData = {
+          "total": widget.total,
+          "drinkOrder": widget.drinkOrder,
+          "foodOrder": widget.foodOrder,
+          "completedPercent": 0,
+          "completedCount": 0,
+          "orderQuantity": widget.quantityTotal,
+          "state": "ORDERED",
+          "customer": FirebaseAuth.instance.currentUser?.phoneNumber,
+          "orderTime": DateTime.now(),
+          "orderType": choosenCheckout,
+          "comment": cusComment.text
+        };
+
+          Temp.dine_in_cart = [];
+          FirebaseFirestore.instance.collection('order')
+          .add(orderData)
+          .then((value) => {
+        FirebaseFirestore.instance
+            .collection("customer")
+            .doc(FirebaseAuth.instance.currentUser?.uid)
+            .update({"dineInCart": Temp.dine_in_cart})
+            .then((value) => {
+          print("Cart Updated"),
+          cusComment.text = "",
+          selectedTable = null,
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) {
+                print(Temp.availableTables.length);
+                return MainScreen(2, "All");
+              },
+            ),
+          )
+        })
+            .catchError((error) =>
+            print("Failed to update cart: $error"))
+      }).catchError((onError) => {
+        showDialog<void>(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text(
+                  'Something went Wrong!'),
+              content: Text(
+                  onError.toString()),
+              actions: <Widget>[
+                TextButton(
+                  style:
+                  TextButton.styleFrom(
+                    textStyle:
+                    Theme.of(context)
+                        .textTheme
+                        .labelLarge,
+                  ),
+                  child: const Text('Okay'),
+                  onPressed: () {
+                    Navigator.of(context)
+                        .pop();
+                  },
+                ),
+              ],
+            );
+          },
+        )
+      });
+        // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("paid successfully")));
+
+        paymentIntent = null;
+
+      }).onError((error, stackTrace){
+        setState(() {
+          loading = false;
+        });
+        print('Error is:--->$error $stackTrace');
+        showDialog(
+            context: context,
+            builder: (_) => AlertDialog(
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: const [
+                      Icon(Icons.warning_amber, color: Colors.red,),
+                      SizedBox(width: 3,),
+                      Text("Payment Failed!"),
+                    ],
+                  ),
+                ],
+              ),
+            ));
+      });
+
+
+    } on StripeException catch (e) {
+      print('Error is:---> $e');
+      showDialog(
+          context: context,
+          builder: (_) => const AlertDialog(
+            content: Text("Cancelled "),
+          ));
+    } catch (e) {
+      print('$e');
+    }
+  }
+
+  createPaymentIntent(String amount, String currency) async {
+    try{
+      Map<String, dynamic> body = {
+        'amount': calculateAmount(amount),
+        'currency': currency,
+        'payment_method_types[]': 'card'
+      };
+
+      var response = await http.post(
+        Uri.parse('https://api.stripe.com/v1/payment_intents'),
+        headers: {
+          'Authorization': 'Bearer ${Temp.STRIPE_SECRET_KEY}',
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: body,
+      );
+      print('Payment Intent Body->>> ${response.body.toString()}');
+      return jsonDecode(response.body);
+    }catch (err) {
+      // ignore: avoid_print
+      print('err charging user: ${err.toString()}');
+    }
+  }
+
+  calculateAmount(String amount) {
+    final calculatedAmout = (int.parse(amount)) * 100 ;
+    return calculatedAmout.toString();
   }
 
   checkAllFields() {
@@ -492,7 +700,7 @@ class _CheckoutState extends State<Checkout> {
               child: SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: Text(
-                    "C O N F I R M I N G   O R D E R\n. . .",
+                    "$loading_text\n. . .",
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   )))
@@ -517,4 +725,6 @@ class _CheckoutState extends State<Checkout> {
 
     return emoji;
   }
+
+
 }

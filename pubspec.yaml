@@ -50,6 +50,10 @@ dependencies:
   flutter_local_notifications: ^8.2.0
   flutter_multi_formatter: ^2.10.2
   dropdown_search: ^5.0.6
+  flutter_stripe: ^9.0.0+1
+  http: ^0.13.5
+  flutter_bloc: ^8.1.2
+  equatable: ^2.0.5
 
 dev_dependencies:
   flutter_test:

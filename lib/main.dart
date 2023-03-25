@@ -9,6 +9,8 @@ import 'package:firebase_core/firebase_core.dart';
 
 import 'package:curry_virunthu_app/util/const.dart';
 import 'package:curry_virunthu_app/screens/login.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
+import '.env';
 
 Future<void> _firebaseMessagingBackgroundHandler(message) async {
   await Firebase.initializeApp();
@@ -17,7 +19,8 @@ Future<void> _firebaseMessagingBackgroundHandler(message) async {
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  Stripe.publishableKey = stripePublishableKey;
+  await Stripe.instance.applySettings();
   await Firebase.initializeApp();
   FirebaseMessaging messaging = FirebaseMessaging.instance;
 
