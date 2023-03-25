@@ -157,6 +157,9 @@ class _CheckoutState extends State<Checkout> {
                                     onTap: () {
                                       setState(() {
                                         selectedTable = Temp.availableTables[index]["tableNum"].toString();
+                                        if (Temp.availableTables[index]["state"] == "OCCUPIED") {
+                                          phoneNumController.text = Temp.availableTables[index]["customer"].toString().replaceAll("+61", "");
+                                        }
                                       });
 
                                     },
@@ -309,7 +312,7 @@ class _CheckoutState extends State<Checkout> {
                         SizedBox(
                           height: 15,
                         ),
-                        GradientSlideToAct(
+                        checkAllFields() ? GradientSlideToAct(
                           text: "CONFIRM ORDER",
                           width: 400,
                           dragableIconBackgroundColor:
@@ -322,7 +325,7 @@ class _CheckoutState extends State<Checkout> {
 
                             String? customer_num = "";
                             if (Session.userData["admin"]) {
-                              customer_num = "+64"+phoneNumController.text;
+                              customer_num = "+61"+phoneNumController.text;
                             } else {
                               customer_num = FirebaseAuth.instance.currentUser?.phoneNumber;
                             }
@@ -342,6 +345,12 @@ class _CheckoutState extends State<Checkout> {
                                 "orderType": choosenCheckout,
                                 "comment": cusComment.text
                               };
+    FirebaseFirestore.instance
+        .collection("tableData")
+        .doc(selectedTable)
+        .update({"state": "OCCUPIED", "customer": customer_num})
+        .then((value) => {});
+
                             } else {
                               orderData = {
                                 "total": widget.total,
@@ -419,7 +428,10 @@ class _CheckoutState extends State<Checkout> {
                                 Color(0Xff11998E),
                                 Color(0Xff38EF7D),
                               ]),
-                        ),
+                        ):Text("All Fields Required!",
+                          style: TextStyle(
+                              color: Colors.red
+                          ),) ,
                       ],
                     ):
                     Text("Contact a staff to complete proceeding with your order! ",
@@ -433,6 +445,18 @@ class _CheckoutState extends State<Checkout> {
             getLoadingScreen()
           ],
         ) );
+  }
+
+  checkAllFields() {
+    if (Session.userData["admin"] && phoneNumController.text.length != 9) {
+      return false;
+    }
+
+    if (choosenCheckout == "Dine-in" && selectedTable == null) {
+      return false;
+    }
+
+    return true;
   }
 
   getLoadingScreen() {

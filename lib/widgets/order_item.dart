@@ -78,7 +78,7 @@ class _OrderItemState extends State<OrderItem> {
                 width: MediaQuery.of(context).size.width,
                 child: Padding(
                   padding: EdgeInsets.only(left:15.0, right:15.0,bottom:5.0),
-                  child:Text("${widget.orderType.toUpperCase()}",
+                  child:Text("${widget.orderType.toUpperCase()}${widget.orderType=='Dine-in' ? ' | ' + widget.tableNum: ''}",
                     textAlign: TextAlign.left,
                     style: TextStyle(
                       color: stateColor[widget.state],
