@@ -534,24 +534,25 @@ class _CheckoutState extends State<Checkout> {
                                                             .then((value) => {
                                                           print(
                                                               "user rating updated"),
-                                                          Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                              builder:
-                                                                  (BuildContext
-                                                              context) {
-                                                                print(Temp
-                                                                    .availableTables
-                                                                    .length);
-                                                                return MainScreen(
-                                                                    2, "All");
-                                                              },
-                                                            ),
-                                                          )
+
                                                         })
                                                             .catchError((error) => print(
                                                             "Failed to update user rating: $error"));
                                                       }
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder:
+                                                              (BuildContext
+                                                          context) {
+                                                            print(Temp
+                                                                .availableTables
+                                                                .length);
+                                                            return const MainScreen(
+                                                                2, "All");
+                                                          },
+                                                        ),
+                                                      );
                                                     }
                                                     )
 

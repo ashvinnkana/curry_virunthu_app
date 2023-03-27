@@ -39,7 +39,7 @@ class _OrderItemState extends State<OrderItem> {
   dynamic stateColor = {
     "ORDERED": Color(0xffeeeeee),
     "PREPARING": Color(0xffe8743e),
-    "BILLING": Color(0xff53a233),
+    "BILLING": Color(0xff8bd36d),
     "PAID": Color(0xff3097c2),
     "NOT-PAID": Color(0xffea4e4e)
   };

@@ -99,6 +99,7 @@ class _CartState extends State<Cart> {
                                 "completedCount": 0,
                                 "category": Temp.dine_in_cart[i]["category"],
                                 "state": "ORDERED",
+                                "itemId": Temp.dine_in_cart[i]["itemid"]
                               });
                             } else {
                               foodOrderData.add({
@@ -111,6 +112,7 @@ class _CartState extends State<Cart> {
                                 "completedCount": 0,
                                 "category": Temp.dine_in_cart[i]["category"],
                                 "state": "ORDERED",
+                              "itemId": Temp.dine_in_cart[i]["itemid"]
                               });
 
                               if (Temp.dine_in_cart[i]["addon"] != null) {
@@ -142,6 +144,7 @@ class _CartState extends State<Cart> {
                                   "completedCount": 0,
                                   "category": Temp.dine_in_cart[i]["category"],
                                   "state": "ORDERED",
+                                  "itemId": Temp.dine_in_cart[i]["itemid"]
                                 });
                               } else {
                                 foodOrderData.add({
@@ -157,6 +160,7 @@ class _CartState extends State<Cart> {
                                   "completedCount": 0,
                                   "category": Temp.dine_in_cart[i]["category"],
                                   "state": "ORDERED",
+                                  "itemId": Temp.dine_in_cart[i]["itemid"]
                                 });
 
                                 if (Temp.dine_in_cart[i]["addon"] != null) {

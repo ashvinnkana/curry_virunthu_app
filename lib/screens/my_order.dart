@@ -70,7 +70,7 @@ class MyOrder extends StatelessWidget {
                                                         .round(),
                                                 state: order["state"],
                                                 orderType: order["orderType"],
-                                                tableNum: order["tableNum"]!,
+                                                tableNum: order["tableNum"],
                                                 total: order["total"],
                                                 foodOrder: order["foodOrder"],
                                                 drinkOrder: order["drinkOrder"],
