@@ -199,6 +199,7 @@ class _HomeState extends State<Home> {
         return SizedBox(
           height: MediaQuery.of(context).size.height / 6,
           child: ListView(
+            physics: BouncingScrollPhysics(),
             primary: false,
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,
@@ -247,6 +248,7 @@ class _HomeState extends State<Home> {
           height: MediaQuery.of(context).size.height / 6,
           child: ListView(
             primary: false,
+            physics: BouncingScrollPhysics(),
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,
             children: snapshot.data!.docs
@@ -451,6 +453,7 @@ class _HomeState extends State<Home> {
           height: MediaQuery.of(context).size.height / 2.4,
           width: MediaQuery.of(context).size.width,
           child: ListView(
+            physics: BouncingScrollPhysics(),
             primary: false,
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,
@@ -553,6 +556,7 @@ class _HomeState extends State<Home> {
         return Container(
           height: MediaQuery.of(context).size.height / 6,
           child: ListView(
+            physics: BouncingScrollPhysics(),
             primary: false,
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,

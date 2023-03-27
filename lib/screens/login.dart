@@ -15,16 +15,6 @@ import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 
 class Login extends StatefulWidget {
   Login({super.key}) {
-    print("=> SETTING UP USER SESSION");
-    Session.phoneNumber = FirebaseAuth.instance.currentUser?.phoneNumber;
-    Session.uid = FirebaseAuth.instance.currentUser?.uid;
-    FirebaseFirestore.instance
-        .collection('customer')
-        .doc(FirebaseAuth.instance.currentUser?.uid)
-        .get()
-        .then((data) => {
-          Session.userData = data
-        });
   }
 
   @override
@@ -44,52 +34,55 @@ class _LoginState extends State<Login> {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
 
-    if (Session.uid == null) {
+    if (FirebaseAuth.instance.currentUser?.uid == null) {
       print("=> NO USER SESSION FOUND");
-      return WillPopScope(
-          onWillPop: () async {
-            showDialog<void>(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: const Text('Alert!'),
-                  content:
-                  const Text('Do you want to continue to exit the app?'),
-                  actions: <Widget>[
-                    TextButton(
-                      style: TextButton.styleFrom(
-                        textStyle: Theme.of(context).textTheme.labelLarge,
-                      ),
-                      child: const Text('No'),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                    TextButton(
-                      style: TextButton.styleFrom(
-                        textStyle: Theme.of(context).textTheme.labelLarge,
-                      ),
-                      child: const Text('Yes'),
-                      onPressed: () {
-                        exit(0);
-                      },
-                    ),
-                  ],
-                );
-              },
-            );
-            return false;
-          },
-          child: Scaffold(
-            // STACK FOR LOADING SCREEN
-            body: Stack(
-              children: <Widget>[getLoginScreen(), getLoadingScreen()],
-            ),
-          ));
+      return noSessionFound();
     } else {
-      print("=> USER SESSION FOUND LOGGING IN USER");
       return MainScreen(0, "All");
     }
+  }
+
+  noSessionFound() {
+    return WillPopScope(
+        onWillPop: () async {
+          showDialog<void>(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('Alert!'),
+                content:
+                const Text('Do you want to continue to exit the app?'),
+                actions: <Widget>[
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      textStyle: Theme.of(context).textTheme.labelLarge,
+                    ),
+                    child: const Text('No'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      textStyle: Theme.of(context).textTheme.labelLarge,
+                    ),
+                    child: const Text('Yes'),
+                    onPressed: () {
+                      exit(0);
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+          return false;
+        },
+        child: Scaffold(
+          // STACK FOR LOADING SCREEN
+          body: Stack(
+            children: <Widget>[getLoginScreen(), getLoadingScreen()],
+          ),
+        ));
   }
 
   getLoadingScreen() {
@@ -361,23 +354,22 @@ class _LoginState extends State<Login> {
                               timeout: const Duration(seconds: 60),
                               verificationCompleted:
                                   (PhoneAuthCredential credential) async {
+
                                 await FirebaseAuth.instance
                                     .signInWithCredential(credential)
                                     .then((value) => {
+                                      /////////////////////////
                                   status = true,
-                                  FirebaseFirestore.instance
-                                      .collection('customer')
-                                      .where("mobile",
-                                      isEqualTo:
-                                      "+61${phoneNumController.text}")
-                                      .get()
-                                      .then((QuerySnapshot
-                                  querySnapshot) {
-                                    querySnapshot.docs
-                                        .forEach((doc) {
-                                      print("hi");
-                                    });
-                                  })
+
+                                    FirebaseFirestore.instance
+                                        .collection('customer')
+                                    .doc(FirebaseAuth.instance.currentUser?.uid)
+                                    .get()
+                                    .then((data) => {
+                                  Session.userData = data
+                                })
+
+                                  ///////////////
                                 })
                                     .catchError((onError) => {
                                   status = true,

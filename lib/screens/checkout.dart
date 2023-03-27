@@ -40,7 +40,9 @@ class _CheckoutState extends State<Checkout> {
   bool loading = false;
   String loading_text = "C O N F I R M I N G   O R D E R";
   String choosenCheckout = "Dine-in";
+  String choosenDelivery = "Pick-Up at Restaurant";
   var checkoutOptions = ["Dine-in", "Takeaway"];
+  var deliveryOptions = ["Pick-Up at Restaurant"];
   TextEditingController phoneNumController = TextEditingController();
   TextEditingController cusComment = TextEditingController();
   dynamic orderData = {};
@@ -130,14 +132,47 @@ class _CheckoutState extends State<Checkout> {
                                   });
                                 }))),
                     SizedBox(
-                      height: 10,
+                      height: 15,
                     ),
-                    Divider(
-                      color: Colors.white,
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
+                    choosenCheckout == 'Takeaway'? Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text("Delivery Method :",
+                          style: const TextStyle(
+                            fontSize: 15,
+                            color: Colors.grey,
+                          )),
+                    ):SizedBox(),
+                    choosenCheckout == 'Takeaway'? Align(
+                        alignment: Alignment.centerLeft,
+                        child: DropdownButtonHideUnderline(
+                            child: DropdownButton(
+                                isExpanded: true,
+                                style: TextStyle(fontSize: 15, color: Colors.white),
+                                value: choosenDelivery,
+                                icon: const Icon(
+                                  Icons.keyboard_arrow_down,
+                                  color: Colors.white,
+                                ),
+                                items: deliveryOptions.map((String items) {
+                                  return DropdownMenuItem(
+                                    value: items,
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          items,
+                                        )
+                                      ],
+                                    ),
+                                  );
+                                }).toList(),
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    choosenDelivery = newValue!;
+                                  });
+                                }))):SizedBox(),
+                    choosenCheckout == 'Takeaway'? SizedBox(
+                      height: 15,
+                    ):SizedBox(),
                     Temp.selfOrderUnlock || Session.userData["admin"] || choosenCheckout=='Takeaway'? Column(
                       children: <Widget>[
                         choosenCheckout=="Dine-in"? Align(
@@ -315,7 +350,13 @@ class _CheckoutState extends State<Checkout> {
                           ),
                         ),
                         SizedBox(
-                          height: 15,
+                          height: 10,
+                        ),
+                        Divider(
+                          color: Colors.white,
+                        ),
+                        SizedBox(
+                          height: 10,
                         ),
                         checkAllFields() ? (choosenCheckout == "Dine-in"?
                         GradientSlideToAct(

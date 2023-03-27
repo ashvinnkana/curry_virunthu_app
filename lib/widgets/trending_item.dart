@@ -89,20 +89,27 @@ class _TrendingItemState extends State<TrendingItem> {
                           borderRadius: BorderRadius.circular(4.0)),
                       child: Padding(
                         padding: EdgeInsets.all(2.0),
-                        child: Row(
+                        child: int.parse(widget.buyCount) > 5 ? Row(
                           children: <Widget>[
-                            Icon(
+                            const Icon(
                               Icons.favorite,
                               color: Colors.pink,
                               size: 12,
                             ),
                             Text(
                               " ${widget.buyCount} ",
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 12.0,
                               ),
                             ),
                           ],
+                        ):
+                        const Text(
+                          " NEW ",
+                          style: TextStyle(
+                              fontSize: 12.0,
+                              color: Colors.yellow
+                          ),
                         ),
                       ),
                     ),

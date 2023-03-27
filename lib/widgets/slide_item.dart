@@ -26,8 +26,8 @@ class _SlideItemState extends State<SlideItem> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
-      child: Container(
+      padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
+      child: SizedBox(
         height: MediaQuery.of(context).size.height / 2.9,
         width: MediaQuery.of(context).size.width / 1.2,
         child: Card(
@@ -91,20 +91,27 @@ class _SlideItemState extends State<SlideItem> {
                           borderRadius: BorderRadius.circular(4.0)),
                       child: Padding(
                         padding: EdgeInsets.all(2.0),
-                        child: Row(
+                        child: int.parse(widget.buyCount) > 5 ? Row(
                           children: <Widget>[
-                            Icon(
+                            const Icon(
                               Icons.favorite,
                               color: Colors.pink,
                               size: 12,
                             ),
                             Text(
                               " ${widget.buyCount} ",
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 12.0,
                               ),
                             ),
                           ],
+                        ):
+                        const Text(
+                          " NEW ",
+                          style: TextStyle(
+                              fontSize: 12.0,
+                              color: Colors.yellow
+                          ),
                         ),
                       ),
                     ),
@@ -132,14 +139,14 @@ class _SlideItemState extends State<SlideItem> {
                   ),
                 ],
               ),
-              SizedBox(height: 7.0),
+              const SizedBox(height: 7.0),
               Padding(
-                padding: EdgeInsets.only(left: 15.0),
-                child: Container(
+                padding: const EdgeInsets.only(left: 15.0),
+                child: SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: Text(
-                    "${widget.title}",
-                    style: TextStyle(
+                    widget.title,
+                    style: const TextStyle(
                       fontSize: 20.0,
                       fontWeight: FontWeight.w800,
                     ),
@@ -147,13 +154,13 @@ class _SlideItemState extends State<SlideItem> {
                   ),
                 ),
               ),
-              SizedBox(height: 7.0),
+              const SizedBox(height: 7.0),
               Padding(
                 padding: EdgeInsets.only(left: 15.0, right: 15),
                 child: Container(
                   height: 45,
                   child: Text(
-                    "${widget.desc}",
+                    widget.desc,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 3,
                     softWrap: false,

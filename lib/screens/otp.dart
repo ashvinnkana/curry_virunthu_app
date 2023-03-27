@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../util/user_session.dart';
 import 'login.dart';
 import 'main_screen.dart';
 
@@ -129,31 +130,33 @@ class _OtpState extends State<Otp> {
                             await FirebaseAuth.instance
                                 .signInWithCredential(credential).then((value) =>
                             {
-                              FirebaseFirestore.instance
-                                  .collection('customer')
-                                  .where("mobile", isEqualTo: "+61${phoneNum}").get()
+                            Session.userData = null,
+                            FirebaseFirestore.instance
+                                .collection('customer')
+                                .where("mobile", isEqualTo: "+61$phoneNum").get()
                                 .then((QuerySnapshot querySnapshot) {
-                                  print("Query: ${querySnapshot.docs.length}");
-                                  if (querySnapshot.docs.isEmpty) {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (BuildContext context) {
-                                          return Register(this.phoneNum);
-                                        },
-                                      ),
-                                    );
-                                  } else {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (BuildContext context) {
-                                          return MainScreen(0, "All");
-                                        },
-                                      ),
-                                    );
-                                  }
-                                })
+                            if (querySnapshot.docs.isEmpty) {
+                            Session.userData = null;
+                            Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                            builder: (BuildContext context) {
+                            return Register(phoneNum);
+                            },
+                            ),
+                            );
+                            } else {
+                            Session.userData = querySnapshot.docs[0];
+                            Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                            builder: (BuildContext context) {
+                            return MainScreen(0, "All");
+                            },
+                            ),
+                            );
+                            }
+                            })
 
                             }).catchError((onError) =>{
 

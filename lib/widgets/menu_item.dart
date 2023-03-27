@@ -99,20 +99,27 @@ class _MenuItemState extends State<MenuItems> {
                               borderRadius: BorderRadius.circular(4.0)),
                           child: Padding(
                             padding: EdgeInsets.all(2.0),
-                            child: Row(
+                            child: int.parse(widget.buyCount) > 5 ? Row(
                               children: <Widget>[
-                                Icon(
+                                const Icon(
                                   Icons.favorite,
                                   color: Colors.pink,
                                   size: 12,
                                 ),
                                 Text(
                                   " ${widget.buyCount} ",
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 12.0,
                                   ),
                                 ),
                               ],
+                            ):
+                            const Text(
+                              " NEW ",
+                              style: TextStyle(
+                                fontSize: 12.0,
+                                color: Colors.yellow
+                              ),
                             ),
                           ),
                         ),
@@ -127,7 +134,7 @@ class _MenuItemState extends State<MenuItems> {
                             padding: EdgeInsets.all(4.0),
                             child: Text(
                               "A\$ ${widget.price}",
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 25.0,
                                 color: Colors.lightGreen,
                                 fontWeight: FontWeight.bold,
@@ -141,14 +148,14 @@ class _MenuItemState extends State<MenuItems> {
                         right: 6.0,
                         child: GestureDetector(
                           child: Card(
-                            color: Color.fromRGBO(0, 0, 0, 0.4),
+                            color: const Color.fromRGBO(0, 0, 0, 0.4),
                             shape: RoundedRectangleBorder(
 
                                 borderRadius: BorderRadius.circular(4.0)),
                             child: Padding(
-                              padding: EdgeInsets.all(2.0),
+                              padding: const EdgeInsets.all(2.0),
                               child: Row(
-                                children: <Widget>[
+                                children: const <Widget>[
                                   Icon(
                                     Icons.info_outline,
                                     color: Colors.white,
@@ -172,14 +179,14 @@ class _MenuItemState extends State<MenuItems> {
                       ),
                     ],
                   )),
-              SizedBox(height: 10.0),
+              const SizedBox(height: 10.0),
               Padding(
-                padding: EdgeInsets.only(left: 15.0),
-                child: Container(
+                padding: const EdgeInsets.only(left: 15.0),
+                child: SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: Text(
-                    "${widget.title}",
-                    style: TextStyle(
+                    widget.title,
+                    style: const TextStyle(
                       fontSize: 20.0,
                       fontWeight: FontWeight.w800,
                     ),
@@ -187,14 +194,14 @@ class _MenuItemState extends State<MenuItems> {
                   ),
                 ),
               ),
-              SizedBox(height: 10.0),
+              const SizedBox(height: 10.0),
               Padding(
-                padding: EdgeInsets.only(left: 15.0, right: 15),
-                child: Container(
+                padding: const EdgeInsets.only(left: 15.0, right: 15),
+                child: SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: Text(
-                    "${widget.desc}",
-                    style: TextStyle(
+                    widget.desc,
+                    style: const TextStyle(
                       fontSize: 12.0,
                       fontWeight: FontWeight.w300,
                     ),
@@ -204,8 +211,8 @@ class _MenuItemState extends State<MenuItems> {
               checkCartforItem(widget.id) == ""
                   ? buildSelect(widget.choices)
                   : buildAddedToCart(widget.choices),
-              widget.category == "K2vR0XROjDoauN5svgLI"?
-              buildAddons() : SizedBox()
+              widget.category == "K2vR0XROjDoauN5svgLI" && widget.data["addon"] == true ?
+              buildAddons() : const SizedBox()
             ],
           ),
         ),

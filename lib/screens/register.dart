@@ -8,6 +8,8 @@ import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../util/user_session.dart';
+
 class Register extends StatefulWidget {
   final String phoneNum;
 
@@ -376,14 +378,26 @@ class _RegisterState extends State<Register> {
                                     .then((value) => {
                                           print(
                                               "NEW USER REGISTERED SUCCESSFULLY"),
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (BuildContext context) {
-                                                return MainScreen(0, "All");
-                                              },
-                                            ),
-                                          )
+                                print("=> SETTING UP USER SESSION"),
+                                    Session.userData = null,
+                                    FirebaseFirestore.instance
+                                    .collection('customer')
+                                    .doc(FirebaseAuth.instance.currentUser?.uid)
+                                    .get()
+                                    .then((data) => {
+                                  Session.userData = data,
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (BuildContext context) {
+
+
+                                        return MainScreen(0, "All");
+                                      },
+                                    ),
+                                  )
+                                })
+
                                         })
                                     .catchError((onError) => {
                                           showDialog<void>(
@@ -417,7 +431,7 @@ class _RegisterState extends State<Register> {
                                           )
                                         });
                               },
-                              icon: Icon(
+                              icon: const Icon(
                                 Icons.save,
                                 size: 24.0,
                               ),
