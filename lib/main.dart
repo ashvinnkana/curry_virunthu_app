@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:curry_virunthu_app/util/temp.dart';
 import 'package:curry_virunthu_app/util/user_session.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -94,6 +95,17 @@ class MyApp extends StatefulWidget {
         }
       });
     }
+
+    FirebaseFirestore.instance
+        .collection('temp')
+        .doc('settings')
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        var data = documentSnapshot.data() as Map<String, dynamic>;
+        Temp.selfOrderUnlock = data["unlockSelfOrder"];
+      }
+    });
   }
 
   @override

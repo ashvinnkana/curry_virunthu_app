@@ -24,7 +24,7 @@ class _AddToCartState extends State<AddToCart> {
             children: [
               const SizedBox(height: 100.0),
               Image.asset(
-                "assets/added-to-cart.gif",
+                "assets/addeed-to-cart.gif",
                 height: MediaQuery.of(context).size.height / 2,
                 width: MediaQuery.of(context).size.height / 2,
                 fit: BoxFit.cover,

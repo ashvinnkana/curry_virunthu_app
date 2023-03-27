@@ -18,7 +18,8 @@ class Checkout extends StatefulWidget {
   final int quantityTotal;
 
   Checkout(
-      {super.key, required this.foodOrder,
+      {super.key,
+      required this.foodOrder,
       required this.drinkOrder,
       required this.total,
       required this.quantityTotal}) {
@@ -114,7 +115,8 @@ class _CheckoutState extends State<Checkout> {
                     child: DropdownButtonHideUnderline(
                         child: DropdownButton(
                             isExpanded: true,
-                            style: const TextStyle(fontSize: 15, color: Colors.white),
+                            style: const TextStyle(
+                                fontSize: 15, color: Colors.white),
                             value: chosenCheckout,
                             icon: const Icon(
                               Icons.keyboard_arrow_down,
@@ -242,13 +244,15 @@ class _CheckoutState extends State<Checkout> {
                                                       ? const Color.fromRGBO(
                                                           86, 4, 4, 1.0)
                                                       : Colors.black,
-                                              borderRadius: const BorderRadius.all(
+                                              borderRadius:
+                                                  const BorderRadius.all(
                                                 Radius.circular(5.0),
                                               ),
                                             ),
                                             child: Padding(
-                                              padding: const EdgeInsets.fromLTRB(
-                                                  0, 10, 0, 10),
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      0, 10, 0, 10),
                                               child: Text(
                                                 Temp.availableTables[index]
                                                         ["tableNum"]
@@ -426,164 +430,198 @@ class _CheckoutState extends State<Checkout> {
                             height: 10,
                           ),
                           checkAllFields()
-                              ? (chosenCheckout == "Dine-in"
-                                  ? GradientSlideToAct(
-                                      text: "CONFIRM ORDER",
-                                      width: 400,
-                                      dragableIconBackgroundColor:
-                                          const Color.fromARGB(255, 148, 182, 117),
-                                      textStyle: const TextStyle(
-                                          color: Colors.black, fontSize: 15),
-                                      backgroundColor:
-                                          const Color.fromARGB(255, 148, 182, 117),
-                                      onSubmit: () {
-                                        /////////////////////////////////////
+                              ? Column(
+                                  children: [
+                                    SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        height: 40,
+                                        child: ElevatedButton(
+                                          onPressed: () async {
+                                            setState(() {
+                                              loading = true;
+                                            });
+                                            await makePayment();
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            primary: Colors.lightGreen.shade800,
+                                          ),
+                                          child: const Text('PAY NOW'),
+                                        )),
+                                    SizedBox(height: 8,),
+                                    chosenCheckout == "Dine-in"
+                                        ? SizedBox(
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            height: 40,
+                                            child: ElevatedButton(
+                                              onPressed: () async {
+                                                setState(() {
+                                                  loading = true;
+                                                });
+                                                /////////////////////////////////////
 
-                                        String? customerNum = "";
-                                        if (Session.userData["admin"]) {
-                                          customerNum =
-                                              "+61${phoneNumController.text}";
-                                        } else {
-                                          customerNum = FirebaseAuth.instance
-                                              .currentUser?.phoneNumber;
-                                        }
+                                                String? customerNum = "";
+                                                if (Session.userData["admin"]) {
+                                                  customerNum =
+                                                      "+61${phoneNumController.text}";
+                                                } else {
+                                                  customerNum = FirebaseAuth
+                                                      .instance
+                                                      .currentUser
+                                                      ?.phoneNumber;
+                                                }
 
-                                        if (chosenCheckout == "Dine-in") {
-                                          orderData = {
-                                            "total": widget.total,
-                                            "drinkOrder": widget.drinkOrder,
-                                            "foodOrder": widget.foodOrder,
-                                            "completedPercent": 0,
-                                            "completedCount": 0,
-                                            "orderQuantity":
-                                                widget.quantityTotal,
-                                            "state": "ORDERED",
-                                            "tableNum": selectedTable,
-                                            "customer": customerNum,
-                                            "orderTime": DateTime.now(),
-                                            "orderType": chosenCheckout,
-                                            "comment": cusComment.text
-                                          };
-                                          FirebaseFirestore.instance
-                                              .collection("tableData")
-                                              .doc(selectedTable)
-                                              .update({
-                                            "state": "OCCUPIED",
-                                            "customer": customerNum
-                                          }).then((value) => {});
-                                        } else {
-                                          orderData = {
-                                            "total": widget.total,
-                                            "drinkOrder": widget.drinkOrder,
-                                            "foodOrder": widget.foodOrder,
-                                            "completedPercent": 0,
-                                            "completedCount": 0,
-                                            "orderQuantity":
-                                                widget.quantityTotal,
-                                            "state": "ORDERED",
-                                            "customer": FirebaseAuth.instance
-                                                .currentUser?.phoneNumber,
-                                            "orderTime": DateTime.now(),
-                                            "orderType": chosenCheckout,
-                                            "comment": cusComment.text
-                                          };
-                                        }
-
-                                        Temp.dine_in_cart = [];
-                                        FirebaseFirestore.instance
-                                            .collection('order')
-                                            .add(orderData)
-                                            .then((value) => {
+                                                if (chosenCheckout ==
+                                                    "Dine-in") {
+                                                  orderData = {
+                                                    "total": widget.total,
+                                                    "drinkOrder":
+                                                        widget.drinkOrder,
+                                                    "foodOrder":
+                                                        widget.foodOrder,
+                                                    "completedPercent": 0,
+                                                    "completedCount": 0,
+                                                    "orderQuantity":
+                                                        widget.quantityTotal,
+                                                    "state": "ORDERED",
+                                                    "paid":false,
+                                                    "tableNum": selectedTable,
+                                                    "customer": customerNum,
+                                                    "orderTime": DateTime.now(),
+                                                    "orderType": chosenCheckout,
+                                                    "comment": cusComment.text
+                                                  };
                                                   FirebaseFirestore.instance
-                                                      .collection("customer")
-                                                      .doc(FirebaseAuth.instance
-                                                          .currentUser?.uid)
+                                                      .collection("tableData")
+                                                      .doc(selectedTable)
                                                       .update({
-                                                        "dineInCart":
-                                                            Temp.dine_in_cart
-                                                      })
-                                                      .then((value) => {
-                                                            print(
-                                                                "Cart Updated"),
-                                                            cusComment.text =
-                                                                "",
-                                                            selectedTable =
-                                                                null,
-                                                    FirebaseFirestore.instance
-                                                        .collection("customer")
-                                                        .where("mobile",
-                                                        isEqualTo: "$customerNum")
-                                                        .get()
-                                                        .then((QuerySnapshot querySnapshot) {
-                                                      if (querySnapshot.docs.isEmpty) {
-                                                        Fluttertoast.showToast(
-                                                            msg: "Customer has not yet installed the App!",
-                                                            toastLength: Toast.LENGTH_LONG,
-                                                            gravity: ToastGravity.TOP,
-                                                            timeInSecForIosWeb: 1,
-                                                            backgroundColor: Colors.lightGreenAccent,
-                                                            textColor: Colors.black,
-                                                            fontSize: 16.0);
-                                                      } else {
-                                                        FirebaseFirestore.instance
-                                                            .collection("customer")
-                                                            .doc(querySnapshot.docs[0].id)
-                                                            .update({
-                                                          "rating":querySnapshot.docs[0]["rating"] + 1
-                                                        })
-                                                            .then((value) => {
-                                                          print(
-                                                              "user rating updated"),
+                                                    "state": "OCCUPIED",
+                                                    "customer": customerNum
+                                                  }).then((value) => {});
+                                                } else {
+                                                  orderData = {
+                                                    "total": widget.total,
+                                                    "drinkOrder":
+                                                        widget.drinkOrder,
+                                                    "foodOrder":
+                                                        widget.foodOrder,
+                                                    "completedPercent": 0,
+                                                    "completedCount": 0,
+                                                    "orderQuantity":
+                                                        widget.quantityTotal,
+                                                    "state": "ORDERED",
+                                                    "paid":false,
+                                                    "customer": FirebaseAuth
+                                                        .instance
+                                                        .currentUser
+                                                        ?.phoneNumber,
+                                                    "orderTime": DateTime.now(),
+                                                    "orderType": chosenCheckout,
+                                                    "comment": cusComment.text
+                                                  };
+                                                }
 
-                                                        })
-                                                            .catchError((error) => print(
-                                                            "Failed to update user rating: $error"));
-                                                      }
-                                                      Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                          builder:
-                                                              (BuildContext
-                                                          context) {
-                                                            print(Temp
-                                                                .availableTables
-                                                                .length);
-                                                            return const MainScreen(
-                                                                2, "All");
-                                                          },
-                                                        ),
-                                                      );
-                                                    }
-                                                    )
-
-                                                          })
-                                                      .catchError((error) => print(
-                                                          "Failed to update cart: $error")),
-
-
-
-                                      });
-                                        },
-                                      gradient: const LinearGradient(
-                                          begin: Alignment.topLeft,
-                                          end: Alignment.bottomRight,
-                                          colors: [
-                                            Color(0Xff11998E),
-                                            Color(0Xff38EF7D),
-                                          ]),
-                                    )
-                                  : ElevatedButton(
-                                      onPressed: () async {
-                                        setState(() {
-                                          loading = true;
-                                        });
-                                        await makePayment();
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        primary: Colors.lightGreen.shade800,
-                                      ),
-                                      child: const Text('Proceed to Payment'),
-                                    ))
+                                                Temp.dine_in_cart = [];
+                                                FirebaseFirestore.instance
+                                                    .collection('order')
+                                                    .add(orderData)
+                                                    .then((value) => {
+                                                          FirebaseFirestore
+                                                              .instance
+                                                              .collection(
+                                                                  "customer")
+                                                              .doc(FirebaseAuth
+                                                                  .instance
+                                                                  .currentUser
+                                                                  ?.uid)
+                                                              .update({
+                                                                "dineInCart": Temp
+                                                                    .dine_in_cart
+                                                              })
+                                                              .then((value) => {
+                                                                    print(
+                                                                        "Cart Updated"),
+                                                                    cusComment
+                                                                        .text = "",
+                                                                    selectedTable =
+                                                                        null,
+                                                                    FirebaseFirestore
+                                                                        .instance
+                                                                        .collection(
+                                                                            "customer")
+                                                                        .where(
+                                                                            "mobile",
+                                                                            isEqualTo:
+                                                                                "$customerNum")
+                                                                        .get()
+                                                                        .then((QuerySnapshot
+                                                                            querySnapshot) {
+                                                                      if (querySnapshot
+                                                                          .docs
+                                                                          .isEmpty) {
+                                                                        Fluttertoast.showToast(
+                                                                            msg:
+                                                                                "Customer has not yet installed the App!",
+                                                                            toastLength: Toast
+                                                                                .LENGTH_LONG,
+                                                                            gravity: ToastGravity
+                                                                                .TOP,
+                                                                            timeInSecForIosWeb:
+                                                                                1,
+                                                                            backgroundColor:
+                                                                                Colors.lightGreenAccent,
+                                                                            textColor: Colors.black,
+                                                                            fontSize: 16.0);
+                                                                      } else {
+                                                                        FirebaseFirestore
+                                                                            .instance
+                                                                            .collection(
+                                                                                "customer")
+                                                                            .doc(querySnapshot
+                                                                                .docs[
+                                                                                    0]
+                                                                                .id)
+                                                                            .update({
+                                                                              "rating": querySnapshot.docs[0]["rating"] + 1
+                                                                            })
+                                                                            .then((value) =>
+                                                                                {
+                                                                                  print("user rating updated"),
+                                                                                })
+                                                                            .catchError((error) =>
+                                                                                print("Failed to update user rating: $error"));
+                                                                      }
+                                                                      Navigator
+                                                                          .push(
+                                                                        context,
+                                                                        MaterialPageRoute(
+                                                                          builder:
+                                                                              (BuildContext context) {
+                                                                            print(Temp.availableTables.length);
+                                                                            return const MainScreen(2,
+                                                                                "All");
+                                                                          },
+                                                                        ),
+                                                                      );
+                                                                    })
+                                                                  })
+                                                              .catchError(
+                                                                  (error) => print(
+                                                                      "Failed to update cart: $error")),
+                                                        });
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                primary:
+                                                    Color.fromRGBO(
+                                                        23, 23, 23, 1.0),
+                                              ),
+                                              child: const Text('PAY LATER'),
+                                            ))
+                                        : SizedBox()
+                                  ],
+                                )
                               : const Text(
                                   "All Fields Required!",
                                   style: TextStyle(color: Colors.red),
@@ -678,6 +716,7 @@ class _CheckoutState extends State<Checkout> {
           "completedCount": 0,
           "orderQuantity": widget.quantityTotal,
           "state": "ORDERED",
+          "paid":true,
           "customer": FirebaseAuth.instance.currentUser?.phoneNumber,
           "orderTime": DateTime.now(),
           "orderType": chosenCheckout,
@@ -692,8 +731,10 @@ class _CheckoutState extends State<Checkout> {
                   FirebaseFirestore.instance
                       .collection("customer")
                       .doc(FirebaseAuth.instance.currentUser?.uid)
-                      .update({"dineInCart": Temp.dine_in_cart,
-                  "rating": Session.userData["rating"]  + 1 })
+                      .update({
+                        "dineInCart": Temp.dine_in_cart,
+                        "rating": Session.userData["rating"] + 1
+                      })
                       .then((value) => {
                             print("Cart Updated"),
                             cusComment.text = "",
@@ -709,8 +750,6 @@ class _CheckoutState extends State<Checkout> {
                           })
                       .catchError(
                           (error) => print("Failed to update cart: $error"))
-
-
                 })
             .catchError((onError) => {
                   showDialog<void>(
@@ -858,7 +897,8 @@ class _CheckoutState extends State<Checkout> {
                   child: Text(
                     "$loadingText\n. . .",
                     textAlign: TextAlign.center,
-                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.bold),
                   )))
         ],
       );
