@@ -1,25 +1,23 @@
 import 'package:curry_virunthu_app/util/temp.dart';
 import 'package:curry_virunthu_app/util/user_session.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import '../widgets/gradient_slide_to_act.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_stripe/flutter_stripe.dart';
-
 import 'main_screen.dart';
 
 class Checkout extends StatefulWidget {
   final List<dynamic> foodOrder;
   final List<dynamic> drinkOrder;
-  final total;
-  final quantityTotal;
+  final int total;
+  final int quantityTotal;
 
   Checkout(
-      {required this.foodOrder,
+      {super.key, required this.foodOrder,
       required this.drinkOrder,
       required this.total,
       required this.quantityTotal}) {
@@ -41,32 +39,32 @@ class Checkout extends StatefulWidget {
 
 class _CheckoutState extends State<Checkout> {
   bool loading = false;
-  String loading_text = "C O N F I R M I N G   O R D E R";
-  String choosenCheckout = "Dine-in";
-  String choosenDelivery = "Pick-Up at Restaurant";
+  String loadingText = "C O N F I R M I N G   O R D E R";
+  String chosenCheckout = "Dine-in";
+  String chosenDelivery = "Pick-Up at Restaurant";
   var checkoutOptions = ["Dine-in", "Takeaway"];
   var deliveryOptions = ["Pick-Up at Restaurant"];
   TextEditingController phoneNumController = TextEditingController();
   TextEditingController cusComment = TextEditingController();
   dynamic orderData = {};
-  var selectedTable = null;
+  var selectedTable;
 
   Map<String, dynamic>? paymentIntent;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color.fromARGB(255, 30, 30, 30),
+        backgroundColor: const Color.fromARGB(255, 30, 30, 30),
         appBar: AppBar(
           leading: IconButton(
-            icon: Icon(Icons.arrow_back),
+            icon: const Icon(Icons.arrow_back),
             onPressed: () {
               Navigator.of(context).pushReplacement(MaterialPageRoute(
                   builder: (BuildContext context) => MainScreen(2, "All")));
             },
           ),
           elevation: 0.0,
-          title: Text("C H E C K O U T"),
+          title: const Text("C H E C K O U T"),
           centerTitle: true,
           backgroundColor: Color.fromARGB(255, 123, 152, 60),
         ),
@@ -83,29 +81,29 @@ class _CheckoutState extends State<Checkout> {
                         color: Colors.orange,
                       )),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 5,
                 ),
-                Center(
+                const Center(
                   child: Text("TOTAL",
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 15,
                         color: Colors.grey,
                       )),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
-                Divider(
+                const Divider(
                   color: Colors.white,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
-                Align(
+                const Align(
                   alignment: Alignment.centerLeft,
                   child: Text("Checkout Option :",
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 15,
                         color: Colors.grey,
                       )),
@@ -115,8 +113,8 @@ class _CheckoutState extends State<Checkout> {
                     child: DropdownButtonHideUnderline(
                         child: DropdownButton(
                             isExpanded: true,
-                            style: TextStyle(fontSize: 15, color: Colors.white),
-                            value: choosenCheckout,
+                            style: const TextStyle(fontSize: 15, color: Colors.white),
+                            value: chosenCheckout,
                             icon: const Icon(
                               Icons.keyboard_arrow_down,
                               color: Colors.white,
@@ -131,31 +129,31 @@ class _CheckoutState extends State<Checkout> {
                             }).toList(),
                             onChanged: (String? newValue) {
                               setState(() {
-                                choosenCheckout = newValue!;
+                                chosenCheckout = newValue!;
                               });
                             }))),
-                SizedBox(
+                const SizedBox(
                   height: 15,
                 ),
-                choosenCheckout == 'Takeaway'
-                    ? Align(
+                chosenCheckout == 'Takeaway'
+                    ? const Align(
                         alignment: Alignment.centerLeft,
                         child: Text("Delivery Method :",
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 15,
                               color: Colors.grey,
                             )),
                       )
-                    : SizedBox(),
-                choosenCheckout == 'Takeaway'
+                    : const SizedBox(),
+                chosenCheckout == 'Takeaway'
                     ? Align(
                         alignment: Alignment.centerLeft,
                         child: DropdownButtonHideUnderline(
                             child: DropdownButton(
                                 isExpanded: true,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontSize: 15, color: Colors.white),
-                                value: choosenDelivery,
+                                value: chosenDelivery,
                                 icon: const Icon(
                                   Icons.keyboard_arrow_down,
                                   color: Colors.white,
@@ -174,42 +172,42 @@ class _CheckoutState extends State<Checkout> {
                                 }).toList(),
                                 onChanged: (String? newValue) {
                                   setState(() {
-                                    choosenDelivery = newValue!;
+                                    chosenDelivery = newValue!;
                                   });
                                 })))
-                    : SizedBox(),
-                choosenCheckout == 'Takeaway'
-                    ? SizedBox(
+                    : const SizedBox(),
+                chosenCheckout == 'Takeaway'
+                    ? const SizedBox(
                         height: 15,
                       )
-                    : SizedBox(),
+                    : const SizedBox(),
                 Temp.selfOrderUnlock ||
                         Session.userData["admin"] ||
-                        choosenCheckout == 'Takeaway'
+                        chosenCheckout == 'Takeaway'
                     ? Column(
                         children: <Widget>[
-                          choosenCheckout == "Dine-in"
-                              ? Align(
+                          chosenCheckout == "Dine-in"
+                              ? const Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text("Choose Table Number :",
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         fontSize: 15,
                                         color: Colors.grey,
                                       )),
                                 )
-                              : SizedBox(),
-                          choosenCheckout == "Dine-in"
-                              ? SizedBox(
+                              : const SizedBox(),
+                          chosenCheckout == "Dine-in"
+                              ? const SizedBox(
                                   height: 10,
                                 )
-                              : SizedBox(),
-                          choosenCheckout == "Dine-in"
+                              : const SizedBox(),
+                          chosenCheckout == "Dine-in"
                               ? SizedBox(
                                   height: 35,
                                   child: ListView.separated(
                                     shrinkWrap: true,
                                     scrollDirection: Axis.horizontal,
-                                    physics: ClampingScrollPhysics(),
+                                    physics: const ClampingScrollPhysics(),
                                     itemBuilder: (_, index) {
                                       return GestureDetector(
                                           onTap: () {
@@ -240,15 +238,15 @@ class _CheckoutState extends State<Checkout> {
                                                   : Temp.availableTables[index]
                                                               ["state"] ==
                                                           "OCCUPIED"
-                                                      ? Color.fromRGBO(
+                                                      ? const Color.fromRGBO(
                                                           86, 4, 4, 1.0)
                                                       : Colors.black,
-                                              borderRadius: BorderRadius.all(
+                                              borderRadius: const BorderRadius.all(
                                                 Radius.circular(5.0),
                                               ),
                                             ),
                                             child: Padding(
-                                              padding: EdgeInsets.fromLTRB(
+                                              padding: const EdgeInsets.fromLTRB(
                                                   0, 10, 0, 10),
                                               child: Text(
                                                 Temp.availableTables[index]
@@ -271,48 +269,48 @@ class _CheckoutState extends State<Checkout> {
                                     },
                                     itemCount: Temp.availableTables.length,
                                     separatorBuilder: (_, index) {
-                                      return SizedBox(
+                                      return const SizedBox(
                                         width: 5,
                                       );
                                     },
                                   ))
-                              : SizedBox(),
-                          choosenCheckout == "Dine-in"
+                              : const SizedBox(),
+                          chosenCheckout == "Dine-in"
                               ? SizedBox(
                                   height: 10,
                                 )
-                              : SizedBox(),
-                          choosenCheckout == "Dine-in"
-                              ? Align(
+                              : const SizedBox(),
+                          chosenCheckout == "Dine-in"
+                              ? const Align(
                                   alignment: Alignment.centerRight,
                                   child: Text(
                                       "Already occupied tables are highlighted in RED!",
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         fontSize: 11,
                                         color: Colors.blueAccent,
                                       )),
                                 )
-                              : SizedBox(),
-                          choosenCheckout == "Dine-in"
-                              ? SizedBox(
+                              : const SizedBox(),
+                          chosenCheckout == "Dine-in"
+                              ? const SizedBox(
                                   height: 20,
                                 )
-                              : SizedBox(),
+                              : const SizedBox(),
                           Session.userData["admin"]
-                              ? Align(
+                              ? const Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text("Customer PhoneNumber :",
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         fontSize: 15,
                                         color: Colors.grey,
                                       )),
                                 )
-                              : SizedBox(),
+                              : const SizedBox(),
                           Session.userData["admin"]
-                              ? SizedBox(
+                              ? const SizedBox(
                                   height: 10,
                                 )
-                              : SizedBox(),
+                              : const SizedBox(),
                           Session.userData["admin"]
                               ? Container(
                                   decoration: const BoxDecoration(
@@ -371,85 +369,85 @@ class _CheckoutState extends State<Checkout> {
                                         ],
                                       )),
                                 )
-                              : SizedBox(),
+                              : const SizedBox(),
                           Session.userData["admin"]
                               ? const SizedBox(height: 10.0)
-                              : SizedBox(),
+                              : const SizedBox(),
                           Session.userData["admin"]
                               ? Padding(
                                   padding: const EdgeInsets.only(
                                       left: 20.0, right: 0.0),
                                   child: (phoneNumController.text.length != 9 &&
                                           phoneNumController.text.isNotEmpty
-                                      ? Align(
+                                      ? const Align(
                                           alignment: Alignment.centerRight,
                                           child: Text(
                                               "Valid Phone Number Required!",
-                                              style: const TextStyle(
+                                              style: TextStyle(
                                                 fontSize: 11,
                                                 color: Colors.red,
                                               )),
                                         )
                                       : const SizedBox()))
-                              : SizedBox(),
+                              : const SizedBox(),
                           Session.userData["admin"]
-                              ? SizedBox(
+                              ? const SizedBox(
                                   height: 10,
                                 )
-                              : SizedBox(),
-                          Align(
+                              : const SizedBox(),
+                          const Align(
                             alignment: Alignment.centerLeft,
                             child: Text("Comments :",
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 15,
                                   color: Colors.grey,
                                 )),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
                           TextField(
                             keyboardType: TextInputType.multiline,
                             maxLines: null,
                             controller: cusComment,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               border: OutlineInputBorder(),
                               hintText: 'let the chef know ...\n\n',
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
-                          Divider(
+                          const Divider(
                             color: Colors.white,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
                           checkAllFields()
-                              ? (choosenCheckout == "Dine-in"
+                              ? (chosenCheckout == "Dine-in"
                                   ? GradientSlideToAct(
                                       text: "CONFIRM ORDER",
                                       width: 400,
                                       dragableIconBackgroundColor:
-                                          Color.fromARGB(255, 148, 182, 117),
-                                      textStyle: TextStyle(
+                                          const Color.fromARGB(255, 148, 182, 117),
+                                      textStyle: const TextStyle(
                                           color: Colors.black, fontSize: 15),
                                       backgroundColor:
-                                          Color.fromARGB(255, 148, 182, 117),
+                                          const Color.fromARGB(255, 148, 182, 117),
                                       onSubmit: () {
                                         /////////////////////////////////////
 
-                                        String? customer_num = "";
+                                        String? customerNum = "";
                                         if (Session.userData["admin"]) {
-                                          customer_num =
-                                              "+61" + phoneNumController.text;
+                                          customerNum =
+                                              "+61${phoneNumController.text}";
                                         } else {
-                                          customer_num = FirebaseAuth.instance
+                                          customerNum = FirebaseAuth.instance
                                               .currentUser?.phoneNumber;
                                         }
 
-                                        if (choosenCheckout == "Dine-in") {
+                                        if (chosenCheckout == "Dine-in") {
                                           orderData = {
                                             "total": widget.total,
                                             "drinkOrder": widget.drinkOrder,
@@ -460,9 +458,9 @@ class _CheckoutState extends State<Checkout> {
                                                 widget.quantityTotal,
                                             "state": "ORDERED",
                                             "tableNum": selectedTable,
-                                            "customer": customer_num,
+                                            "customer": customerNum,
                                             "orderTime": DateTime.now(),
-                                            "orderType": choosenCheckout,
+                                            "orderType": chosenCheckout,
                                             "comment": cusComment.text
                                           };
                                           FirebaseFirestore.instance
@@ -470,7 +468,7 @@ class _CheckoutState extends State<Checkout> {
                                               .doc(selectedTable)
                                               .update({
                                             "state": "OCCUPIED",
-                                            "customer": customer_num
+                                            "customer": customerNum
                                           }).then((value) => {});
                                         } else {
                                           orderData = {
@@ -485,7 +483,7 @@ class _CheckoutState extends State<Checkout> {
                                             "customer": FirebaseAuth.instance
                                                 .currentUser?.phoneNumber,
                                             "orderTime": DateTime.now(),
-                                            "orderType": choosenCheckout,
+                                            "orderType": chosenCheckout,
                                             "comment": cusComment.text
                                           };
                                         }
@@ -576,18 +574,18 @@ class _CheckoutState extends State<Checkout> {
                                         });
                                         await makePayment();
                                       },
-                                      child: Text('Proceed to Payment'),
                                       style: ElevatedButton.styleFrom(
                                         primary: Colors.lightGreen.shade800,
                                       ),
+                                      child: const Text('Proceed to Payment'),
                                     ))
-                              : Text(
+                              : const Text(
                                   "All Fields Required!",
                                   style: TextStyle(color: Colors.red),
                                 ),
                         ],
                       )
-                    : Text(
+                    : const Text(
                         "Contact a staff to complete proceeding with your order! ",
                         style: TextStyle(color: Colors.red),
                       ),
@@ -609,14 +607,16 @@ class _CheckoutState extends State<Checkout> {
                   //applePay: const PaymentSheetApplePay(merchantCountryCode: '+61',),
                   //googlePay: const PaymentSheetGooglePay(testEnv: true, currencyCode: "AU", merchantCountryCode: "+61"),
                   style: ThemeMode.dark,
-                  merchantDisplayName: 'Curry Virunthu'))
+                  merchantDisplayName: 'Curry Virundhu'))
           .then((value) {});
       displayPaymentSheet();
     } catch (e, s) {
       setState(() {
         loading = false;
       });
-      print('exception:$e$s');
+      if (kDebugMode) {
+        print('exception:$e$s');
+      }
       showDialog(
           context: context,
           builder: (_) => AlertDialog(
@@ -659,7 +659,7 @@ class _CheckoutState extends State<Checkout> {
                           SizedBox(
                             width: 3,
                           ),
-                          Text("Payment Successfull!"),
+                          Text("Payment Successful!"),
                         ],
                       ),
                     ],
@@ -675,7 +675,7 @@ class _CheckoutState extends State<Checkout> {
           "state": "ORDERED",
           "customer": FirebaseAuth.instance.currentUser?.phoneNumber,
           "orderTime": DateTime.now(),
-          "orderType": choosenCheckout,
+          "orderType": chosenCheckout,
           "comment": cusComment.text
         };
 
@@ -696,7 +696,6 @@ class _CheckoutState extends State<Checkout> {
                               context,
                               MaterialPageRoute(
                                 builder: (BuildContext context) {
-                                  print(Temp.availableTables.length);
                                   return MainScreen(2, "All");
                                 },
                               ),
@@ -734,7 +733,9 @@ class _CheckoutState extends State<Checkout> {
         setState(() {
           loading = false;
         });
-        print('Error is:--->$error $stackTrace');
+        if (kDebugMode) {
+          print('Error is:--->$error $stackTrace');
+        }
         showDialog(
             context: context,
             builder: (_) => AlertDialog(
@@ -758,7 +759,9 @@ class _CheckoutState extends State<Checkout> {
                 ));
       });
     } on StripeException catch (e) {
-      print('Error is:---> $e');
+      if (kDebugMode) {
+        print('Error is:---> $e');
+      }
       showDialog(
           context: context,
           builder: (_) => const AlertDialog(
@@ -785,7 +788,9 @@ class _CheckoutState extends State<Checkout> {
         },
         body: body,
       );
-      print('Payment Intent Body->>> ${response.body.toString()}');
+      if (kDebugMode) {
+        print('Payment Intent Body->>> ${response.body.toString()}');
+      }
       return jsonDecode(response.body);
     } catch (err) {
       // ignore: avoid_print
@@ -794,8 +799,8 @@ class _CheckoutState extends State<Checkout> {
   }
 
   calculateAmount(String amount) {
-    final calculatedAmout = (int.parse(amount)) * 100;
-    return calculatedAmout.toString();
+    final calculatedAmount = (int.parse(amount)) * 100;
+    return calculatedAmount.toString();
   }
 
   checkAllFields() {
@@ -803,7 +808,7 @@ class _CheckoutState extends State<Checkout> {
       return false;
     }
 
-    if (choosenCheckout == "Dine-in" && selectedTable == null) {
+    if (chosenCheckout == "Dine-in" && selectedTable == null) {
       return false;
     }
 
@@ -843,9 +848,9 @@ class _CheckoutState extends State<Checkout> {
               child: SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: Text(
-                    "$loading_text\n. . .",
+                    "$loadingText\n. . .",
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   )))
         ],
       );

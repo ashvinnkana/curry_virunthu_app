@@ -1,20 +1,16 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
 import 'package:curry_virunthu_app/screens/main_screen.dart';
 import 'package:curry_virunthu_app/screens/otp.dart';
 import 'package:curry_virunthu_app/util/user_session.dart';
-import 'package:flutter/services.dart';
-
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 
 class Login extends StatefulWidget {
-  Login({super.key});
+  const Login({super.key});
 
   @override
   _LoginState createState() => _LoginState();
@@ -33,7 +29,9 @@ class _LoginState extends State<Login> {
     screenHeight = MediaQuery.of(context).size.height;
 
     if (FirebaseAuth.instance.currentUser?.uid == null) {
-      print("=> NO USER SESSION FOUND");
+      if (kDebugMode) {
+        print("=> NO USER SESSION FOUND");
+      }
       return noSessionFound();
     } else {
       return MainScreen(0, "All");
@@ -114,7 +112,7 @@ class _LoginState extends State<Login> {
               top: 210,
               child: SizedBox(
                   width: MediaQuery.of(context).size.width,
-                  child: Text(
+                  child: const Text(
                     "S E N D I N G   C O D E\n. . .",
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -251,7 +249,7 @@ class _LoginState extends State<Login> {
                       "  +61     ",
                       style: TextStyle(fontSize: 15),
                     ),
-                    Container(
+                    SizedBox(
                         width: MediaQuery.of(context).size.width / 2,
                         child: TextField(
                           controller: phoneNumController,
@@ -298,7 +296,7 @@ class _LoginState extends State<Login> {
                             phoneNumController.text.length < 9
                         ? ElevatedButton.icon(
                             style: ElevatedButton.styleFrom(
-                                primary: Colors.grey.shade800,
+                                backgroundColor: Colors.grey.shade800,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10))),
                             onPressed: () {
@@ -326,14 +324,14 @@ class _LoginState extends State<Login> {
                                 },
                               );
                             },
-                            icon: Icon(
+                            icon: const Icon(
                               Icons.block,
                               size: 24.0,
                             ),
                             label: const Text("G E T   S T A R T E D"))
                         : ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                                primary: Colors.lightGreen.shade800,
+                                backgroundColor: Colors.lightGreen.shade800,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10))),
                             onPressed: () async {
@@ -342,7 +340,9 @@ class _LoginState extends State<Login> {
                               });
 
                               FirebaseAuth auth = FirebaseAuth.instance;
-                              print('+61${phoneNumController.text}');
+                              if (kDebugMode) {
+                                print('+61${phoneNumController.text}');
+                              }
 
                               try {
                                 var status = false;
@@ -372,7 +372,7 @@ class _LoginState extends State<Login> {
                                               setState(() {
                                                 loading = false;
                                                 phoneNumController =
-                                                    new TextEditingController();
+                                                    TextEditingController();
                                               }),
                                               showDialog<void>(
                                                 context: context,
@@ -407,13 +407,15 @@ class _LoginState extends State<Login> {
                                   },
                                   verificationFailed:
                                       (FirebaseAuthException e) {
-                                    print(
-                                        "Phone ERROR: " + e.message.toString());
+                                    if (kDebugMode) {
+                                      print(
+                                        "Phone ERROR: ${e.message}");
+                                    }
                                     status = true;
                                     setState(() {
                                       loading = false;
                                       phoneNumController =
-                                          new TextEditingController();
+                                          TextEditingController();
                                     });
                                     showDialog<void>(
                                       context: context,
@@ -456,18 +458,20 @@ class _LoginState extends State<Login> {
                                       (String verificationId) {},
                                 );
 
-                                final timer = Timer(
+                                Timer(
                                   const Duration(seconds: 15),
                                   () {
-                                    print(
+                                    if (kDebugMode) {
+                                      print(
                                         ModalRoute.of(context)?.settings.name);
+                                    }
                                     if (ModalRoute.of(context)?.settings.name ==
                                             null &&
                                         status == false) {
                                       setState(() {
                                         loading = false;
                                         phoneNumController =
-                                            new TextEditingController();
+                                            TextEditingController();
                                       });
                                       showDialog<void>(
                                         context: context,
@@ -497,10 +501,12 @@ class _LoginState extends State<Login> {
                                   },
                                 );
                               } catch (e) {
-                                print(e);
+                                if (kDebugMode) {
+                                  print(e);
+                                }
                               }
                             },
-                            child: Text("G E T   S T A R T E D"))))),
+                            child: const Text("G E T   S T A R T E D"))))),
         const SizedBox(height: 20.0),
       ],
     );

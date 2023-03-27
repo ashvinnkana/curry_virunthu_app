@@ -1,13 +1,8 @@
 import 'dart:async';
-
-import 'package:curry_virunthu_app/screens/main_screen.dart';
-import 'package:curry_virunthu_app/screens/product_view.dart';
 import 'package:flutter/material.dart';
 
 class AddToCart extends StatefulWidget {
-  final Map<String, dynamic> product;
-  final String item_id;
-  const AddToCart({required this.product, required this.item_id});
+  const AddToCart({super.key});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -17,7 +12,9 @@ class AddToCart extends StatefulWidget {
 class _AddToCartState extends State<AddToCart> {
   @override
   Widget build(BuildContext context) {
-    Timer(const Duration(seconds: 2), () => Navigator.pop(context));
+    Timer(
+        const Duration(seconds: 2),
+        () => Navigator.pop(context));
 
     return Stack(
       children: <Widget>[
@@ -27,7 +24,7 @@ class _AddToCartState extends State<AddToCart> {
             children: [
               const SizedBox(height: 100.0),
               Image.asset(
-                "assets/addeed-to-cart.gif",
+                "assets/added-to-cart.gif",
                 height: MediaQuery.of(context).size.height / 2,
                 width: MediaQuery.of(context).size.height / 2,
                 fit: BoxFit.cover,

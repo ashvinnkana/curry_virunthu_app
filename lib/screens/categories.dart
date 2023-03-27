@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:curry_virunthu_app/screens/main_screen.dart';
-import 'package:curry_virunthu_app/screens/today_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -47,13 +46,13 @@ class _CategoriesState extends State<Categories> {
                   width: 2.0,
                 ),
                 borderRadius: BorderRadius.circular(10.0),
-                gradient: LinearGradient(colors: [
+                gradient: const LinearGradient(colors: [
                   Color.fromARGB(97, 147, 238, 122),
                   Color.fromARGB(255, 23, 141, 28),
                 ]),
               ),
-              padding: EdgeInsets.fromLTRB(20.0, 10, 20.0, 10),
-              child: Text(
+              padding: const EdgeInsets.fromLTRB(20.0, 10, 20.0, 10),
+              child: const Text(
                 "L O A D I N G ...",
                 textAlign: TextAlign.center,
               ));
@@ -92,7 +91,7 @@ class _CategoriesState extends State<Categories> {
                                       )),
                                     ),
                                 errorWidget: (context, url, error) =>
-                                    Icon(Icons.error),
+                                    const Icon(Icons.error),
                                 height: MediaQuery.of(context).size.height,
                                 width: MediaQuery.of(context).size.width),
                             Container(

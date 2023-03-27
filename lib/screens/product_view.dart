@@ -249,8 +249,7 @@ class _ProductViewState extends State<ProductView> {
                                       .catchError((error) => print(
                                           "Failed to update cart: $error"));
 
-                                  return AddToCart(
-                                      product: product, item_id: item_id);
+                                  return AddToCart();
                                 },
                               ),
                             );

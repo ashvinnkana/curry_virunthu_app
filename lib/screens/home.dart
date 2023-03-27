@@ -1,37 +1,36 @@
-import 'dart:io';
-
 import 'package:curry_virunthu_app/screens/product_view.dart';
 import 'package:curry_virunthu_app/util/temp.dart';
 import 'package:curry_virunthu_app/widgets/product_item.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:curry_virunthu_app/screens/categories.dart';
 import 'package:curry_virunthu_app/screens/trending.dart';
 import 'package:curry_virunthu_app/widgets/category_item.dart';
 import 'package:curry_virunthu_app/widgets/slide_item.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
 import 'main_screen.dart';
 
 class Home extends StatefulWidget {
-  Home() {
+  Home({super.key}) {
     Temp.items = [];
     Temp.itemDatas = {};
     FirebaseFirestore.instance
         .collection('item')
         .get()
         .then((QuerySnapshot querySnapshot) {
-      querySnapshot.docs.forEach((doc) {
+      for (var doc in querySnapshot.docs) {
         Map<String, dynamic> item = doc.data() as Map<String, dynamic>;
         if (item["label"] != null) {
           Temp.items.add(item["label"]);
           Temp.itemDatas[item["label"]] = item;
         }
-      });
+      }
     }).catchError((e) {
-      print(e.message);
+      if (kDebugMode) {
+        print(e.message);
+      }
     });
 
     Temp.categoryLabels = ["All"];
@@ -41,9 +40,9 @@ class Home extends StatefulWidget {
         .orderBy("orderId")
         .get()
         .then((QuerySnapshot querySnapshot) {
-      querySnapshot.docs.forEach((doc) {
+      for (var doc in querySnapshot.docs) {
         Temp.categoryLabels.add(doc["label"].toString());
-      });
+      }
     });
   }
 
@@ -131,7 +130,7 @@ class _HomeState extends State<Home> {
           child: Text(
             "See all",
             style: TextStyle(
-              color: Theme.of(context).accentColor,
+              color: Theme.of(context).colorScheme.secondary,
             ),
           ),
           onPressed: () {
@@ -164,7 +163,7 @@ class _HomeState extends State<Home> {
           child: Text(
             "See all",
             style: TextStyle(
-              color: Theme.of(context).accentColor,
+              color: Theme.of(context).colorScheme.secondary,
             ),
           ),
           onPressed: () {
@@ -200,7 +199,7 @@ class _HomeState extends State<Home> {
         return SizedBox(
           height: MediaQuery.of(context).size.height / 6,
           child: ListView(
-            physics: BouncingScrollPhysics(),
+            physics: const BouncingScrollPhysics(),
             primary: false,
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,
@@ -249,7 +248,7 @@ class _HomeState extends State<Home> {
           height: MediaQuery.of(context).size.height / 6,
           child: ListView(
             primary: false,
-            physics: BouncingScrollPhysics(),
+            physics: const BouncingScrollPhysics(),
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,
             children: snapshot.data!.docs
@@ -289,18 +288,18 @@ class _HomeState extends State<Home> {
         child: Card(
           elevation: 6.0,
           child: Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.all(
                 Radius.circular(5.0),
               ),
             ),
             child: Padding(
-                padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.search,
                       color: Colors.black,
                     ),
@@ -308,7 +307,7 @@ class _HomeState extends State<Home> {
                         child: DropdownButtonHideUnderline(
                       child: DropdownButton2<String>(
                         isExpanded: true,
-                        hint: Text(
+                        hint: const Text(
                           'Search',
                           style: TextStyle(
                             fontSize: 14,
@@ -329,7 +328,9 @@ class _HomeState extends State<Home> {
                         onChanged: (value) {
                           setState(() {
                             selectedValue = value as String;
-                            print(Temp.itemDatas[value]);
+                            if (kDebugMode) {
+                              print(Temp.itemDatas[value]);
+                            }
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -418,7 +419,7 @@ class _HomeState extends State<Home> {
           child: Text(
             "See all",
             style: TextStyle(
-              color: Theme.of(context).accentColor,
+              color: Theme.of(context).colorScheme.secondary,
             ),
           ),
           onPressed: () {
@@ -450,11 +451,11 @@ class _HomeState extends State<Home> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Container();
         }
-        return Container(
+        return SizedBox(
           height: MediaQuery.of(context).size.height / 2.4,
           width: MediaQuery.of(context).size.width,
           child: ListView(
-            physics: BouncingScrollPhysics(),
+            physics: const BouncingScrollPhysics(),
             primary: false,
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,
@@ -522,7 +523,7 @@ class _HomeState extends State<Home> {
           child: Text(
             "See all",
             style: TextStyle(
-              color: Theme.of(context).accentColor,
+              color: Theme.of(context).colorScheme.secondary,
             ),
           ),
           onPressed: () {
@@ -530,7 +531,7 @@ class _HomeState extends State<Home> {
               context,
               MaterialPageRoute(
                 builder: (BuildContext context) {
-                  return Categories();
+                  return const Categories();
                 },
               ),
             );
@@ -554,10 +555,10 @@ class _HomeState extends State<Home> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Container();
         }
-        return Container(
+        return SizedBox(
           height: MediaQuery.of(context).size.height / 6,
           child: ListView(
-            physics: BouncingScrollPhysics(),
+            physics: const BouncingScrollPhysics(),
             primary: false,
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,
@@ -565,7 +566,6 @@ class _HomeState extends State<Home> {
                 .map((DocumentSnapshot document) {
                   Map<String, dynamic> category =
                       document.data()! as Map<String, dynamic>;
-                  String id = document.id;
                   return GestureDetector(
                       onTap: () {
                         Navigator.push(

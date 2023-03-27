@@ -4,13 +4,10 @@ import 'package:curry_virunthu_app/util/temp.dart';
 import 'package:curry_virunthu_app/widgets/cart_item.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-
-import '../util/user_session.dart';
 import '../widgets/gradient_slide_to_act.dart';
 
 class Cart extends StatefulWidget {
-  Cart() {
+  Cart({super.key}) {
     FirebaseFirestore.instance
         .collection("customer")
         .doc(FirebaseAuth.instance.currentUser?.uid)
@@ -18,8 +15,7 @@ class Cart extends StatefulWidget {
         .then((value) => {
               if (value["dineInCart"] != null)
                 {Temp.dine_in_cart = value["dineInCart"]}
-            })
-        .catchError((onError) => {print(onError.toString())});
+            });
     Temp.curryList = [];
     FirebaseFirestore.instance
         .collection('item')
@@ -27,10 +23,10 @@ class Cart extends StatefulWidget {
         .where("isAvailable", isEqualTo: true)
         .get()
         .then((QuerySnapshot querySnapshot) {
-      querySnapshot.docs.forEach((doc) {
+      for (var doc in querySnapshot.docs) {
         Temp.curryList.add(doc);
-      });
-    }).catchError((onError) => {print(onError.toString())});
+      }
+    });
   }
 
   @override
@@ -58,177 +54,155 @@ class _CartState extends State<Cart> {
           children: <Widget>[
             Column(
               children: [
-                Temp.dine_in_cart.length != 0
-                    ? const SizedBox(
-                        height: 20,
-                      )
-                    : SizedBox(),
-                Temp.dine_in_cart.length != 0
-                    ? Text("\$${findTotal().toString()}",
-                        style: const TextStyle(
-                          fontSize: 45,
-                          color: Colors.orange,
-                        ))
-                    : SizedBox(),
-                Temp.dine_in_cart.length != 0
-                    ? Padding(
-                        padding:
-                            const EdgeInsets.fromLTRB(40.0, 20.0, 40.0, 20.0),
-                        child: GradientSlideToAct(
-                          text: "PROCEED TO CHECKOUT",
-                          width: 400,
-                          dragableIconBackgroundColor:
-                              Color.fromARGB(255, 148, 182, 117),
-                          textStyle:
-                              TextStyle(color: Colors.black, fontSize: 15),
-                          backgroundColor: Color.fromARGB(255, 148, 182, 117),
-                          onSubmit: () {
-                            setState(() {
-                              loading = true;
-                            });
-                            //////////////////////////////////////////////////////////////////
-                            List<dynamic> foodOrderData = [];
-                            List<dynamic> drinksOrderData = [];
-                            int total = 0;
-                            int quantityTotal = 0;
-                            for (int i = 0; i < Temp.dine_in_cart.length; i++) {
-                              quantityTotal = (quantityTotal +
-                                  Temp.dine_in_cart[i]["quantity"]) as int;
-                              if (Temp.dine_in_cart[i]["choices"] == null) {
-                                total = (total +
-                                    (Temp.dine_in_cart[i]["quantity"] *
-                                        Temp.dine_in_cart[i]["price"])) as int;
-                                if (Temp.dine_in_cart[i]["category"] ==
-                                    "YdpRfe1CwGZ4A3tgtYF9") {
-                                  drinksOrderData.add({
-                                    "label": Temp.dine_in_cart[i]["label"],
-                                    "unitPrice": Temp.dine_in_cart[i]["price"],
-                                    "quantity": Temp.dine_in_cart[i]
-                                        ["quantity"],
-                                    "totalPrice": (Temp.dine_in_cart[i]
-                                                ["price"] *
-                                            Temp.dine_in_cart[i]["quantity"])
-                                        as int,
-                                    "completedPercent": 0,
-                                    "completedCount": 0,
-                                    "category": Temp.dine_in_cart[i]
-                                        ["category"],
-                                    "state": "ORDERED",
-                                  });
-                                } else {
-                                  foodOrderData.add({
-                                    "label": Temp.dine_in_cart[i]["label"],
-                                    "unitPrice": Temp.dine_in_cart[i]["price"],
-                                    "quantity": Temp.dine_in_cart[i]
-                                        ["quantity"],
-                                    "totalPrice": (Temp.dine_in_cart[i]
-                                                ["price"] *
-                                            Temp.dine_in_cart[i]["quantity"])
-                                        as int,
-                                    "completedPercent": 0,
-                                    "completedCount": 0,
-                                    "category": Temp.dine_in_cart[i]
-                                        ["category"],
-                                    "state": "ORDERED",
-                                  });
+                Temp.dine_in_cart.isNotEmpty ?const SizedBox(
+                  height: 20,
+                ): const SizedBox(),
+                Temp.dine_in_cart.isNotEmpty ?Text("\$${findTotal().toString()}",
+                    style: const TextStyle(
+                      fontSize: 45,
+                      color: Colors.orange,
+                    )): const SizedBox(),
+                Temp.dine_in_cart.isNotEmpty ?Padding(
+                    padding: const EdgeInsets.fromLTRB(40.0, 20.0, 40.0, 20.0),
+                    child: GradientSlideToAct(
+                      text: "PROCEED TO CHECKOUT",
+                      width: 400,
+                      dragableIconBackgroundColor:
+                          const Color.fromARGB(255, 148, 182, 117),
+                      textStyle: const TextStyle(color: Colors.black, fontSize: 15),
+                      backgroundColor: const Color.fromARGB(255, 148, 182, 117),
+                      onSubmit: () {
+                        setState(() {
+                          loading = true;
+                        });
+                        //////////////////////////////////////////////////////////////////
+                        List<dynamic> foodOrderData = [];
+                        List<dynamic> drinksOrderData = [];
+                        int total = 0;
+                        int quantityTotal = 0;
+                        for (int i = 0; i < Temp.dine_in_cart.length; i++) {
+                          quantityTotal = (quantityTotal +
+                              Temp.dine_in_cart[i]["quantity"]) as int;
+                          if (Temp.dine_in_cart[i]["choices"] == null) {
+                            total = (total +
+                                (Temp.dine_in_cart[i]["quantity"] *
+                                    Temp.dine_in_cart[i]["price"])) as int;
+                            if (Temp.dine_in_cart[i]["category"] ==
+                                "YdpRfe1CwGZ4A3tgtYF9") {
+                              drinksOrderData.add({
+                                "label": Temp.dine_in_cart[i]["label"],
+                                "unitPrice": Temp.dine_in_cart[i]["price"],
+                                "quantity": Temp.dine_in_cart[i]["quantity"],
+                                "totalPrice": (Temp.dine_in_cart[i]["price"] *
+                                    Temp.dine_in_cart[i]["quantity"]) as int,
+                                "completedPercent": 0,
+                                "completedCount": 0,
+                                "category": Temp.dine_in_cart[i]["category"],
+                                "state": "ORDERED",
+                              });
+                            } else {
+                              foodOrderData.add({
+                                "label": Temp.dine_in_cart[i]["label"],
+                                "unitPrice": Temp.dine_in_cart[i]["price"],
+                                "quantity": Temp.dine_in_cart[i]["quantity"],
+                                "totalPrice": (Temp.dine_in_cart[i]["price"] *
+                                    Temp.dine_in_cart[i]["quantity"]) as int,
+                                "completedPercent": 0,
+                                "completedCount": 0,
+                                "category": Temp.dine_in_cart[i]["category"],
+                                "state": "ORDERED",
+                              });
 
-                                  if (Temp.dine_in_cart[i]["addon"] != null) {
-                                    foodOrderData[foodOrderData.length - 1]
-                                            ["addon"] =
-                                        "With ${Temp.dine_in_cart[i]["addon"]}";
-                                  }
-                                }
+                              if (Temp.dine_in_cart[i]["addon"] != null) {
+                                foodOrderData[foodOrderData.length - 1]
+                                        ["addon"] =
+                                    "With ${Temp.dine_in_cart[i]["addon"]}";
+                              }
+                            }
+                          } else {
+                            for (int j = 0;
+                                j < Temp.dine_in_cart[i]["choices"].length;
+                                j++) {
+                              total = (total +
+                                  (Temp.dine_in_cart[i]["choices"][j]
+                                          ["quantity"] *
+                                      Temp.dine_in_cart[i]["price"])) as int;
+                              if (Temp.dine_in_cart[i]["category"] ==
+                                  "YdpRfe1CwGZ4A3tgtYF9") {
+                                drinksOrderData.add({
+                                  "label": Temp.dine_in_cart[i]["choices"][j]
+                                      ["choice"],
+                                  "unitPrice": Temp.dine_in_cart[i]["price"],
+                                  "quantity": Temp.dine_in_cart[i]["choices"][j]
+                                      ["quantity"],
+                                  "totalPrice": (Temp.dine_in_cart[i]["price"] *
+                                      Temp.dine_in_cart[i]["choices"][j]
+                                          ["quantity"]) as int,
+                                  "completedPercent": 0,
+                                  "completedCount": 0,
+                                  "category": Temp.dine_in_cart[i]["category"],
+                                  "state": "ORDERED",
+                                });
                               } else {
-                                for (int j = 0;
-                                    j < Temp.dine_in_cart[i]["choices"].length;
-                                    j++) {
-                                  total = (total +
-                                          (Temp.dine_in_cart[i]["choices"][j]
-                                                  ["quantity"] *
-                                              Temp.dine_in_cart[i]["price"]))
-                                      as int;
-                                  if (Temp.dine_in_cart[i]["category"] ==
-                                      "YdpRfe1CwGZ4A3tgtYF9") {
-                                    drinksOrderData.add({
-                                      "label": Temp.dine_in_cart[i]["choices"]
-                                          [j]["choice"],
-                                      "unitPrice": Temp.dine_in_cart[i]
-                                          ["price"],
-                                      "quantity": Temp.dine_in_cart[i]
-                                          ["choices"][j]["quantity"],
-                                      "totalPrice": (Temp.dine_in_cart[i]
-                                              ["price"] *
-                                          Temp.dine_in_cart[i]["choices"][j]
-                                              ["quantity"]) as int,
-                                      "completedPercent": 0,
-                                      "completedCount": 0,
-                                      "category": Temp.dine_in_cart[i]
-                                          ["category"],
-                                      "state": "ORDERED",
-                                    });
-                                  } else {
-                                    foodOrderData.add({
-                                      "label": Temp.dine_in_cart[i]["choices"]
-                                          [j]["choice"],
-                                      "unitPrice": Temp.dine_in_cart[i]
-                                          ["price"],
-                                      "quantity": Temp.dine_in_cart[i]
-                                          ["choices"][j]["quantity"],
-                                      "totalPrice": (Temp.dine_in_cart[i]
-                                              ["price"] *
-                                          Temp.dine_in_cart[i]["choices"][j]
-                                              ["quantity"]) as int,
-                                      "completedPercent": 0,
-                                      "completedCount": 0,
-                                      "category": Temp.dine_in_cart[i]
-                                          ["category"],
-                                      "state": "ORDERED",
-                                    });
+                                foodOrderData.add({
+                                  "label": Temp.dine_in_cart[i]["choices"][j]
+                                      ["choice"],
+                                  "unitPrice": Temp.dine_in_cart[i]["price"],
+                                  "quantity": Temp.dine_in_cart[i]["choices"][j]
+                                      ["quantity"],
+                                  "totalPrice": (Temp.dine_in_cart[i]["price"] *
+                                      Temp.dine_in_cart[i]["choices"][j]
+                                          ["quantity"]) as int,
+                                  "completedPercent": 0,
+                                  "completedCount": 0,
+                                  "category": Temp.dine_in_cart[i]["category"],
+                                  "state": "ORDERED",
+                                });
 
-                                    if (Temp.dine_in_cart[i]["addon"] != null) {
-                                      foodOrderData[foodOrderData.length - 1]
-                                              ["addon"] =
-                                          "With ${Temp.dine_in_cart[i]["addon"]}";
-                                    }
-                                  }
+                                if (Temp.dine_in_cart[i]["addon"] != null) {
+                                  foodOrderData[foodOrderData.length - 1]
+                                          ["addon"] =
+                                      "With ${Temp.dine_in_cart[i]["addon"]}";
                                 }
                               }
                             }
+                          }
+                        }
 
-                            Temp.availableTables = [];
-                            FirebaseFirestore.instance
-                                .collection('tableData')
-                                .orderBy("tableNum", descending: false)
-                                .get()
-                                .then((QuerySnapshot querySnapshot) {
-                              querySnapshot.docs.forEach((doc) {
-                                Temp.availableTables.add(doc);
-                              });
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (BuildContext context) {
-                                    print(Temp.availableTables.length);
-                                    return Checkout(
-                                        foodOrder: foodOrderData,
-                                        drinkOrder: drinksOrderData,
-                                        total: total,
-                                        quantityTotal: quantityTotal);
-                                  },
-                                ),
-                              );
-                            }).catchError(
-                                    (onError) => {print(onError.toString())});
-                          },
-                          gradient: const LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [
-                                Color(0Xff11998E),
-                                Color(0Xff38EF7D),
-                              ]),
-                        ))
-                    : SizedBox(),
+                        Temp.availableTables = [];
+                        FirebaseFirestore.instance
+                            .collection('tableData')
+                            .orderBy("tableNum", descending: false)
+                            .get()
+                            .then((QuerySnapshot querySnapshot) {
+                          for (var doc in querySnapshot.docs) {
+                            Temp.availableTables.add(doc);
+                          }
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext context) {
+                                return Checkout(
+                                    foodOrder: foodOrderData,
+                                    drinkOrder: drinksOrderData,
+                                    total: total,
+                                    quantityTotal: quantityTotal
+                                );
+                              },
+                            ),
+                          );
+                        });
+
+
+                      },
+                      gradient: const LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            Color(0Xff11998E),
+                            Color(0Xff38EF7D),
+                          ]),
+                    )): const SizedBox(),
                 Expanded(
                     child: SingleChildScrollView(
                         child: Padding(
@@ -258,6 +232,7 @@ class _CartState extends State<Cart> {
                 colors: [
                   Color.fromARGB(180, 0, 0, 0),
                   Color.fromARGB(180, 27, 54, 3),
+
                 ],
                 // stops: [0.0, 0.1],
               ),
@@ -276,7 +251,7 @@ class _CartState extends State<Cart> {
               bottom: 90,
               child: SizedBox(
                   width: MediaQuery.of(context).size.width,
-                  child: Text(
+                  child: const Text(
                     "L O A D I N G\n. . .",
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),

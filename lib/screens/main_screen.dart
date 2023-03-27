@@ -1,26 +1,23 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curry_virunthu_app/util/noti.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
 import 'package:curry_virunthu_app/screens/my_order.dart';
 import 'package:curry_virunthu_app/screens/cart.dart';
 import 'package:curry_virunthu_app/screens/home.dart';
 import 'package:curry_virunthu_app/screens/profile.dart';
 import 'package:curry_virunthu_app/screens/today_menu.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-
 import '../util/temp.dart';
-import 'login.dart';
 
 class MainScreen extends StatefulWidget {
   final int page;
   final String subPage;
 
-  MainScreen(this.page, this.subPage) {}
+  const MainScreen(this.page, this.subPage, {super.key});
 
   @override
   _MainScreenState createState() => _MainScreenState(page, subPage);
@@ -51,14 +48,14 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Timer(Duration(seconds: 0), () => {_pageController.jumpToPage(_page)});
+    Timer(const Duration(seconds: 0), () => {_pageController.jumpToPage(_page)});
     return WillPopScope(
         onWillPop: () async {
           return false;
         },
         child: Scaffold(
           body: PageView(
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             controller: _pageController,
             onPageChanged: onPageChanged,
             children: List.generate(5, (index) {
@@ -70,7 +67,7 @@ class _MainScreenState extends State<MainScreen> {
           ),
           bottomNavigationBar: BottomAppBar(
             color: Theme.of(context).primaryColor,
-            shape: CircularNotchedRectangle(),
+            shape: const CircularNotchedRectangle(),
             child: Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -115,9 +112,11 @@ class _MainScreenState extends State<MainScreen> {
 
   initInfo() {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-      print("--------------ON MESSAGE------------------");
-      print(
-          "onMessage: ${message.notification?.title}/${message.notification?.body}");
+      if (kDebugMode) {
+        print("--------------ON MESSAGE------------------");
+        print(
+            "onMessage: ${message.notification?.title}/${message.notification?.body}");
+      }
 
       // Noti.showBigTextNotification(title: message.notification?.title.toString(),
       //     body: message.notification?.title,
@@ -139,13 +138,15 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
-  String? mtoken = " ";
+  String? mToken = " ";
 
   void getToken() async {
     await FirebaseMessaging.instance.getToken().then((token) {
       setState(() {
-        mtoken = token;
-        print("My token is $mtoken");
+        mToken = token;
+        if (kDebugMode) {
+          print("My token is $mToken");
+        }
       });
       saveToken(token!);
     });
