@@ -3,6 +3,7 @@ import 'package:curry_virunthu_app/util/user_session.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '../widgets/gradient_slide_to_act.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:convert';
@@ -508,57 +509,60 @@ class _CheckoutState extends State<Checkout> {
                                                                 "",
                                                             selectedTable =
                                                                 null,
-                                                            Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                builder:
-                                                                    (BuildContext
-                                                                        context) {
-                                                                  print(Temp
-                                                                      .availableTables
-                                                                      .length);
-                                                                  return MainScreen(
-                                                                      2, "All");
-                                                                },
-                                                              ),
-                                                            )
+                                                    FirebaseFirestore.instance
+                                                        .collection("customer")
+                                                        .where("mobile",
+                                                        isEqualTo: "$customerNum")
+                                                        .get()
+                                                        .then((QuerySnapshot querySnapshot) {
+                                                      if (querySnapshot.docs.isEmpty) {
+                                                        Fluttertoast.showToast(
+                                                            msg: "Customer has not yet installed the App!",
+                                                            toastLength: Toast.LENGTH_LONG,
+                                                            gravity: ToastGravity.TOP,
+                                                            timeInSecForIosWeb: 1,
+                                                            backgroundColor: Colors.lightGreenAccent,
+                                                            textColor: Colors.black,
+                                                            fontSize: 16.0);
+                                                      } else {
+                                                        FirebaseFirestore.instance
+                                                            .collection("customer")
+                                                            .doc(querySnapshot.docs[0].id)
+                                                            .update({
+                                                          "rating":querySnapshot.docs[0]["rating"] + 1
+                                                        })
+                                                            .then((value) => {
+                                                          print(
+                                                              "user rating updated"),
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder:
+                                                                  (BuildContext
+                                                              context) {
+                                                                print(Temp
+                                                                    .availableTables
+                                                                    .length);
+                                                                return MainScreen(
+                                                                    2, "All");
+                                                              },
+                                                            ),
+                                                          )
+                                                        })
+                                                            .catchError((error) => print(
+                                                            "Failed to update user rating: $error"));
+                                                      }
+                                                    }
+                                                    )
+
                                                           })
                                                       .catchError((error) => print(
-                                                          "Failed to update cart: $error"))
-                                                })
-                                            .catchError((onError) => {
-                                                  showDialog<void>(
-                                                    context: context,
-                                                    builder:
-                                                        (BuildContext context) {
-                                                      return AlertDialog(
-                                                        title: const Text(
-                                                            'Something went Wrong!'),
-                                                        content: Text(
-                                                            onError.toString()),
-                                                        actions: <Widget>[
-                                                          TextButton(
-                                                            style: TextButton
-                                                                .styleFrom(
-                                                              textStyle: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .labelLarge,
-                                                            ),
-                                                            child: const Text(
-                                                                'Okay'),
-                                                            onPressed: () {
-                                                              Navigator.of(
-                                                                      context)
-                                                                  .pop();
-                                                            },
-                                                          ),
-                                                        ],
-                                                      );
-                                                    },
-                                                  )
-                                                });
-                                      },
+                                                          "Failed to update cart: $error")),
+
+
+
+                                      });
+                                        },
                                       gradient: const LinearGradient(
                                           begin: Alignment.topLeft,
                                           end: Alignment.bottomRight,
@@ -687,7 +691,8 @@ class _CheckoutState extends State<Checkout> {
                   FirebaseFirestore.instance
                       .collection("customer")
                       .doc(FirebaseAuth.instance.currentUser?.uid)
-                      .update({"dineInCart": Temp.dine_in_cart})
+                      .update({"dineInCart": Temp.dine_in_cart,
+                  "rating": Session.userData["rating"]  + 1 })
                       .then((value) => {
                             print("Cart Updated"),
                             cusComment.text = "",
@@ -703,6 +708,8 @@ class _CheckoutState extends State<Checkout> {
                           })
                       .catchError(
                           (error) => print("Failed to update cart: $error"))
+
+
                 })
             .catchError((onError) => {
                   showDialog<void>(
