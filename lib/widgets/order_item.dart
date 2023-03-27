@@ -27,7 +27,9 @@ class OrderItem extends StatefulWidget {
       required this.tableNum,
       required this.total,
       required this.foodOrder,
-      required this.drinkOrder, required this.completedCount, required this.orderQuantity});
+      required this.drinkOrder,
+      required this.completedCount,
+      required this.orderQuantity});
 
   @override
   _OrderItemState createState() => _OrderItemState();
@@ -215,80 +217,84 @@ class _OrderItemState extends State<OrderItem> {
                 return Padding(
                     padding: const EdgeInsets.only(left: 15.0, right: 15.0),
                     child: GestureDetector(
-                        onHorizontalDragStart: (detail)
-                {
-                  if (widget
-                      .foodOrder[index]["state"] == 'ORDERED' && Session.userData["admin"]){
-                  showDialog<void>(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text('Alert!'),
-                        content: Text(
-                            'Do you want to continue to remove item : ${widget
-                                .foodOrder[index]["label"]}?'),
-                        actions: <Widget>[
-                          TextButton(
-                            style: TextButton.styleFrom(
-                              textStyle: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .labelLarge,
-                            ),
-                            child: const Text('No'),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                          TextButton(
-                            style: TextButton.styleFrom(
-                              textStyle: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .labelLarge,
-                            ),
-                            child: const Text('Yes'),
-                            onPressed: () {
-                              widget.foodOrder[index]["state"] = "REMOVED";
-                              var tempCompletedCount = widget.completedCount -
-                                  widget.foodOrder[index]["completedCount"];
-                              var tempOrderQuantity = widget.orderQuantity -
-                                  widget.foodOrder[index]["quantity"];
-                              widget.foodOrder[index]["completedCount"] = 0;
-                              var tempCompletedPercentage;
-                              if (tempOrderQuantity == 0)
-                                tempCompletedPercentage = 100;
-                              else
-                                tempCompletedPercentage =
-                                    (tempCompletedCount / tempOrderQuantity) *
-                                        100;
+                        onHorizontalDragStart: (detail) {
+                          if (widget.foodOrder[index]["state"] == 'ORDERED' &&
+                              Session.userData["admin"]) {
+                            showDialog<void>(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Text('Alert!'),
+                                  content: Text(
+                                      'Do you want to continue to remove item : ${widget.foodOrder[index]["label"]}?'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      style: TextButton.styleFrom(
+                                        textStyle: Theme.of(context)
+                                            .textTheme
+                                            .labelLarge,
+                                      ),
+                                      child: const Text('No'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                    TextButton(
+                                      style: TextButton.styleFrom(
+                                        textStyle: Theme.of(context)
+                                            .textTheme
+                                            .labelLarge,
+                                      ),
+                                      child: const Text('Yes'),
+                                      onPressed: () {
+                                        widget.foodOrder[index]["state"] =
+                                            "REMOVED";
+                                        var tempCompletedCount =
+                                            widget.completedCount -
+                                                widget.foodOrder[index]
+                                                    ["completedCount"];
+                                        var tempOrderQuantity = widget
+                                                .orderQuantity -
+                                            widget.foodOrder[index]["quantity"];
+                                        widget.foodOrder[index]
+                                            ["completedCount"] = 0;
+                                        var tempCompletedPercentage;
+                                        if (tempOrderQuantity == 0)
+                                          tempCompletedPercentage = 100;
+                                        else
+                                          tempCompletedPercentage =
+                                              (tempCompletedCount /
+                                                      tempOrderQuantity) *
+                                                  100;
 
-                              FirebaseFirestore.instance
-                                  .collection("order")
-                                  .doc(widget.id)
-                                  .update({
-                                "foodOrder": widget.foodOrder,
-                                "completedCount": tempCompletedCount,
-                                "orderQuantity": tempOrderQuantity,
-                                "total": widget.total -
-                                    widget.foodOrder[index]["totalPrice"],
-                                "completedPercent": tempCompletedPercentage
-                              })
-                                  .then((value) =>
-                              {
-                              })
-                                  .catchError((error) =>
-                                  print("Failed to update cart: $error"));
-                              setState(() {
-                                Navigator.of(context).pop();
-                              });
-                            },
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                }
+                                        FirebaseFirestore.instance
+                                            .collection("order")
+                                            .doc(widget.id)
+                                            .update({
+                                              "foodOrder": widget.foodOrder,
+                                              "completedCount":
+                                                  tempCompletedCount,
+                                              "orderQuantity":
+                                                  tempOrderQuantity,
+                                              "total": widget.total -
+                                                  widget.foodOrder[index]
+                                                      ["totalPrice"],
+                                              "completedPercent":
+                                                  tempCompletedPercentage
+                                            })
+                                            .then((value) => {})
+                                            .catchError((error) => print(
+                                                "Failed to update cart: $error"));
+                                        setState(() {
+                                          Navigator.of(context).pop();
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }
                         },
                         child: OrderListItem(
                             addon: widget.foodOrder[index]["addon"],
@@ -320,80 +326,85 @@ class _OrderItemState extends State<OrderItem> {
                 return Padding(
                     padding: const EdgeInsets.only(left: 15.0, right: 15.0),
                     child: GestureDetector(
-                        onHorizontalDragStart: (detail)
-    {
-    if (widget
-        .drinkOrder[index]["state"] == 'ORDERED' && Session.userData["admin"]){
-                  showDialog<void>(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text('Alert!'),
-                        content: Text(
-                            'Do you want to continue to remove item : ${widget
-                                .drinkOrder[index]["label"]}?'),
-                        actions: <Widget>[
-                          TextButton(
-                            style: TextButton.styleFrom(
-                              textStyle: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .labelLarge,
-                            ),
-                            child: const Text('No'),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                          TextButton(
-                            style: TextButton.styleFrom(
-                              textStyle: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .labelLarge,
-                            ),
-                            child: const Text('Yes'),
-                            onPressed: () {
-                              widget.drinkOrder[index]["state"] = "REMOVED";
-                              var tempCompletedCount = widget.completedCount -
-                                  widget.drinkOrder[index]["completedCount"];
-                              var tempOrderQuantity = widget.orderQuantity -
-                                  widget.drinkOrder[index]["quantity"];
-                              widget.drinkOrder[index]["completedCount"] = 0;
-                              var tempCompletedPercentage;
-                              if (tempOrderQuantity == 0)
-                                tempCompletedPercentage = 100;
-                              else
-                                tempCompletedPercentage =
-                                    (tempCompletedCount / tempOrderQuantity) *
-                                        100;
+                        onHorizontalDragStart: (detail) {
+                          if (widget.drinkOrder[index]["state"] == 'ORDERED' &&
+                              Session.userData["admin"]) {
+                            showDialog<void>(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Text('Alert!'),
+                                  content: Text(
+                                      'Do you want to continue to remove item : ${widget.drinkOrder[index]["label"]}?'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      style: TextButton.styleFrom(
+                                        textStyle: Theme.of(context)
+                                            .textTheme
+                                            .labelLarge,
+                                      ),
+                                      child: const Text('No'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                    TextButton(
+                                      style: TextButton.styleFrom(
+                                        textStyle: Theme.of(context)
+                                            .textTheme
+                                            .labelLarge,
+                                      ),
+                                      child: const Text('Yes'),
+                                      onPressed: () {
+                                        widget.drinkOrder[index]["state"] =
+                                            "REMOVED";
+                                        var tempCompletedCount =
+                                            widget.completedCount -
+                                                widget.drinkOrder[index]
+                                                    ["completedCount"];
+                                        var tempOrderQuantity =
+                                            widget.orderQuantity -
+                                                widget.drinkOrder[index]
+                                                    ["quantity"];
+                                        widget.drinkOrder[index]
+                                            ["completedCount"] = 0;
+                                        var tempCompletedPercentage;
+                                        if (tempOrderQuantity == 0)
+                                          tempCompletedPercentage = 100;
+                                        else
+                                          tempCompletedPercentage =
+                                              (tempCompletedCount /
+                                                      tempOrderQuantity) *
+                                                  100;
 
-                              FirebaseFirestore.instance
-                                  .collection("order")
-                                  .doc(widget.id)
-                                  .update({
-                                "drinkOrder": widget.drinkOrder,
-                                "completedCount": tempCompletedCount,
-                                "orderQuantity": tempOrderQuantity,
-                                "total": widget.total -
-                                    widget.drinkOrder[index]["totalPrice"],
-                                "completedPercent": tempCompletedPercentage
-                              })
-                                  .then((value) =>
-                              {
-                              })
-                                  .catchError((error) =>
-                                  print("Failed to update cart: $error"));
-                              setState(() {
-                                Navigator.of(context).pop();
-                              });
-                            },
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                }
+                                        FirebaseFirestore.instance
+                                            .collection("order")
+                                            .doc(widget.id)
+                                            .update({
+                                              "drinkOrder": widget.drinkOrder,
+                                              "completedCount":
+                                                  tempCompletedCount,
+                                              "orderQuantity":
+                                                  tempOrderQuantity,
+                                              "total": widget.total -
+                                                  widget.drinkOrder[index]
+                                                      ["totalPrice"],
+                                              "completedPercent":
+                                                  tempCompletedPercentage
+                                            })
+                                            .then((value) => {})
+                                            .catchError((error) => print(
+                                                "Failed to update cart: $error"));
+                                        setState(() {
+                                          Navigator.of(context).pop();
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }
                         },
                         child: OrderListItem(
                             addon: widget.drinkOrder[index]["addon"],

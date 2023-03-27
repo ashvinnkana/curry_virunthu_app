@@ -11,7 +11,6 @@ import 'login.dart';
 import 'main_screen.dart';
 
 class Otp extends StatefulWidget {
-
   final String verifyId;
   final String phoneNum;
 
@@ -22,7 +21,6 @@ class Otp extends StatefulWidget {
 }
 
 class _OtpState extends State<Otp> {
-
   final String verifyId;
   final String phoneNum;
   bool loading = false;
@@ -32,7 +30,6 @@ class _OtpState extends State<Otp> {
 
   @override
   Widget build(BuildContext context) {
-
     bool _errorState = false;
 
     final defaultPinTheme = PinTheme(
@@ -92,7 +89,8 @@ class _OtpState extends State<Otp> {
                       ),
                       Text(
                         "Phone Verification",
-                        style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 22, fontWeight: FontWeight.bold),
                       ),
                       SizedBox(
                         height: 10,
@@ -111,11 +109,12 @@ class _OtpState extends State<Otp> {
                         length: 6,
                         forceErrorState: _errorState,
                         errorText: 'Wrong Pin',
-                        defaultPinTheme: defaultPinTheme ,
-                        errorPinTheme: errorPinTheme ,
+                        defaultPinTheme: defaultPinTheme,
+                        errorPinTheme: errorPinTheme,
                         focusedPinTheme: focusedPinTheme,
                         submittedPinTheme: submittedPinTheme,
-                        androidSmsAutofillMethod:  AndroidSmsAutofillMethod.smsRetrieverApi,
+                        androidSmsAutofillMethod:
+                            AndroidSmsAutofillMethod.smsRetrieverApi,
                         showCursor: true,
                         onCompleted: (pin) async {
                           setState(() {
@@ -123,84 +122,94 @@ class _OtpState extends State<Otp> {
                           });
                           try {
                             PhoneAuthCredential credential =
-                            PhoneAuthProvider.credential(
-                                verificationId: this.verifyId, smsCode: pin);
+                                PhoneAuthProvider.credential(
+                                    verificationId: this.verifyId,
+                                    smsCode: pin);
 
                             // Sign the user in (or link) with the credential
                             await FirebaseAuth.instance
-                                .signInWithCredential(credential).then((value) =>
-                            {
-                            Session.userData = null,
-                            FirebaseFirestore.instance
-                                .collection('customer')
-                                .where("mobile", isEqualTo: "+61$phoneNum").get()
-                                .then((QuerySnapshot querySnapshot) {
-                            if (querySnapshot.docs.isEmpty) {
-                            Session.userData = null;
-                            Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                            builder: (BuildContext context) {
-                            return Register(phoneNum);
-                            },
-                            ),
-                            );
-                            } else {
-                            Session.userData = querySnapshot.docs[0];
-                            Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                            builder: (BuildContext context) {
-                            return MainScreen(0, "All");
-                            },
-                            ),
-                            );
-                            }
-                            })
-
-                            }).catchError((onError) =>{
-
-                              showDialog<void>(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: const Text('Something Went Wrong'),
-                                    content: const Text('Invalid OTP, Login Failed'),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        style: TextButton.styleFrom(
-                                          textStyle: Theme.of(context).textTheme.labelLarge,
-                                        ),
-                                        child: const Text('Okay'),
-                                        onPressed: () {
+                                .signInWithCredential(credential)
+                                .then((value) => {
+                                      Session.userData = null,
+                                      FirebaseFirestore.instance
+                                          .collection('customer')
+                                          .where("mobile",
+                                              isEqualTo: "+61$phoneNum")
+                                          .get()
+                                          .then((QuerySnapshot querySnapshot) {
+                                        if (querySnapshot.docs.isEmpty) {
+                                          Session.userData = null;
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                               builder: (BuildContext context) {
-                                                return Otp(verifyId, phoneNum);
+                                                return Register(phoneNum);
                                               },
                                             ),
                                           );
-
+                                        } else {
+                                          Session.userData =
+                                              querySnapshot.docs[0];
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (BuildContext context) {
+                                                return MainScreen(0, "All");
+                                              },
+                                            ),
+                                          );
+                                        }
+                                      })
+                                    })
+                                .catchError((onError) => {
+                                      showDialog<void>(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: const Text(
+                                                'Something Went Wrong'),
+                                            content: const Text(
+                                                'Invalid OTP, Login Failed'),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                style: TextButton.styleFrom(
+                                                  textStyle: Theme.of(context)
+                                                      .textTheme
+                                                      .labelLarge,
+                                                ),
+                                                child: const Text('Okay'),
+                                                onPressed: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (BuildContext
+                                                          context) {
+                                                        return Otp(
+                                                            verifyId, phoneNum);
+                                                      },
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                            ],
+                                          );
                                         },
-                                      ),
-                                    ],
-                                  );
-                                },
-                              )
-                            });
+                                      )
+                                    });
                           } catch (e) {
                             showDialog<void>(
                               context: context,
                               builder: (BuildContext context) {
-
                                 return AlertDialog(
                                   title: const Text('Something Went Wrong'),
-                                  content: const Text('Invalid OTP, Please Re-enter!'),
+                                  content: const Text(
+                                      'Invalid OTP, Please Re-enter!'),
                                   actions: <Widget>[
                                     TextButton(
                                       style: TextButton.styleFrom(
-                                        textStyle: Theme.of(context).textTheme.labelLarge,
+                                        textStyle: Theme.of(context)
+                                            .textTheme
+                                            .labelLarge,
                                       ),
                                       child: const Text('Okay'),
                                       onPressed: () {
@@ -212,7 +221,6 @@ class _OtpState extends State<Otp> {
                                             },
                                           ),
                                         );
-
                                       },
                                     ),
                                   ],
@@ -221,7 +229,7 @@ class _OtpState extends State<Otp> {
                             );
                           }
                         },
-                        onChanged: (value){
+                        onChanged: (value) {
                           code = value;
                         },
                       ),
@@ -237,7 +245,6 @@ class _OtpState extends State<Otp> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (BuildContext context) {
-
                                       return Login();
                                     },
                                   ),
@@ -273,7 +280,6 @@ class _OtpState extends State<Otp> {
                 colors: [
                   Color.fromARGB(180, 0, 0, 0),
                   Color.fromARGB(180, 27, 54, 3),
-
                 ],
                 // stops: [0.0, 0.1],
               ),
@@ -308,5 +314,4 @@ class _OtpState extends State<Otp> {
   void initState() {
     super.initState();
   }
-
 }

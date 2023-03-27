@@ -54,10 +54,7 @@ Future<void> main() async {
     if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
       print('Internet Connection Successfull!');
     }
-  } on SocketException catch (_) {
-  }
-
-
+  } on SocketException catch (_) {}
 }
 
 class MyApp extends StatefulWidget {
@@ -68,7 +65,8 @@ class MyApp extends StatefulWidget {
       FirebaseFirestore.instance
           .collection('customer')
           .where("mobile",
-          isEqualTo: "${FirebaseAuth.instance.currentUser?.phoneNumber}").get()
+              isEqualTo: "${FirebaseAuth.instance.currentUser?.phoneNumber}")
+          .get()
           .then((QuerySnapshot querySnapshot) {
         print("Query: ${querySnapshot.docs.length}");
         if (querySnapshot.docs.isEmpty) {
@@ -94,10 +92,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: Constants.appName,

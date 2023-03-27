@@ -49,10 +49,9 @@ class _TrendingItemState extends State<TrendingItem> {
                         imageBuilder: (context, imageProvider) => Container(
                           decoration: BoxDecoration(
                               image: DecorationImage(
-                                image: imageProvider,
-                                fit: BoxFit.cover,
-                              )
-                          ),
+                            image: imageProvider,
+                            fit: BoxFit.cover,
+                          )),
                         ),
                         errorWidget: (context, url, error) => Icon(Icons.error),
                       ),
@@ -89,28 +88,27 @@ class _TrendingItemState extends State<TrendingItem> {
                           borderRadius: BorderRadius.circular(4.0)),
                       child: Padding(
                         padding: EdgeInsets.all(2.0),
-                        child: int.parse(widget.buyCount) > 5 ? Row(
-                          children: <Widget>[
-                            const Icon(
-                              Icons.favorite,
-                              color: Colors.pink,
-                              size: 12,
-                            ),
-                            Text(
-                              " ${widget.buyCount} ",
-                              style: const TextStyle(
-                                fontSize: 12.0,
+                        child: int.parse(widget.buyCount) > 5
+                            ? Row(
+                                children: <Widget>[
+                                  const Icon(
+                                    Icons.favorite,
+                                    color: Colors.pink,
+                                    size: 12,
+                                  ),
+                                  Text(
+                                    " ${widget.buyCount} ",
+                                    style: const TextStyle(
+                                      fontSize: 12.0,
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : const Text(
+                                " NEW ",
+                                style: TextStyle(
+                                    fontSize: 12.0, color: Colors.yellow),
                               ),
-                            ),
-                          ],
-                        ):
-                        const Text(
-                          " NEW ",
-                          style: TextStyle(
-                              fontSize: 12.0,
-                              color: Colors.yellow
-                          ),
-                        ),
                       ),
                     ),
                   ),

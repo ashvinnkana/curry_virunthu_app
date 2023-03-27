@@ -21,7 +21,8 @@ class _CategoriesState extends State<Categories> {
         centerTitle: true,
       ),
       body: Padding(
-          padding: const EdgeInsets.all(5.0), child: buildCategoryList(context)),
+          padding: const EdgeInsets.all(5.0),
+          child: buildCategoryList(context)),
     );
   }
 
@@ -82,18 +83,18 @@ class _CategoriesState extends State<Categories> {
                           children: <Widget>[
                             CachedNetworkImage(
                                 imageUrl: category["img"],
-                                imageBuilder: (context, imageProvider) => Container(
-                                  decoration: BoxDecoration(
-                                      image: DecorationImage(
+                                imageBuilder: (context, imageProvider) =>
+                                    Container(
+                                      decoration: BoxDecoration(
+                                          image: DecorationImage(
                                         image: imageProvider,
                                         fit: BoxFit.cover,
-                                      )
-                                  ),
-                                ),
-                                errorWidget: (context, url, error) => Icon(Icons.error),
+                                      )),
+                                    ),
+                                errorWidget: (context, url, error) =>
+                                    Icon(Icons.error),
                                 height: MediaQuery.of(context).size.height,
-                                width: MediaQuery.of(context).size.width
-                            ),
+                                width: MediaQuery.of(context).size.width),
                             Container(
                               decoration: const BoxDecoration(
                                 gradient: LinearGradient(
@@ -135,8 +136,7 @@ class _CategoriesState extends State<Categories> {
                           ],
                         )),
                   ),
-                )
-                  ;
+                );
               })
               .toList()
               .cast(),

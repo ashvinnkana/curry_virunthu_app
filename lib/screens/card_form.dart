@@ -9,7 +9,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'main_screen.dart';
 
 class CardForm extends StatefulWidget {
-
   CardForm({Key? key}) : super(key: key);
 
   @override
@@ -17,7 +16,6 @@ class CardForm extends StatefulWidget {
 }
 
 class _CardFormState extends State<CardForm> {
-
   bool loading = false;
 
   @override
@@ -49,19 +47,25 @@ class _CardFormState extends State<CardForm> {
                     'Card Form',
                     style: Theme.of(context).textTheme.headlineSmall,
                   ),
-                  SizedBox(height: 20,),
+                  SizedBox(
+                    height: 20,
+                  ),
                   CardFormField(
                     controller: CardFormEditController(),
                   ),
-                  ElevatedButton(onPressed: () {}, child: Text('Pay'),
+                  ElevatedButton(
+                    onPressed: () {},
+                    child: Text('Pay'),
                     style: ElevatedButton.styleFrom(
-                        primary: Colors.lightGreen.shade800,),)
+                      primary: Colors.lightGreen.shade800,
+                    ),
+                  )
                 ],
               ),
             ),
             getLoadingScreen()
           ],
-        ) );
+        ));
   }
 
   getLoadingScreen() {

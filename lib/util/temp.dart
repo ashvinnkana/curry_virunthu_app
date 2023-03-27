@@ -14,5 +14,6 @@ class Temp {
 
   static bool selfOrderUnlock = false;
 
-  static String STRIPE_SECRET_KEY = "sk_test_51MpfIVG4FftqZs4OZM6hRCnC2m3weVQlgQ78A0fsOmRy1GFlm13oB2xhs2BM2c4bJwPc3YCGE3DU0u8HxImh8DZj00t4nqncB7";
+  static String STRIPE_SECRET_KEY =
+      "sk_test_51MpfIVG4FftqZs4OZM6hRCnC2m3weVQlgQ78A0fsOmRy1GFlm13oB2xhs2BM2c4bJwPc3YCGE3DU0u8HxImh8DZj00t4nqncB7";
 }

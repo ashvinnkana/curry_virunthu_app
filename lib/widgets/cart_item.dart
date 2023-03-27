@@ -12,7 +12,8 @@ class CartItem extends StatefulWidget {
       {required this.price,
       required this.itemid,
       required this.label,
-      required this.quantity, required this.addon});
+      required this.quantity,
+      required this.addon});
 
   @override
   _CartItemState createState() => _CartItemState();
@@ -28,75 +29,69 @@ class _CartItemState extends State<CartItem> {
           top: 0.0,
         ),
         child: Container(
-          color: Colors.black,
-            child: Column(
+            color: Colors.black,
+            child: Column(children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Container(
-                              width: 35.0,
-                              height: 35.0,
-                              decoration: BoxDecoration(
-                                  color: Color.fromARGB(255, 126, 126, 126),
-                                  shape: BoxShape.rectangle,
-                                  border: Border.all(width: 1.5),
-                                  borderRadius:
+                      Container(
+                          width: 35.0,
+                          height: 35.0,
+                          decoration: BoxDecoration(
+                              color: Color.fromARGB(255, 126, 126, 126),
+                              shape: BoxShape.rectangle,
+                              border: Border.all(width: 1.5),
+                              borderRadius:
                                   BorderRadius.all(Radius.circular(10.0))),
-                              child: Center(
-                                  child: Text(
-                                    "${widget.quantity}",
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      color: Colors.white,
-                                    ),
-                                  ))),
-                          const SizedBox(width: 15.0),
-
-                          Padding(
-                              padding: EdgeInsets.only(top: 16),
-                              child: RichText(
-                                text: new TextSpan(
-                                  // Note: Styles for TextSpans must be explicitly defined.
-                                  // Child text spans will inherit styles from parent
-                                  style: new TextStyle(
-                                    fontSize: 15.0,
-                                    color: Colors.white,
-                                  ),
-                                  children: <InlineSpan>[
-                                    new TextSpan(text: "${widget.label}\n"),
-                                    widget.addon == null ? WidgetSpan(child: SizedBox()):
-                                    WidgetSpan(
+                          child: Center(
+                              child: Text(
+                            "${widget.quantity}",
+                            style: TextStyle(
+                              fontSize: 15,
+                              color: Colors.white,
+                            ),
+                          ))),
+                      const SizedBox(width: 15.0),
+                      Padding(
+                          padding: EdgeInsets.only(top: 16),
+                          child: RichText(
+                            text: new TextSpan(
+                              // Note: Styles for TextSpans must be explicitly defined.
+                              // Child text spans will inherit styles from parent
+                              style: new TextStyle(
+                                fontSize: 15.0,
+                                color: Colors.white,
+                              ),
+                              children: <InlineSpan>[
+                                new TextSpan(text: "${widget.label}\n"),
+                                widget.addon == null
+                                    ? WidgetSpan(child: SizedBox())
+                                    : WidgetSpan(
                                         child: Container(
-                                          padding: EdgeInsets.only(top:5.0),
-                                          child: Text("With ${widget.addon}", style: new TextStyle(
-                                            fontSize: 13.0,
-                                            color: Colors.yellow,
-                                          )),
-                                        )
-                                    )
-                                  ],
-                                ),
-                              )),
-
-                        ],
-                      ),
-                      Text(
-                        "\$${widget.price * widget.quantity}",
-                        style: TextStyle(fontSize: 20),
-                      ),
+                                        padding: EdgeInsets.only(top: 5.0),
+                                        child: Text("With ${widget.addon}",
+                                            style: new TextStyle(
+                                              fontSize: 13.0,
+                                              color: Colors.yellow,
+                                            )),
+                                      ))
+                              ],
+                            ),
+                          )),
                     ],
                   ),
-                  const SizedBox(height: 10.0),
-                  Divider(
-                    color: Colors.grey,
+                  Text(
+                    "\$${widget.price * widget.quantity}",
+                    style: TextStyle(fontSize: 20),
                   ),
-
-                ])
-        )
-
-    );
+                ],
+              ),
+              const SizedBox(height: 10.0),
+              Divider(
+                color: Colors.grey,
+              ),
+            ])));
   }
 }

@@ -20,9 +20,7 @@ class MainScreen extends StatefulWidget {
   final int page;
   final String subPage;
 
-  MainScreen(this.page, this.subPage) {
-
-  }
+  MainScreen(this.page, this.subPage) {}
 
   @override
   _MainScreenState createState() => _MainScreenState(page, subPage);
@@ -56,47 +54,47 @@ class _MainScreenState extends State<MainScreen> {
     Timer(Duration(seconds: 0), () => {_pageController.jumpToPage(_page)});
     return WillPopScope(
         onWillPop: () async {
-      return false;
-    },
-    child:Scaffold(
-      body: PageView(
-        physics: NeverScrollableScrollPhysics(),
-        controller: _pageController,
-        onPageChanged: onPageChanged,
-        children: List.generate(5, (index){
-          if (index == 1) {
-            return Menu(subPage);
-          }
-          return pages[index];
-        }),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        color: Theme.of(context).primaryColor,
-        shape: CircularNotchedRectangle(),
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            // SizedBox(width: 7),
-            buildTabIcon(0),
-            buildTabIcon(1),
-            buildTabIcon(3),
-            buildTabIcon(4),
-            // SizedBox(width: 7),
-          ],
-        ),
-      ),
-      floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingActionButton(
-        elevation: 10.0,
-        child: const Icon(
-          Icons.shopping_cart,
-        ),
-        onPressed: () => _pageController.jumpToPage(2),
-      ),
-    )
-    );
+          return false;
+        },
+        child: Scaffold(
+          body: PageView(
+            physics: NeverScrollableScrollPhysics(),
+            controller: _pageController,
+            onPageChanged: onPageChanged,
+            children: List.generate(5, (index) {
+              if (index == 1) {
+                return Menu(subPage);
+              }
+              return pages[index];
+            }),
+          ),
+          bottomNavigationBar: BottomAppBar(
+            color: Theme.of(context).primaryColor,
+            shape: CircularNotchedRectangle(),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                // SizedBox(width: 7),
+                buildTabIcon(0),
+                buildTabIcon(1),
+                buildTabIcon(3),
+                buildTabIcon(4),
+                // SizedBox(width: 7),
+              ],
+            ),
+          ),
+          floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
+          floatingActionButton: FloatingActionButton(
+            elevation: 10.0,
+            child: const Icon(
+              Icons.shopping_cart,
+            ),
+            onPressed: () => _pageController.jumpToPage(2),
+          ),
+        ));
   }
 
   // void navigationTapped(int page) {
@@ -104,7 +102,7 @@ class _MainScreenState extends State<MainScreen> {
   //  }
 
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-  FlutterLocalNotificationsPlugin();
+      FlutterLocalNotificationsPlugin();
 
   @override
   void initState() {
@@ -115,21 +113,17 @@ class _MainScreenState extends State<MainScreen> {
     initInfo();
   }
 
-
-
-
   initInfo() {
-
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) async{
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       print("--------------ON MESSAGE------------------");
-      print("onMessage: ${message.notification?.title}/${message.notification?.body}");
-
+      print(
+          "onMessage: ${message.notification?.title}/${message.notification?.body}");
 
       // Noti.showBigTextNotification(title: message.notification?.title.toString(),
       //     body: message.notification?.title,
       //     fln: flutterLocalNotificationsPlugin);
       final snackBar = SnackBar(
-          content: Text(message.notification?.body ?? ""),
+        content: Text(message.notification?.body ?? ""),
         backgroundColor: Colors.teal,
         behavior: SnackBarBehavior.floating,
         action: SnackBarAction(
@@ -142,8 +136,6 @@ class _MainScreenState extends State<MainScreen> {
         ),
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
-
     });
   }
 
@@ -160,7 +152,9 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void saveToken(String token) async {
-    await FirebaseFirestore.instance.collection("DeviceTokens").doc(FirebaseAuth.instance.currentUser?.uid)
+    await FirebaseFirestore.instance
+        .collection("DeviceTokens")
+        .doc(FirebaseAuth.instance.currentUser?.uid)
         .set({'token': token});
   }
 
@@ -177,15 +171,9 @@ class _MainScreenState extends State<MainScreen> {
           .collection("customer")
           .doc(FirebaseAuth.instance.currentUser?.uid)
           .update({"dineInCart": Temp.dine_in_cart})
-          .then((value) => {
-        print("Cart Updated")
-
-      })
-          .catchError((error) =>
-          print("Failed to update cart: $error"));
+          .then((value) => {print("Cart Updated")})
+          .catchError((error) => print("Failed to update cart: $error"));
     });
-
-
   }
 
   buildTabIcon(int index) {

@@ -28,7 +28,7 @@ class MenuItems extends StatefulWidget {
       required this.isAvailable,
       required this.price,
       required this.choices,
-        required this.category,
+      required this.category,
       required this.data});
 
   @override
@@ -36,7 +36,6 @@ class MenuItems extends StatefulWidget {
 }
 
 class _MenuItemState extends State<MenuItems> {
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -66,12 +65,12 @@ class _MenuItemState extends State<MenuItems> {
                             imageBuilder: (context, imageProvider) => Container(
                               decoration: BoxDecoration(
                                   image: DecorationImage(
-                                    image: imageProvider,
-                                    fit: BoxFit.cover,
-                                  )
-                              ),
+                                image: imageProvider,
+                                fit: BoxFit.cover,
+                              )),
                             ),
-                            errorWidget: (context, url, error) => Icon(Icons.error),
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error),
                           ),
                         ),
                       ),
@@ -99,28 +98,27 @@ class _MenuItemState extends State<MenuItems> {
                               borderRadius: BorderRadius.circular(4.0)),
                           child: Padding(
                             padding: EdgeInsets.all(2.0),
-                            child: int.parse(widget.buyCount) > 5 ? Row(
-                              children: <Widget>[
-                                const Icon(
-                                  Icons.favorite,
-                                  color: Colors.pink,
-                                  size: 12,
-                                ),
-                                Text(
-                                  " ${widget.buyCount} ",
-                                  style: const TextStyle(
-                                    fontSize: 12.0,
+                            child: int.parse(widget.buyCount) > 5
+                                ? Row(
+                                    children: <Widget>[
+                                      const Icon(
+                                        Icons.favorite,
+                                        color: Colors.pink,
+                                        size: 12,
+                                      ),
+                                      Text(
+                                        " ${widget.buyCount} ",
+                                        style: const TextStyle(
+                                          fontSize: 12.0,
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : const Text(
+                                    " NEW ",
+                                    style: TextStyle(
+                                        fontSize: 12.0, color: Colors.yellow),
                                   ),
-                                ),
-                              ],
-                            ):
-                            const Text(
-                              " NEW ",
-                              style: TextStyle(
-                                fontSize: 12.0,
-                                color: Colors.yellow
-                              ),
-                            ),
                           ),
                         ),
                       ),
@@ -144,39 +142,37 @@ class _MenuItemState extends State<MenuItems> {
                         ),
                       ),
                       Positioned(
-                        top: 6.0,
-                        right: 6.0,
-                        child: GestureDetector(
-                          child: Card(
-                            color: const Color.fromRGBO(0, 0, 0, 0.4),
-                            shape: RoundedRectangleBorder(
-
-                                borderRadius: BorderRadius.circular(4.0)),
-                            child: Padding(
-                              padding: const EdgeInsets.all(2.0),
-                              child: Row(
-                                children: const <Widget>[
-                                  Icon(
-                                    Icons.info_outline,
-                                    color: Colors.white,
-                                    size: 25,
-                                  )
-                                ],
+                          top: 6.0,
+                          right: 6.0,
+                          child: GestureDetector(
+                            child: Card(
+                              color: const Color.fromRGBO(0, 0, 0, 0.4),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(4.0)),
+                              child: Padding(
+                                padding: const EdgeInsets.all(2.0),
+                                child: Row(
+                                  children: const <Widget>[
+                                    Icon(
+                                      Icons.info_outline,
+                                      color: Colors.white,
+                                      size: 25,
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (BuildContext context) {
-                                  return ProductView(widget.data, widget.id);
-                                },
-                              ),
-                            );
-                          },
-                        )
-                      ),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) {
+                                    return ProductView(widget.data, widget.id);
+                                  },
+                                ),
+                              );
+                            },
+                          )),
                     ],
                   )),
               const SizedBox(height: 10.0),
@@ -211,8 +207,10 @@ class _MenuItemState extends State<MenuItems> {
               checkCartforItem(widget.id) == ""
                   ? buildSelect(widget.choices)
                   : buildAddedToCart(widget.choices),
-              widget.category == "K2vR0XROjDoauN5svgLI" && widget.data["addon"] == true ?
-              buildAddons() : const SizedBox()
+              widget.category == "K2vR0XROjDoauN5svgLI" &&
+                      widget.data["addon"] == true
+                  ? buildAddons()
+                  : const SizedBox()
             ],
           ),
         ),
@@ -412,64 +410,66 @@ class _MenuItemState extends State<MenuItems> {
                   ),
                   const SizedBox(height: 10.0),
                   SizedBox(
-              child: ListView.separated(
-                shrinkWrap: true,
-                physics: ClampingScrollPhysics(),
-                itemBuilder: (_, index) {
-                  if (Temp.curryList[index]["isAvailable"]) {
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Radio(
-                            value: Temp.curryList[index]["label"],
-                            groupValue: checkCartforItem(widget.id)["addon"],
-                            onChanged: (flag) {
-                              setState(() {
-                                checkCartforItem(widget.id)["addon"] = Temp.curryList[index]["label"];
-                              });
-                            }),
-                        Expanded(
-                          child: Text(
-                            Temp.curryList[index]["label"].toString(),
-                            style: TextStyle(
-                              fontSize: 15.0,
-                            ),
-                          ),
-                        ),
-                        Card(
-                          margin: EdgeInsets.only(left: 40),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(3.0)),
-                          child: Padding(
-                            padding: EdgeInsets.all(4.0),
-                            child: Text(
-                              Temp.curryList[index]["isVeg"] == true
-                                  ? 'VEG'
-                                  : "NON-VEG",
-                              style: TextStyle(
-                                fontSize: 12.0,
-                                color: Temp.curryList[index]["isVeg"] == true
-                                    ? Colors.lightGreenAccent
-                                    : Colors.deepOrange,
-                                fontWeight: FontWeight.bold,
+                      child: ListView.separated(
+                    shrinkWrap: true,
+                    physics: ClampingScrollPhysics(),
+                    itemBuilder: (_, index) {
+                      if (Temp.curryList[index]["isAvailable"]) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Radio(
+                                value: Temp.curryList[index]["label"],
+                                groupValue:
+                                    checkCartforItem(widget.id)["addon"],
+                                onChanged: (flag) {
+                                  setState(() {
+                                    checkCartforItem(widget.id)["addon"] =
+                                        Temp.curryList[index]["label"];
+                                  });
+                                }),
+                            Expanded(
+                              child: Text(
+                                Temp.curryList[index]["label"].toString(),
+                                style: TextStyle(
+                                  fontSize: 15.0,
+                                ),
                               ),
                             ),
-                          ),
-                        )
-                      ],
-                    );
-                  } else {
-                    return SizedBox();
-                  }
-                  },
-                itemCount: Temp.curryList.length,
-                separatorBuilder: (_, index) {
-                  return SizedBox(
-                    height: 5,
-                  );
-                },
-              )
-            )
+                            Card(
+                              margin: EdgeInsets.only(left: 40),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(3.0)),
+                              child: Padding(
+                                padding: EdgeInsets.all(4.0),
+                                child: Text(
+                                  Temp.curryList[index]["isVeg"] == true
+                                      ? 'VEG'
+                                      : "NON-VEG",
+                                  style: TextStyle(
+                                    fontSize: 12.0,
+                                    color:
+                                        Temp.curryList[index]["isVeg"] == true
+                                            ? Colors.lightGreenAccent
+                                            : Colors.deepOrange,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            )
+                          ],
+                        );
+                      } else {
+                        return SizedBox();
+                      }
+                    },
+                    itemCount: Temp.curryList.length,
+                    separatorBuilder: (_, index) {
+                      return SizedBox(
+                        height: 5,
+                      );
+                    },
+                  ))
                 ]));
       } else {
         return SizedBox();
@@ -477,7 +477,6 @@ class _MenuItemState extends State<MenuItems> {
     } catch (e) {
       return SizedBox();
     }
-
   }
 
   buildSelect(List choices) {
@@ -599,7 +598,6 @@ class _MenuItemState extends State<MenuItems> {
         backgroundColor: Colors.red,
         textColor: Colors.white,
         fontSize: 16.0);
-
   }
 
   void deleteChoiceInCart(String id, String title, String choice) {
@@ -608,7 +606,9 @@ class _MenuItemState extends State<MenuItems> {
         if (Temp.dine_in_cart[i]["choices"].length > 1) {
           for (int j = 0; j < Temp.dine_in_cart[i]["choices"].length; j++) {
             if (Temp.dine_in_cart[i]["choices"][j]["choice"] == choice) {
-              Temp.dine_in_cart[i]["quantity"] = Temp.dine_in_cart[i]["quantity"] - (Temp.dine_in_cart[i]["choices"][j]["quantity"]) as int;
+              Temp.dine_in_cart[i]["quantity"] = Temp.dine_in_cart[i]
+                      ["quantity"] -
+                  (Temp.dine_in_cart[i]["choices"][j]["quantity"]) as int;
               Temp.dine_in_cart[i]["choices"].removeAt(j);
               Fluttertoast.showToast(
                   msg: choice + " Removed from Cart!",
@@ -630,7 +630,6 @@ class _MenuItemState extends State<MenuItems> {
               backgroundColor: Colors.red,
               textColor: Colors.white,
               fontSize: 16.0);
-
         }
       }
     }

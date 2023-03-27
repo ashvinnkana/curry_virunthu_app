@@ -17,9 +17,7 @@ class AddToCart extends StatefulWidget {
 class _AddToCartState extends State<AddToCart> {
   @override
   Widget build(BuildContext context) {
-    Timer(
-        const Duration(seconds: 2),
-        () => Navigator.pop(context));
+    Timer(const Duration(seconds: 2), () => Navigator.pop(context));
 
     return Stack(
       children: <Widget>[

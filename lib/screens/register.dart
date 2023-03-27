@@ -157,7 +157,7 @@ class _RegisterState extends State<Register> {
                                 style: TextStyle(fontSize: 15),
                               ),
                               Container(
-                                  width: MediaQuery.of(context).size.width/2,
+                                  width: MediaQuery.of(context).size.width / 2,
                                   child: TextField(
                                     enabled: false,
                                     controller: _controller,
@@ -223,10 +223,8 @@ class _RegisterState extends State<Register> {
                                   border: InputBorder.none,
                                   labelText: "First Name",
                                 ),
-                                onChanged: (text){
-                                  setState(() {
-
-                                  });
+                                onChanged: (text) {
+                                  setState(() {});
                                 },
                               )),
                         ),
@@ -256,10 +254,8 @@ class _RegisterState extends State<Register> {
                                   border: InputBorder.none,
                                   labelText: "Last Name",
                                 ),
-                                onChanged: (text){
-                                  setState(() {
-
-                                  });
+                                onChanged: (text) {
+                                  setState(() {});
                                 },
                               )),
                         )
@@ -291,10 +287,8 @@ class _RegisterState extends State<Register> {
                                 border: InputBorder.none,
                                 labelText: "Email Address",
                               ),
-                              onChanged: (text){
-                                setState(() {
-
-                                });
+                              onChanged: (text) {
+                                setState(() {});
                               },
                             )),
                       )),
@@ -372,32 +366,32 @@ class _RegisterState extends State<Register> {
                                       'lname': lname_controller.text,
                                       'email': email_controller.text,
                                       'dineInCart': [],
-                                      'admin':false,
+                                      'admin': false,
                                       'mobile': "+61$phoneNum"
                                     })
                                     .then((value) => {
                                           print(
                                               "NEW USER REGISTERED SUCCESSFULLY"),
-                                print("=> SETTING UP USER SESSION"),
-                                    Session.userData = null,
-                                    FirebaseFirestore.instance
-                                    .collection('customer')
-                                    .doc(FirebaseAuth.instance.currentUser?.uid)
-                                    .get()
-                                    .then((data) => {
-                                  Session.userData = data,
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (BuildContext context) {
-
-
-                                        return MainScreen(0, "All");
-                                      },
-                                    ),
-                                  )
-                                })
-
+                                          print("=> SETTING UP USER SESSION"),
+                                          Session.userData = null,
+                                          FirebaseFirestore.instance
+                                              .collection('customer')
+                                              .doc(FirebaseAuth
+                                                  .instance.currentUser?.uid)
+                                              .get()
+                                              .then((data) => {
+                                                    Session.userData = data,
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (BuildContext
+                                                            context) {
+                                                          return MainScreen(
+                                                              0, "All");
+                                                        },
+                                                      ),
+                                                    )
+                                                  })
                                         })
                                     .catchError((onError) => {
                                           showDialog<void>(
@@ -458,7 +452,6 @@ class _RegisterState extends State<Register> {
                 colors: [
                   Color.fromARGB(180, 0, 0, 0),
                   Color.fromARGB(180, 27, 54, 3),
-
                 ],
                 // stops: [0.0, 0.1],
               ),

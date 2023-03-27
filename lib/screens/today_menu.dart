@@ -16,7 +16,6 @@ class Menu extends StatefulWidget {
 }
 
 class _MenuState extends State<Menu> {
-
   late String choosen_category;
   bool loading = false;
 
@@ -27,48 +26,44 @@ class _MenuState extends State<Menu> {
     return Scaffold(
         appBar: AppBar(
           actions: [
-        Padding(
-        padding: const EdgeInsets.only( right:20, top: 10, bottom: 10),
-      child:
-      DecoratedBox(
-          decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                  colors: [
-                    Color.fromRGBO(0, 0, 0, 1.0),
-                    Color.fromRGBO(0, 0, 0, 1.0),
-                    //add more colors
-                  ]),
-              borderRadius: BorderRadius.circular(5),
-              boxShadow: const <BoxShadow>[
-                BoxShadow(
-                    color: Color.fromRGBO(0, 0, 0, 0.57), //shadow for button
-                    blurRadius: 2) //blur radius of shadow
-              ]
-          ),
-          child: Padding(
-              padding: const EdgeInsets.only(left:10, right:10),
-              child:DropdownButton(
-                underline: Container(), //empty line
-                style: const TextStyle(fontSize: 12, color: Colors.white),
-                dropdownColor: Colors.black,
-                iconEnabledColor: Colors.white, //Icon color
-                value: choosen_category,
-                items: Temp.categoryLabels.map((String items) {
-                  return DropdownMenuItem(
-                    value: items,
-                    child: Text(items),
-                  );
-                }).toList(),
-                icon: const Icon(Icons.keyboard_arrow_down),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    choosen_category = newValue!;
-                  });
-                },)
-          )
-      )
-
-            )
+            Padding(
+                padding: const EdgeInsets.only(right: 20, top: 10, bottom: 10),
+                child: DecoratedBox(
+                    decoration: BoxDecoration(
+                        gradient: const LinearGradient(colors: [
+                          Color.fromRGBO(0, 0, 0, 1.0),
+                          Color.fromRGBO(0, 0, 0, 1.0),
+                          //add more colors
+                        ]),
+                        borderRadius: BorderRadius.circular(5),
+                        boxShadow: const <BoxShadow>[
+                          BoxShadow(
+                              color: Color.fromRGBO(
+                                  0, 0, 0, 0.57), //shadow for button
+                              blurRadius: 2) //blur radius of shadow
+                        ]),
+                    child: Padding(
+                        padding: const EdgeInsets.only(left: 10, right: 10),
+                        child: DropdownButton(
+                          underline: Container(), //empty line
+                          style: const TextStyle(
+                              fontSize: 12, color: Colors.white),
+                          dropdownColor: Colors.black,
+                          iconEnabledColor: Colors.white, //Icon color
+                          value: choosen_category,
+                          items: Temp.categoryLabels.map((String items) {
+                            return DropdownMenuItem(
+                              value: items,
+                              child: Text(items),
+                            );
+                          }).toList(),
+                          icon: const Icon(Icons.keyboard_arrow_down),
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              choosen_category = newValue!;
+                            });
+                          },
+                        ))))
           ],
           automaticallyImplyLeading: false,
           title: const Text("T O D A Y ' S   M E N U",
@@ -91,7 +86,8 @@ class _MenuState extends State<Menu> {
                             return Text('${snapshot.error}');
                           }
 
-                          if (snapshot.connectionState == ConnectionState.waiting) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
                             return Container();
                           }
 
@@ -101,31 +97,33 @@ class _MenuState extends State<Menu> {
                             physics: const NeverScrollableScrollPhysics(),
                             children: snapshot.data!.docs
                                 .map((DocumentSnapshot document) {
-                              Map<String, dynamic> category =
-                              document.data()! as Map<String, dynamic>;
-                              String id = document.id;
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  (choosen_category == "All") ?
-                                  buildHeading(context, category["label"]):
-                                  Container(),
-                                  (choosen_category == "All" || choosen_category == category["label"]) ?
-                                  buildList(context, id) : Container(),
-
-                                ],
-                              );
-                            })
+                                  Map<String, dynamic> category =
+                                      document.data()! as Map<String, dynamic>;
+                                  String id = document.id;
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      (choosen_category == "All")
+                                          ? buildHeading(
+                                              context, category["label"])
+                                          : Container(),
+                                      (choosen_category == "All" ||
+                                              choosen_category ==
+                                                  category["label"])
+                                          ? buildList(context, id)
+                                          : Container(),
+                                    ],
+                                  );
+                                })
                                 .toList()
                                 .cast(),
                           );
                         }))),
             getLoadingScreen()
           ],
-        )
-    );
+        ));
   }
-
 
   @override
   void initState() {
@@ -187,10 +185,10 @@ class _MenuState extends State<Menu> {
               fontSize: 15,
             ),
           ),
-        ),const SizedBox(height: 10.0)
+        ),
+        const SizedBox(height: 10.0)
       ],
     );
-
   }
 
   buildList(BuildContext context, String categoryId) {
@@ -202,7 +200,8 @@ class _MenuState extends State<Menu> {
               .where("isAvailable", isEqualTo: true)
               .where("category", isEqualTo: categoryId)
               .snapshots(),
-          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError) {
               return Text('${snapshot.error}');
             }
@@ -219,24 +218,23 @@ class _MenuState extends State<Menu> {
                 child: Column(
                   children: snapshot.data!.docs
                       .map((DocumentSnapshot document) {
-                    Map<String, dynamic> product =
-                    document.data()! as Map<String, dynamic>;
-                    String id = document.id;
-                    return Padding(
-                          padding: const EdgeInsets.only(right: 0.0),
-                          child: MenuItems(
-                              id: id,
-                              img: product["img"],
-                              title: product["label"],
-                              desc: product["description"],
-                              buyCount: product["buyCount"],
-                              isAvailable: product["isAvailable"],
-                              price: product["price"],
-                              choices: product["choices"],
-                            category : categoryId,
-                            data: product
-                          ));
-                  })
+                        Map<String, dynamic> product =
+                            document.data()! as Map<String, dynamic>;
+                        String id = document.id;
+                        return Padding(
+                            padding: const EdgeInsets.only(right: 0.0),
+                            child: MenuItems(
+                                id: id,
+                                img: product["img"],
+                                title: product["label"],
+                                desc: product["description"],
+                                buyCount: product["buyCount"],
+                                isAvailable: product["isAvailable"],
+                                price: product["price"],
+                                choices: product["choices"],
+                                category: categoryId,
+                                data: product));
+                      })
                       .toList()
                       .cast(),
                 ),
@@ -267,6 +265,5 @@ class _MenuState extends State<Menu> {
         const SizedBox(height: 40.0)
       ],
     );
-
   }
 }

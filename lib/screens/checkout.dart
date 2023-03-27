@@ -19,7 +19,10 @@ class Checkout extends StatefulWidget {
   final quantityTotal;
 
   Checkout(
-      {required this.foodOrder, required this.drinkOrder, required this.total, required this.quantityTotal}) {
+      {required this.foodOrder,
+      required this.drinkOrder,
+      required this.total,
+      required this.quantityTotal}) {
     FirebaseFirestore.instance
         .collection('temp')
         .doc('settings')
@@ -73,81 +76,85 @@ class _CheckoutState extends State<Checkout> {
               padding: const EdgeInsets.fromLTRB(40.0, 20.0, 40.0, 20.0),
               child: SingleChildScrollView(
                   child: Column(children: [
-                    Center(
-                      child: Text("\$${widget.total.toString()}",
-                          style: const TextStyle(
-                            fontSize: 45,
-                            color: Colors.orange,
-                          )),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Center(
-                      child: Text("TOTAL",
-                          style: const TextStyle(
-                            fontSize: 15,
-                            color: Colors.grey,
-                          )),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Divider(
-                      color: Colors.white,
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text("Checkout Option :",
-                          style: const TextStyle(
-                            fontSize: 15,
-                            color: Colors.grey,
-                          )),
-                    ),
-                    Align(
-                        alignment: Alignment.centerLeft,
-                        child: DropdownButtonHideUnderline(
-                            child: DropdownButton(
-                                isExpanded: true,
-                                style: TextStyle(fontSize: 15, color: Colors.white),
-                                value: choosenCheckout,
-                                icon: const Icon(
-                                  Icons.keyboard_arrow_down,
-                                  color: Colors.white,
+                Center(
+                  child: Text("\$${widget.total.toString()}",
+                      style: const TextStyle(
+                        fontSize: 45,
+                        color: Colors.orange,
+                      )),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Center(
+                  child: Text("TOTAL",
+                      style: const TextStyle(
+                        fontSize: 15,
+                        color: Colors.grey,
+                      )),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Divider(
+                  color: Colors.white,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text("Checkout Option :",
+                      style: const TextStyle(
+                        fontSize: 15,
+                        color: Colors.grey,
+                      )),
+                ),
+                Align(
+                    alignment: Alignment.centerLeft,
+                    child: DropdownButtonHideUnderline(
+                        child: DropdownButton(
+                            isExpanded: true,
+                            style: TextStyle(fontSize: 15, color: Colors.white),
+                            value: choosenCheckout,
+                            icon: const Icon(
+                              Icons.keyboard_arrow_down,
+                              color: Colors.white,
+                            ),
+                            items: checkoutOptions.map((String items) {
+                              return DropdownMenuItem(
+                                value: items,
+                                child: Text(
+                                  items,
                                 ),
-                                items: checkoutOptions.map((String items) {
-                                  return DropdownMenuItem(
-                                    value: items,
-                                    child: Text(
-                                      items,
-                                    ),
-                                  );
-                                }).toList(),
-                                onChanged: (String? newValue) {
-                                  setState(() {
-                                    choosenCheckout = newValue!;
-                                  });
-                                }))),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    choosenCheckout == 'Takeaway'? Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text("Delivery Method :",
-                          style: const TextStyle(
-                            fontSize: 15,
-                            color: Colors.grey,
-                          )),
-                    ):SizedBox(),
-                    choosenCheckout == 'Takeaway'? Align(
+                              );
+                            }).toList(),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                choosenCheckout = newValue!;
+                              });
+                            }))),
+                SizedBox(
+                  height: 15,
+                ),
+                choosenCheckout == 'Takeaway'
+                    ? Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text("Delivery Method :",
+                            style: const TextStyle(
+                              fontSize: 15,
+                              color: Colors.grey,
+                            )),
+                      )
+                    : SizedBox(),
+                choosenCheckout == 'Takeaway'
+                    ? Align(
                         alignment: Alignment.centerLeft,
                         child: DropdownButtonHideUnderline(
                             child: DropdownButton(
                                 isExpanded: true,
-                                style: TextStyle(fontSize: 15, color: Colors.white),
+                                style: TextStyle(
+                                    fontSize: 15, color: Colors.white),
                                 value: choosenDelivery,
                                 icon: const Icon(
                                   Icons.keyboard_arrow_down,
@@ -169,352 +176,441 @@ class _CheckoutState extends State<Checkout> {
                                   setState(() {
                                     choosenDelivery = newValue!;
                                   });
-                                }))):SizedBox(),
-                    choosenCheckout == 'Takeaway'? SizedBox(
-                      height: 15,
-                    ):SizedBox(),
-                    Temp.selfOrderUnlock || Session.userData["admin"] || choosenCheckout=='Takeaway'? Column(
-                      children: <Widget>[
-                        choosenCheckout=="Dine-in"? Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text("Choose Table Number :",
-                              style: const TextStyle(
-                                fontSize: 15,
-                                color: Colors.grey,
-                              )),
-                        ): SizedBox(),
-                        choosenCheckout=="Dine-in"?SizedBox(
-                          height: 10,
-                        ): SizedBox(),
-                        choosenCheckout=="Dine-in"?SizedBox(
-                            height: 35,
-                            child: ListView.separated(
-                              shrinkWrap: true,
-                              scrollDirection: Axis.horizontal,
-                              physics: ClampingScrollPhysics(),
-                              itemBuilder: (_, index) {
-                                return GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        selectedTable = Temp.availableTables[index]["tableNum"].toString();
-                                        if (Temp.availableTables[index]["state"] == "OCCUPIED") {
-                                          phoneNumController.text = Temp.availableTables[index]["customer"].toString().replaceAll("+61", "");
-                                        }
-                                      });
-
-                                    },
-                                    child: Container(
-                                      width: 40,
-                                      decoration: BoxDecoration(
-                                        color: Temp.availableTables[index]["tableNum"].toString() == selectedTable?Colors.green:
-                                        Temp.availableTables[index]["state"]=="OCCUPIED"? Color.fromRGBO(
-                                            86, 4, 4, 1.0): Colors.black,
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(5.0),
-                                        ),
-                                      ),
-                                      child:
-                                      Padding(
-                                        padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                                        child:
-                                        Text(
-                                          Temp.availableTables[index]["tableNum"].toString(),
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              color: Temp.availableTables[index]["tableNum"].toString() == selectedTable?
-                                              Colors.black:Colors.grey,
-                                              fontWeight: FontWeight.bold
-                                          ),
-                                        ),
-                                      )
-                                      ,
-                                    ));
-                              },
-                              itemCount: Temp.availableTables.length,
-                              separatorBuilder: (_, index) {
-                                return SizedBox(
-                                  width: 5,
-                                );
-                              },
-                            )
-                        ): SizedBox(),
-                        choosenCheckout=="Dine-in"?SizedBox(
-                          height: 10,
-                        ): SizedBox(),
-                        choosenCheckout=="Dine-in"?Align(
-                          alignment: Alignment.centerRight,
-                          child: Text("Already occupied tables are highlighted in RED!",
-                              style: const TextStyle(
-                                fontSize: 11,
-                                color: Colors.blueAccent,
-                              )),
-                        ): SizedBox(),
-                        choosenCheckout=="Dine-in"?SizedBox(
-                          height: 20,
-                        ): SizedBox(),
-                        Session.userData["admin"]?Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text("Customer PhoneNumber :",
-                              style: const TextStyle(
-                                fontSize: 15,
-                                color: Colors.grey,
-                              )),
-                        ):SizedBox(),
-                        Session.userData["admin"]?SizedBox(
-                          height: 10,
-                        ): SizedBox(),
-                        Session.userData["admin"]?Container(
-                          decoration: const BoxDecoration(
-                              gradient: LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  stops: [
-                                    0.2,
-                                    0.7
-                                  ],
-                                  colors: [
-                                    Color.fromARGB(255, 40, 40, 40),
-                                    Color.fromARGB(255, 40, 40, 40),
-                                  ])),
-                          child: Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20.0, right: 20.0, top: 10.0, bottom: 10.0),
-                              child: Row(
-                                children: <Widget>[
-                                  Text(
-                                    _emoji(),
-                                    style: const TextStyle(fontSize: 25),
-                                  ),
-                                  const Text(
-                                    "  +61     ",
-                                    style: TextStyle(fontSize: 15),
-                                  ),
-                                  Container(
-                                      width: MediaQuery.of(context).size.width/3,
-                                      child: TextField(
-                                        controller: phoneNumController,
-                                        keyboardType: TextInputType.phone,
-                                        decoration: const InputDecoration(
-                                          border: InputBorder.none,
-                                          labelText: "Phone Number",
-                                          hintText: "41 655 1457",
-                                        ),
-                                        onChanged: (text) => {
-                                          setState(() {
-                                            if (text.length == 9)
-                                            {
-                                              FocusScope.of(context).unfocus();
-                                          }
-                                          })
-
-                                        },
-                                      ))
-                                ],
-                              )),
-                        ):SizedBox(),
-                        Session.userData["admin"]?const SizedBox(height: 10.0):SizedBox(),
-                        Session.userData["admin"]?Padding(
-                            padding: const EdgeInsets.only(left: 20.0, right: 0.0),
-                            child: (phoneNumController.text.length != 9 &&
-                                phoneNumController.text.isNotEmpty
-                                ? Align(
-                              alignment: Alignment.centerRight,
-                              child: Text("Valid Phone Number Required!",
-                                  style: const TextStyle(
-                                    fontSize: 11,
-                                    color: Colors.red,
-                                  )),
-                            )
-                                : const SizedBox())):SizedBox(),
-                        Session.userData["admin"]?SizedBox(
-                          height: 10,
-                        ): SizedBox(),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text("Comments :",
-                              style: const TextStyle(
-                                fontSize: 15,
-                                color: Colors.grey,
-                              )),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        TextField(
-                          keyboardType: TextInputType.multiline,
-                          maxLines: null,
-                          controller: cusComment,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            hintText: 'let the chef know ...\n\n',
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Divider(
-                          color: Colors.white,
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        checkAllFields() ? (choosenCheckout == "Dine-in"?
-                        GradientSlideToAct(
-                          text: "CONFIRM ORDER",
-                          width: 400,
-                          dragableIconBackgroundColor:
-                          Color.fromARGB(255, 148, 182, 117),
-                          textStyle: TextStyle(color: Colors.black, fontSize: 15),
-                          backgroundColor: Color.fromARGB(255, 148, 182, 117),
-                          onSubmit: (){
-
-                            /////////////////////////////////////
-
-                            String? customer_num = "";
-                            if (Session.userData["admin"]) {
-                              customer_num = "+61"+phoneNumController.text;
-                            } else {
-                              customer_num = FirebaseAuth.instance.currentUser?.phoneNumber;
-                            }
-
-                            if (choosenCheckout == "Dine-in") {
-                              orderData = {
-                                "total": widget.total,
-                                "drinkOrder": widget.drinkOrder,
-                                "foodOrder": widget.foodOrder,
-                                "completedPercent": 0,
-                                "completedCount": 0,
-                                "orderQuantity": widget.quantityTotal,
-                                "state": "ORDERED",
-                                "tableNum": selectedTable,
-                                "customer": customer_num,
-                                "orderTime": DateTime.now(),
-                                "orderType": choosenCheckout,
-                                "comment": cusComment.text
-                              };
-    FirebaseFirestore.instance
-        .collection("tableData")
-        .doc(selectedTable)
-        .update({"state": "OCCUPIED", "customer": customer_num})
-        .then((value) => {});
-
-                            } else {
-                              orderData = {
-                                "total": widget.total,
-                                "drinkOrder": widget.drinkOrder,
-                                "foodOrder": widget.foodOrder,
-                                "completedPercent": 0,
-                                "completedCount": 0,
-                                "orderQuantity": widget.quantityTotal,
-                                "state": "ORDERED",
-                                "customer": FirebaseAuth.instance.currentUser?.phoneNumber,
-                                "orderTime": DateTime.now(),
-                                "orderType": choosenCheckout,
-                                "comment": cusComment.text
-                              };
-                            }
-
-                            Temp.dine_in_cart = [];
-                            FirebaseFirestore.instance.collection('order')
-                                .add(orderData)
-                                .then((value) => {
-                              FirebaseFirestore.instance
-                                  .collection("customer")
-                                  .doc(FirebaseAuth.instance.currentUser?.uid)
-                                  .update({"dineInCart": Temp.dine_in_cart})
-                                  .then((value) => {
-                                print("Cart Updated"),
-                                cusComment.text = "",
-                                selectedTable = null,
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (BuildContext context) {
-                                      print(Temp.availableTables.length);
-                                      return MainScreen(2, "All");
-                                    },
-                                  ),
+                                })))
+                    : SizedBox(),
+                choosenCheckout == 'Takeaway'
+                    ? SizedBox(
+                        height: 15,
+                      )
+                    : SizedBox(),
+                Temp.selfOrderUnlock ||
+                        Session.userData["admin"] ||
+                        choosenCheckout == 'Takeaway'
+                    ? Column(
+                        children: <Widget>[
+                          choosenCheckout == "Dine-in"
+                              ? Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text("Choose Table Number :",
+                                      style: const TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.grey,
+                                      )),
                                 )
-                              })
-                                  .catchError((error) =>
-                                  print("Failed to update cart: $error"))
-                            }).catchError((onError) => {
-                              showDialog<void>(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: const Text(
-                                        'Something went Wrong!'),
-                                    content: Text(
-                                        onError.toString()),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        style:
-                                        TextButton.styleFrom(
-                                          textStyle:
-                                          Theme.of(context)
-                                              .textTheme
-                                              .labelLarge,
-                                        ),
-                                        child: const Text('Okay'),
-                                        onPressed: () {
-                                          Navigator.of(context)
-                                              .pop();
-                                        },
+                              : SizedBox(),
+                          choosenCheckout == "Dine-in"
+                              ? SizedBox(
+                                  height: 10,
+                                )
+                              : SizedBox(),
+                          choosenCheckout == "Dine-in"
+                              ? SizedBox(
+                                  height: 35,
+                                  child: ListView.separated(
+                                    shrinkWrap: true,
+                                    scrollDirection: Axis.horizontal,
+                                    physics: ClampingScrollPhysics(),
+                                    itemBuilder: (_, index) {
+                                      return GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              selectedTable = Temp
+                                                  .availableTables[index]
+                                                      ["tableNum"]
+                                                  .toString();
+                                              if (Temp.availableTables[index]
+                                                      ["state"] ==
+                                                  "OCCUPIED") {
+                                                phoneNumController.text = Temp
+                                                    .availableTables[index]
+                                                        ["customer"]
+                                                    .toString()
+                                                    .replaceAll("+61", "");
+                                              }
+                                            });
+                                          },
+                                          child: Container(
+                                            width: 40,
+                                            decoration: BoxDecoration(
+                                              color: Temp.availableTables[index]
+                                                              ["tableNum"]
+                                                          .toString() ==
+                                                      selectedTable
+                                                  ? Colors.green
+                                                  : Temp.availableTables[index]
+                                                              ["state"] ==
+                                                          "OCCUPIED"
+                                                      ? Color.fromRGBO(
+                                                          86, 4, 4, 1.0)
+                                                      : Colors.black,
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(5.0),
+                                              ),
+                                            ),
+                                            child: Padding(
+                                              padding: EdgeInsets.fromLTRB(
+                                                  0, 10, 0, 10),
+                                              child: Text(
+                                                Temp.availableTables[index]
+                                                        ["tableNum"]
+                                                    .toString(),
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    color: Temp.availableTables[
+                                                                    index]
+                                                                    ["tableNum"]
+                                                                .toString() ==
+                                                            selectedTable
+                                                        ? Colors.black
+                                                        : Colors.grey,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                          ));
+                                    },
+                                    itemCount: Temp.availableTables.length,
+                                    separatorBuilder: (_, index) {
+                                      return SizedBox(
+                                        width: 5,
+                                      );
+                                    },
+                                  ))
+                              : SizedBox(),
+                          choosenCheckout == "Dine-in"
+                              ? SizedBox(
+                                  height: 10,
+                                )
+                              : SizedBox(),
+                          choosenCheckout == "Dine-in"
+                              ? Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Text(
+                                      "Already occupied tables are highlighted in RED!",
+                                      style: const TextStyle(
+                                        fontSize: 11,
+                                        color: Colors.blueAccent,
+                                      )),
+                                )
+                              : SizedBox(),
+                          choosenCheckout == "Dine-in"
+                              ? SizedBox(
+                                  height: 20,
+                                )
+                              : SizedBox(),
+                          Session.userData["admin"]
+                              ? Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text("Customer PhoneNumber :",
+                                      style: const TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.grey,
+                                      )),
+                                )
+                              : SizedBox(),
+                          Session.userData["admin"]
+                              ? SizedBox(
+                                  height: 10,
+                                )
+                              : SizedBox(),
+                          Session.userData["admin"]
+                              ? Container(
+                                  decoration: const BoxDecoration(
+                                      gradient: LinearGradient(
+                                          begin: Alignment.topCenter,
+                                          end: Alignment.bottomCenter,
+                                          stops: [
+                                        0.2,
+                                        0.7
+                                      ],
+                                          colors: [
+                                        Color.fromARGB(255, 40, 40, 40),
+                                        Color.fromARGB(255, 40, 40, 40),
+                                      ])),
+                                  child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 20.0,
+                                          right: 20.0,
+                                          top: 10.0,
+                                          bottom: 10.0),
+                                      child: Row(
+                                        children: <Widget>[
+                                          Text(
+                                            _emoji(),
+                                            style:
+                                                const TextStyle(fontSize: 25),
+                                          ),
+                                          const Text(
+                                            "  +61     ",
+                                            style: TextStyle(fontSize: 15),
+                                          ),
+                                          Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  3,
+                                              child: TextField(
+                                                controller: phoneNumController,
+                                                keyboardType:
+                                                    TextInputType.phone,
+                                                decoration:
+                                                    const InputDecoration(
+                                                  border: InputBorder.none,
+                                                  labelText: "Phone Number",
+                                                  hintText: "41 655 1457",
+                                                ),
+                                                onChanged: (text) => {
+                                                  setState(() {
+                                                    if (text.length == 9) {
+                                                      FocusScope.of(context)
+                                                          .unfocus();
+                                                    }
+                                                  })
+                                                },
+                                              ))
+                                        ],
+                                      )),
+                                )
+                              : SizedBox(),
+                          Session.userData["admin"]
+                              ? const SizedBox(height: 10.0)
+                              : SizedBox(),
+                          Session.userData["admin"]
+                              ? Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 20.0, right: 0.0),
+                                  child: (phoneNumController.text.length != 9 &&
+                                          phoneNumController.text.isNotEmpty
+                                      ? Align(
+                                          alignment: Alignment.centerRight,
+                                          child: Text(
+                                              "Valid Phone Number Required!",
+                                              style: const TextStyle(
+                                                fontSize: 11,
+                                                color: Colors.red,
+                                              )),
+                                        )
+                                      : const SizedBox()))
+                              : SizedBox(),
+                          Session.userData["admin"]
+                              ? SizedBox(
+                                  height: 10,
+                                )
+                              : SizedBox(),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text("Comments :",
+                                style: const TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.grey,
+                                )),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          TextField(
+                            keyboardType: TextInputType.multiline,
+                            maxLines: null,
+                            controller: cusComment,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                              hintText: 'let the chef know ...\n\n',
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Divider(
+                            color: Colors.white,
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          checkAllFields()
+                              ? (choosenCheckout == "Dine-in"
+                                  ? GradientSlideToAct(
+                                      text: "CONFIRM ORDER",
+                                      width: 400,
+                                      dragableIconBackgroundColor:
+                                          Color.fromARGB(255, 148, 182, 117),
+                                      textStyle: TextStyle(
+                                          color: Colors.black, fontSize: 15),
+                                      backgroundColor:
+                                          Color.fromARGB(255, 148, 182, 117),
+                                      onSubmit: () {
+                                        /////////////////////////////////////
+
+                                        String? customer_num = "";
+                                        if (Session.userData["admin"]) {
+                                          customer_num =
+                                              "+61" + phoneNumController.text;
+                                        } else {
+                                          customer_num = FirebaseAuth.instance
+                                              .currentUser?.phoneNumber;
+                                        }
+
+                                        if (choosenCheckout == "Dine-in") {
+                                          orderData = {
+                                            "total": widget.total,
+                                            "drinkOrder": widget.drinkOrder,
+                                            "foodOrder": widget.foodOrder,
+                                            "completedPercent": 0,
+                                            "completedCount": 0,
+                                            "orderQuantity":
+                                                widget.quantityTotal,
+                                            "state": "ORDERED",
+                                            "tableNum": selectedTable,
+                                            "customer": customer_num,
+                                            "orderTime": DateTime.now(),
+                                            "orderType": choosenCheckout,
+                                            "comment": cusComment.text
+                                          };
+                                          FirebaseFirestore.instance
+                                              .collection("tableData")
+                                              .doc(selectedTable)
+                                              .update({
+                                            "state": "OCCUPIED",
+                                            "customer": customer_num
+                                          }).then((value) => {});
+                                        } else {
+                                          orderData = {
+                                            "total": widget.total,
+                                            "drinkOrder": widget.drinkOrder,
+                                            "foodOrder": widget.foodOrder,
+                                            "completedPercent": 0,
+                                            "completedCount": 0,
+                                            "orderQuantity":
+                                                widget.quantityTotal,
+                                            "state": "ORDERED",
+                                            "customer": FirebaseAuth.instance
+                                                .currentUser?.phoneNumber,
+                                            "orderTime": DateTime.now(),
+                                            "orderType": choosenCheckout,
+                                            "comment": cusComment.text
+                                          };
+                                        }
+
+                                        Temp.dine_in_cart = [];
+                                        FirebaseFirestore.instance
+                                            .collection('order')
+                                            .add(orderData)
+                                            .then((value) => {
+                                                  FirebaseFirestore.instance
+                                                      .collection("customer")
+                                                      .doc(FirebaseAuth.instance
+                                                          .currentUser?.uid)
+                                                      .update({
+                                                        "dineInCart":
+                                                            Temp.dine_in_cart
+                                                      })
+                                                      .then((value) => {
+                                                            print(
+                                                                "Cart Updated"),
+                                                            cusComment.text =
+                                                                "",
+                                                            selectedTable =
+                                                                null,
+                                                            Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                builder:
+                                                                    (BuildContext
+                                                                        context) {
+                                                                  print(Temp
+                                                                      .availableTables
+                                                                      .length);
+                                                                  return MainScreen(
+                                                                      2, "All");
+                                                                },
+                                                              ),
+                                                            )
+                                                          })
+                                                      .catchError((error) => print(
+                                                          "Failed to update cart: $error"))
+                                                })
+                                            .catchError((onError) => {
+                                                  showDialog<void>(
+                                                    context: context,
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      return AlertDialog(
+                                                        title: const Text(
+                                                            'Something went Wrong!'),
+                                                        content: Text(
+                                                            onError.toString()),
+                                                        actions: <Widget>[
+                                                          TextButton(
+                                                            style: TextButton
+                                                                .styleFrom(
+                                                              textStyle: Theme.of(
+                                                                      context)
+                                                                  .textTheme
+                                                                  .labelLarge,
+                                                            ),
+                                                            child: const Text(
+                                                                'Okay'),
+                                                            onPressed: () {
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop();
+                                                            },
+                                                          ),
+                                                        ],
+                                                      );
+                                                    },
+                                                  )
+                                                });
+                                      },
+                                      gradient: const LinearGradient(
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                          colors: [
+                                            Color(0Xff11998E),
+                                            Color(0Xff38EF7D),
+                                          ]),
+                                    )
+                                  : ElevatedButton(
+                                      onPressed: () async {
+                                        setState(() {
+                                          loading = true;
+                                        });
+                                        await makePayment();
+                                      },
+                                      child: Text('Proceed to Payment'),
+                                      style: ElevatedButton.styleFrom(
+                                        primary: Colors.lightGreen.shade800,
                                       ),
-                                    ],
-                                  );
-                                },
-                              )
-                            });
-                          },
-                          gradient: const LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [
-                                Color(0Xff11998E),
-                                Color(0Xff38EF7D),
-                              ]),
-                        ):
-                        ElevatedButton(onPressed: () async {
-                          setState(() {
-                            loading = true;
-                          });
-                          await makePayment();
-                        }, child: Text('Proceed to Payment'),
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.lightGreen.shade800,),)
-                        ) :Text("All Fields Required!",
-                          style: TextStyle(
-                              color: Colors.red
-                          ),) ,
-                      ],
-                    ):
-                    Text("Contact a staff to complete proceeding with your order! ",
-                    style: TextStyle(
-                      color: Colors.red
-                    ),),
-
-
-                  ])),
+                                    ))
+                              : Text(
+                                  "All Fields Required!",
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                        ],
+                      )
+                    : Text(
+                        "Contact a staff to complete proceeding with your order! ",
+                        style: TextStyle(color: Colors.red),
+                      ),
+              ])),
             ),
             getLoadingScreen()
           ],
-        ) );
+        ));
   }
 
   Future<void> makePayment() async {
     try {
       paymentIntent = await createPaymentIntent(widget.total.toString(), 'AUD');
       //Payment Sheet
-      await Stripe.instance.initPaymentSheet(
-          paymentSheetParameters: SetupPaymentSheetParameters(
-              paymentIntentClientSecret: paymentIntent!['client_secret'],
-              //applePay: const PaymentSheetApplePay(merchantCountryCode: '+61',),
-              //googlePay: const PaymentSheetGooglePay(testEnv: true, currencyCode: "AU", merchantCountryCode: "+61"),
-              style: ThemeMode.dark,
-              merchantDisplayName: 'Curry Virunthu')).then((value){
-      });
+      await Stripe.instance
+          .initPaymentSheet(
+              paymentSheetParameters: SetupPaymentSheetParameters(
+                  paymentIntentClientSecret: paymentIntent!['client_secret'],
+                  //applePay: const PaymentSheetApplePay(merchantCountryCode: '+61',),
+                  //googlePay: const PaymentSheetGooglePay(testEnv: true, currencyCode: "AU", merchantCountryCode: "+61"),
+                  style: ThemeMode.dark,
+                  merchantDisplayName: 'Curry Virunthu'))
+          .then((value) {});
       displayPaymentSheet();
     } catch (e, s) {
       setState(() {
@@ -524,42 +620,51 @@ class _CheckoutState extends State<Checkout> {
       showDialog(
           context: context,
           builder: (_) => AlertDialog(
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  children: const [
-                    Icon(Icons.warning_amber, color: Colors.red,),
-                    SizedBox(width: 3,),
-                    Text("Payment Failed!"),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      children: const [
+                        Icon(
+                          Icons.warning_amber,
+                          color: Colors.red,
+                        ),
+                        SizedBox(
+                          width: 3,
+                        ),
+                        Text("Payment Failed!"),
+                      ],
+                    ),
                   ],
                 ),
-              ],
-            ),
-          ));
+              ));
     }
   }
 
   displayPaymentSheet() async {
     try {
-      await Stripe.instance.presentPaymentSheet(
-      ).then((value){
+      await Stripe.instance.presentPaymentSheet().then((value) {
         showDialog(
             context: context,
             builder: (_) => AlertDialog(
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    children: const [
-                      Icon(Icons.check_circle, color: Colors.green,),
-                      SizedBox(width: 3,),
-                      Text("Payment Successfull!"),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        children: const [
+                          Icon(
+                            Icons.check_circle,
+                            color: Colors.green,
+                          ),
+                          SizedBox(
+                            width: 3,
+                          ),
+                          Text("Payment Successfull!"),
+                        ],
+                      ),
                     ],
                   ),
-                ],
-              ),
-            ));
+                ));
         orderData = {
           "total": widget.total,
           "drinkOrder": widget.drinkOrder,
@@ -574,64 +679,58 @@ class _CheckoutState extends State<Checkout> {
           "comment": cusComment.text
         };
 
-          Temp.dine_in_cart = [];
-          FirebaseFirestore.instance.collection('order')
-          .add(orderData)
-          .then((value) => {
+        Temp.dine_in_cart = [];
         FirebaseFirestore.instance
-            .collection("customer")
-            .doc(FirebaseAuth.instance.currentUser?.uid)
-            .update({"dineInCart": Temp.dine_in_cart})
+            .collection('order')
+            .add(orderData)
             .then((value) => {
-          print("Cart Updated"),
-          cusComment.text = "",
-          selectedTable = null,
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (BuildContext context) {
-                print(Temp.availableTables.length);
-                return MainScreen(2, "All");
-              },
-            ),
-          )
-        })
-            .catchError((error) =>
-            print("Failed to update cart: $error"))
-      }).catchError((onError) => {
-        showDialog<void>(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text(
-                  'Something went Wrong!'),
-              content: Text(
-                  onError.toString()),
-              actions: <Widget>[
-                TextButton(
-                  style:
-                  TextButton.styleFrom(
-                    textStyle:
-                    Theme.of(context)
-                        .textTheme
-                        .labelLarge,
-                  ),
-                  child: const Text('Okay'),
-                  onPressed: () {
-                    Navigator.of(context)
-                        .pop();
-                  },
-                ),
-              ],
-            );
-          },
-        )
-      });
+                  FirebaseFirestore.instance
+                      .collection("customer")
+                      .doc(FirebaseAuth.instance.currentUser?.uid)
+                      .update({"dineInCart": Temp.dine_in_cart})
+                      .then((value) => {
+                            print("Cart Updated"),
+                            cusComment.text = "",
+                            selectedTable = null,
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (BuildContext context) {
+                                  print(Temp.availableTables.length);
+                                  return MainScreen(2, "All");
+                                },
+                              ),
+                            )
+                          })
+                      .catchError(
+                          (error) => print("Failed to update cart: $error"))
+                })
+            .catchError((onError) => {
+                  showDialog<void>(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text('Something went Wrong!'),
+                        content: Text(onError.toString()),
+                        actions: <Widget>[
+                          TextButton(
+                            style: TextButton.styleFrom(
+                              textStyle: Theme.of(context).textTheme.labelLarge,
+                            ),
+                            child: const Text('Okay'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  )
+                });
         // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("paid successfully")));
 
         paymentIntent = null;
-
-      }).onError((error, stackTrace){
+      }).onError((error, stackTrace) {
         setState(() {
           loading = false;
         });
@@ -639,36 +738,39 @@ class _CheckoutState extends State<Checkout> {
         showDialog(
             context: context,
             builder: (_) => AlertDialog(
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    children: const [
-                      Icon(Icons.warning_amber, color: Colors.red,),
-                      SizedBox(width: 3,),
-                      Text("Payment Failed!"),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        children: const [
+                          Icon(
+                            Icons.warning_amber,
+                            color: Colors.red,
+                          ),
+                          SizedBox(
+                            width: 3,
+                          ),
+                          Text("Payment Failed!"),
+                        ],
+                      ),
                     ],
                   ),
-                ],
-              ),
-            ));
+                ));
       });
-
-
     } on StripeException catch (e) {
       print('Error is:---> $e');
       showDialog(
           context: context,
           builder: (_) => const AlertDialog(
-            content: Text("Cancelled "),
-          ));
+                content: Text("Cancelled "),
+              ));
     } catch (e) {
       print('$e');
     }
   }
 
   createPaymentIntent(String amount, String currency) async {
-    try{
+    try {
       Map<String, dynamic> body = {
         'amount': calculateAmount(amount),
         'currency': currency,
@@ -685,14 +787,14 @@ class _CheckoutState extends State<Checkout> {
       );
       print('Payment Intent Body->>> ${response.body.toString()}');
       return jsonDecode(response.body);
-    }catch (err) {
+    } catch (err) {
       // ignore: avoid_print
       print('err charging user: ${err.toString()}');
     }
   }
 
   calculateAmount(String amount) {
-    final calculatedAmout = (int.parse(amount)) * 100 ;
+    final calculatedAmout = (int.parse(amount)) * 100;
     return calculatedAmout.toString();
   }
 
@@ -766,6 +868,4 @@ class _CheckoutState extends State<Checkout> {
 
     return emoji;
   }
-
-
 }

@@ -125,8 +125,9 @@ class _GradientSlideToActState extends State<GradientSlideToAct>
                           child: Text(widget.text,
                               style: widget.textStyle ??
                                   const TextStyle(
-                                      color: Colors.black, fontSize: 15,
-                                  fontWeight: FontWeight.bold)),
+                                      color: Colors.black,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold)),
                         ),
                       )),
                   Positioned(
@@ -212,7 +213,10 @@ class _draggableWidget extends StatelessWidget {
           color: dragableIconBackground,
           gradient: dragableIconBackground != null ? null : gradient),
       alignment: Alignment.center,
-      child: Icon(dragableIcon, color: Colors.black,),
+      child: Icon(
+        dragableIcon,
+        color: Colors.black,
+      ),
     );
   }
 }

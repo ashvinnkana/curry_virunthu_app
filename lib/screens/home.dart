@@ -36,7 +36,8 @@ class Home extends StatefulWidget {
 
     Temp.categoryLabels = ["All"];
 
-    FirebaseFirestore.instance.collection('category')
+    FirebaseFirestore.instance
+        .collection('category')
         .orderBy("orderId")
         .get()
         .then((QuerySnapshot querySnapshot) {

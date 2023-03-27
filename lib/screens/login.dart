@@ -14,8 +14,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 
 class Login extends StatefulWidget {
-  Login({super.key}) {
-  }
+  Login({super.key});
 
   @override
   _LoginState createState() => _LoginState();
@@ -26,7 +25,6 @@ class _LoginState extends State<Login> {
   bool loading = false;
   double screenWidth = 0.0;
   double screenHeight = 0.0;
-
 
   @override
   Widget build(BuildContext context) {
@@ -50,8 +48,7 @@ class _LoginState extends State<Login> {
             builder: (BuildContext context) {
               return AlertDialog(
                 title: const Text('Alert!'),
-                content:
-                const Text('Do you want to continue to exit the app?'),
+                content: const Text('Do you want to continue to exit the app?'),
                 actions: <Widget>[
                   TextButton(
                     style: TextButton.styleFrom(
@@ -159,13 +156,13 @@ class _LoginState extends State<Login> {
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       stops: [
-                        0.2,
-                        0.7
-                      ],
+                    0.2,
+                    0.7
+                  ],
                       colors: [
-                        Color.fromARGB(0, 10, 10, 10),
-                        Color.fromARGB(200, 10, 10, 10),
-                      ])),
+                    Color.fromARGB(0, 10, 10, 10),
+                    Color.fromARGB(200, 10, 10, 10),
+                  ])),
               width: screenWidth,
               height: screenHeight * 0.6,
             ),
@@ -234,13 +231,13 @@ class _LoginState extends State<Login> {
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     stops: [
-                      0.2,
-                      0.7
-                    ],
+                  0.2,
+                  0.7
+                ],
                     colors: [
-                      Color.fromARGB(255, 40, 40, 40),
-                      Color.fromARGB(255, 40, 40, 40),
-                    ])),
+                  Color.fromARGB(255, 40, 40, 40),
+                  Color.fromARGB(255, 40, 40, 40),
+                ])),
             child: Padding(
                 padding: const EdgeInsets.only(
                     left: 20.0, right: 20.0, top: 10.0, bottom: 10.0),
@@ -255,7 +252,7 @@ class _LoginState extends State<Login> {
                       style: TextStyle(fontSize: 15),
                     ),
                     Container(
-                        width: MediaQuery.of(context).size.width/2,
+                        width: MediaQuery.of(context).size.width / 2,
                         child: TextField(
                           controller: phoneNumController,
                           keyboardType: TextInputType.phone,
@@ -281,12 +278,12 @@ class _LoginState extends State<Login> {
         Padding(
             padding: const EdgeInsets.only(left: 20.0, right: 20.0),
             child: (phoneNumController.text.length > 9 &&
-                phoneNumController.text.isNotEmpty
+                    phoneNumController.text.isNotEmpty
                 ? const Text(
-              "Valid Phone Number Required!",
-              textAlign: TextAlign.right,
-              style: TextStyle(color: Color.fromARGB(255, 203, 26, 26)),
-            )
+                    "Valid Phone Number Required!",
+                    textAlign: TextAlign.right,
+                    style: TextStyle(color: Color.fromARGB(255, 203, 26, 26)),
+                  )
                 : const SizedBox())),
 
         const SizedBox(height: 10.0),
@@ -297,214 +294,213 @@ class _LoginState extends State<Login> {
                     width: 400,
                     height: 52,
                     child: phoneNumController.text == "" ||
-                        phoneNumController.text.length > 9 ||
-                        phoneNumController.text.length < 9
+                            phoneNumController.text.length > 9 ||
+                            phoneNumController.text.length < 9
                         ? ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                            primary: Colors.grey.shade800,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10))),
-                        onPressed: () {
-                          showDialog<void>(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: const Text('Cannot Proceed'),
-                                content: const Text(
-                                    'Valid phone number is required!'),
-                                actions: <Widget>[
-                                  TextButton(
-                                    style: TextButton.styleFrom(
-                                      textStyle: Theme.of(context)
-                                          .textTheme
-                                          .labelLarge,
-                                    ),
-                                    child: const Text('Okay'),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                ],
+                            style: ElevatedButton.styleFrom(
+                                primary: Colors.grey.shade800,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10))),
+                            onPressed: () {
+                              showDialog<void>(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('Cannot Proceed'),
+                                    content: const Text(
+                                        'Valid phone number is required!'),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        style: TextButton.styleFrom(
+                                          textStyle: Theme.of(context)
+                                              .textTheme
+                                              .labelLarge,
+                                        ),
+                                        child: const Text('Okay'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
                               );
                             },
-                          );
-                        },
-                        icon: Icon(
-                          Icons.block,
-                          size: 24.0,
-                        ),
-                        label: const Text("G E T   S T A R T E D"))
+                            icon: Icon(
+                              Icons.block,
+                              size: 24.0,
+                            ),
+                            label: const Text("G E T   S T A R T E D"))
                         : ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            primary: Colors.lightGreen.shade800,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10))),
-                        onPressed: () async {
-                          setState(() {
-                            loading = true;
-                          });
+                            style: ElevatedButton.styleFrom(
+                                primary: Colors.lightGreen.shade800,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10))),
+                            onPressed: () async {
+                              setState(() {
+                                loading = true;
+                              });
 
-                          FirebaseAuth auth = FirebaseAuth.instance;
-                          print('+61${phoneNumController.text}');
+                              FirebaseAuth auth = FirebaseAuth.instance;
+                              print('+61${phoneNumController.text}');
 
-                          try {
-                            var status = false;
-                            await auth.verifyPhoneNumber(
-                              phoneNumber: '+61${phoneNumController.text}',
-                              timeout: const Duration(seconds: 60),
-                              verificationCompleted:
-                                  (PhoneAuthCredential credential) async {
+                              try {
+                                var status = false;
+                                await auth.verifyPhoneNumber(
+                                  phoneNumber: '+61${phoneNumController.text}',
+                                  timeout: const Duration(seconds: 60),
+                                  verificationCompleted:
+                                      (PhoneAuthCredential credential) async {
+                                    await FirebaseAuth.instance
+                                        .signInWithCredential(credential)
+                                        .then((value) => {
+                                              /////////////////////////
+                                              status = true,
 
-                                await FirebaseAuth.instance
-                                    .signInWithCredential(credential)
-                                    .then((value) => {
-                                      /////////////////////////
-                                  status = true,
+                                              FirebaseFirestore.instance
+                                                  .collection('customer')
+                                                  .doc(FirebaseAuth.instance
+                                                      .currentUser?.uid)
+                                                  .get()
+                                                  .then((data) =>
+                                                      {Session.userData = data})
 
-                                    FirebaseFirestore.instance
-                                        .collection('customer')
-                                    .doc(FirebaseAuth.instance.currentUser?.uid)
-                                    .get()
-                                    .then((data) => {
-                                  Session.userData = data
-                                })
-
-                                  ///////////////
-                                })
-                                    .catchError((onError) => {
-                                  status = true,
-                                  setState(() {
-                                    loading = false;
-                                    phoneNumController =
-                                    new TextEditingController();
-                                  }),
-                                  showDialog<void>(
-                                    context: context,
-                                    builder:
-                                        (BuildContext context) {
-                                      return AlertDialog(
-                                        title: const Text(
-                                            'Something Went Wrong'),
-                                        content: const Text(
-                                            'Invalid OTP, Login Failed'),
-                                        actions: <Widget>[
-                                          TextButton(
-                                            style: TextButton
-                                                .styleFrom(
-                                              textStyle:
-                                              Theme.of(context)
-                                                  .textTheme
-                                                  .labelLarge,
+                                              ///////////////
+                                            })
+                                        .catchError((onError) => {
+                                              status = true,
+                                              setState(() {
+                                                loading = false;
+                                                phoneNumController =
+                                                    new TextEditingController();
+                                              }),
+                                              showDialog<void>(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return AlertDialog(
+                                                    title: const Text(
+                                                        'Something Went Wrong'),
+                                                    content: const Text(
+                                                        'Invalid OTP, Login Failed'),
+                                                    actions: <Widget>[
+                                                      TextButton(
+                                                        style: TextButton
+                                                            .styleFrom(
+                                                          textStyle:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .labelLarge,
+                                                        ),
+                                                        child:
+                                                            const Text('Okay'),
+                                                        onPressed: () {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        },
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
+                                              )
+                                            });
+                                  },
+                                  verificationFailed:
+                                      (FirebaseAuthException e) {
+                                    print(
+                                        "Phone ERROR: " + e.message.toString());
+                                    status = true;
+                                    setState(() {
+                                      loading = false;
+                                      phoneNumController =
+                                          new TextEditingController();
+                                    });
+                                    showDialog<void>(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: const Text(
+                                              'Something Went Wrong'),
+                                          content: Text(e.message.toString()),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              style: TextButton.styleFrom(
+                                                textStyle: Theme.of(context)
+                                                    .textTheme
+                                                    .labelLarge,
+                                              ),
+                                              child: const Text('Okay'),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
                                             ),
-                                            child:
-                                            const Text('Okay'),
-                                            onPressed: () {
-                                              Navigator.of(context)
-                                                  .pop();
-                                            },
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  )
-                                });
-                              },
-                              verificationFailed:
-                                  (FirebaseAuthException e) {
-                                print(
-                                    "Phone ERROR: " + e.message.toString());
-                                status = true;
-                                setState(() {
-                                  loading = false;
-                                  phoneNumController =
-                                  new TextEditingController();
-                                });
-                                showDialog<void>(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: const Text(
-                                          'Something Went Wrong'),
-                                      content: Text(e.message.toString()),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          style: TextButton.styleFrom(
-                                            textStyle: Theme.of(context)
-                                                .textTheme
-                                                .labelLarge,
-                                          ),
-                                          child: const Text('Okay'),
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                      ],
+                                          ],
+                                        );
+                                      },
                                     );
                                   },
+                                  codeSent: (String verificationId,
+                                      int? resendToken) {
+                                    status = true;
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (BuildContext context) {
+                                          return Otp(verificationId,
+                                              phoneNumController.text);
+                                        },
+                                      ),
+                                    );
+                                  },
+                                  codeAutoRetrievalTimeout:
+                                      (String verificationId) {},
                                 );
-                              },
-                              codeSent: (String verificationId,
-                                  int? resendToken) {
-                                status = true;
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (BuildContext context) {
-                                      return Otp(verificationId,
-                                          phoneNumController.text);
-                                    },
-                                  ),
-                                );
-                              },
-                              codeAutoRetrievalTimeout:
-                                  (String verificationId) {},
-                            );
 
-                            final timer = Timer(
-                              const Duration(seconds: 15),
+                                final timer = Timer(
+                                  const Duration(seconds: 15),
                                   () {
-                                print(
-                                    ModalRoute.of(context)?.settings.name);
-                                if (ModalRoute.of(context)?.settings.name ==
-                                    null &&
-                                    status == false) {
-                                  setState(() {
-                                    loading = false;
-                                    phoneNumController =
-                                    new TextEditingController();
-                                  });
-                                  showDialog<void>(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title: const Text(
-                                            'Something Went Wrong'),
-                                        content: const Text(
-                                            'Entered phone number was attempted already, cannot send verification code immediately\n\nTRY AGAIN LATER'),
-                                        actions: <Widget>[
-                                          TextButton(
-                                            style: TextButton.styleFrom(
-                                              textStyle: Theme.of(context)
-                                                  .textTheme
-                                                  .labelLarge,
-                                            ),
-                                            child: const Text('Okay'),
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                          ),
-                                        ],
+                                    print(
+                                        ModalRoute.of(context)?.settings.name);
+                                    if (ModalRoute.of(context)?.settings.name ==
+                                            null &&
+                                        status == false) {
+                                      setState(() {
+                                        loading = false;
+                                        phoneNumController =
+                                            new TextEditingController();
+                                      });
+                                      showDialog<void>(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: const Text(
+                                                'Something Went Wrong'),
+                                            content: const Text(
+                                                'Entered phone number was attempted already, cannot send verification code immediately\n\nTRY AGAIN LATER'),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                style: TextButton.styleFrom(
+                                                  textStyle: Theme.of(context)
+                                                      .textTheme
+                                                      .labelLarge,
+                                                ),
+                                                child: const Text('Okay'),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        },
                                       );
-                                    },
-                                  );
-                                }
-                              },
-                            );
-                          } catch (e) {
-                            print(e);
-                          }
-                        },
-                        child: Text("G E T   S T A R T E D"))))),
+                                    }
+                                  },
+                                );
+                              } catch (e) {
+                                print(e);
+                              }
+                            },
+                            child: Text("G E T   S T A R T E D"))))),
         const SizedBox(height: 20.0),
       ],
     );
